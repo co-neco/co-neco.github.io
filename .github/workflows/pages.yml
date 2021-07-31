@@ -22,8 +22,7 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache
       - name: Install Dependencies
-        run: npm install
-        run: hexo g
+        run: npm install | hexo g
       - name: Build
         run: npm run build
       - name: Deploy
