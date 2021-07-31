@@ -5,7 +5,7 @@
 # Site
 title: Coneco's diary
 subtitle: ''
-description: ''
+description: Hello, welcome to coneco's diary
 keywords:
 author: coneco
 language: en
@@ -41,7 +41,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -109,14 +109,15 @@ algolia:
   chunkSize: 5000
   indexName: "my-hexo-blog"
   fields:
+    - date
     - content:strip:truncate,0,500
     - excerpt:strip
     - gallery
     - permalink
     - photos
     - slug
-    - tags
     - title
+    - tags
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
