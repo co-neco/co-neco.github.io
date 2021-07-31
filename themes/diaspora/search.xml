@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/02/05/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<a id="more"></a>
+
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>tranquilpeak</category>
+        <category>features</category>
+      </categories>
+      <tags>
+        <tag>japanese</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>second title</title>
+    <url>/2021/07/31/second-title/</url>
+    <content><![CDATA[<h5 id="Second-title-test"><a href="#Second-title-test" class="headerlink" title="Second title test"></a>Second title test</h5><p>dgdf</p>
+<a id="more"></a>]]></content>
+      <tags>
+        <tag>AA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>日本語テスト</title>
+    <url>/2013/01/02/%E6%97%A5%E6%9C%AC%E8%AA%9E/</url>
+    <content><![CDATA[<p>This is a Japanese test post to show you how japanese is displayed.</p>
+<a id="more"></a>
+
+<p>私は昨日ついにその助力家というのの上よりするたなけれ。<br>最も今をお話団はちょうどこの前後なかろでくらいに困りがいるたをは帰着考えたなかって、そうにもするでうたらない。<br>がたを知っないはずも同時に九月をいよいよたありた。</p>
+<p>もっと槙さんにぼんやり金少し説明にえた自分大した人私か影響にというお関係たうませないが、この次第も私か兄具合に使うて、槙さんののに当人のあなたにさぞご意味と行くて私個人が小尊敬を聴いように同時に同反抗に集っだうて、いよいよまず相当へあっうからいだ事をしでなけれ。</p>
+<blockquote>
+<p>それでそれでもご時日をしはずはたったいやと突き抜けるますて、その元がは行ったてという獄を尽すていけですた。</p>
+</blockquote>
+<p>この中道具の日その学校はあなたごろがすまなりかとネルソンさんの考えるですん、辺の事実ないというご盲従ありたですと、爺さんのためが薬缶が結果までの箸の当時してならて、多少の十月にためからそういう上からとにかくしましないと触れべきものたで、ないうですと多少お人達したのでたた。</p>
+<p><em>From <a href="http://lipsum.sugutsukaeru.jp/index.cgi">すぐ使えるダミーテキスト - 日本語 Lorem ipsum</a></em></p>
+]]></content>
+      <categories>
+        <category>tranquilpeak</category>
+        <category>features</category>
+      </categories>
+      <tags>
+        <tag>japanese</tag>
+      </tags>
+  </entry>
+</search>
