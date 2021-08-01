@@ -105,13 +105,9 @@ menu:
 # Value before `||` delimiter is the target permalink,
 # secend value is the name of Font icon.
 social:
-  github: https://github.com/yourname || github || "#191717"
-  #google: https://plus.google.com/yourname || google
-  twitter: https://twitter.com/yourname || twitter || "#00aff0"
-  zhihu: https://www.zhihu.com/people/yourname || zhihu || "#1e88e5"
-  music: https://music.163.com/#/user/home?id=yourid || cloud-music || "#e60026"
-  weibo: https://weibo.com/yourname || weibo || "#ea716e"
-  about: https://about.me/yourname || address-card || "#3b5998"
+  github: https://github.com/co-neco || github || "#191717"
+  twitter: https://twitter.com/1073352334 || twitter || "#00aff0"
+  music: https://music.163.com/#/user/home?id=1746233908 || cloud-music || "#e60026"
   #email: mailto:yourname@mail.com || envelope || "#55acd5"
   #facebook: https://www.facebook.com/yourname || facebook
   #stackoverflow: https://stackoverflow.com/yourname || stack-overflow
@@ -125,7 +121,7 @@ sidebar:
   position: left
   # position: right
   # Replace the default avatar image and set the url here.
-  avatar: avatar.jpg
+  avatar: megumi.jpg
 
 widgets:
   # if true, will show random posts
@@ -151,7 +147,7 @@ post:
 # Reward (Donate)
 reward:
   # If true, reward will be displayed in every article by default.
-  enable: true
+  enable: false
   account:
     wechatpay: /wechatpay.png
     alipay: /alipay.png
@@ -216,13 +212,13 @@ valine:
 
 # bgm
 audio:
-  # - title: 列表1
-  #   list:
-  #    - https://music.163.com/#/playlist?id=2943811283
-  #    - https://music.163.com/#/playlist?id=2297706586
-  # - title: 列表2
-  #   list:
-  #    - https://music.163.com/#/playlist?id=2031842656
+  - title: light_music
+    list:
+     - https://music.163.com/#/playlist?id=5461446138
+  - title: other_list
+    list:
+     - https://music.163.com/#/playlist?id=5460990937
+     - https://music.163.com/#/playlist?id=2642857704
 
 # random image api
 image_server: # "https://acg.xydwz.cn/api/api.php"
@@ -302,3 +298,13 @@ vendors:
     valine: gh/amehime/MiniValine@4.2.2-beta10/dist/MiniValine.min.js
     copy_tex: npm/katex@0.12.0/dist/contrib/copy-tex.min.js
     chart: npm/frappe-charts@1.5.0/dist/frappe-charts.min.iife.min.js
+
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
+  exclude_codeblock: true
+  awl: 2
+  wpm: 275
+  suffix: "mins."

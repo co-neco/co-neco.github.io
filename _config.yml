@@ -9,7 +9,7 @@ description: Hello, welcome to coneco's diary
 keywords: anime, music, galgame
 author: coneco
 language: zh-CN
-timezone: 'Asia/Sichuan'
+timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
@@ -119,6 +119,16 @@ aplayer:
 autoprefixer:
   exclude:
     - '*.min.css'
+
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
+  exclude_codeblock: true
+  awl: 2
+  wpm: 275
+  suffix: "mins."
 
 markdown:
   render: # 渲染器设置

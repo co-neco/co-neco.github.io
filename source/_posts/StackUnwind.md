@@ -8,9 +8,6 @@ tags:
  - StackUnwind
 ---
 
-{% meting "5461446138" "netease" "playlist" %}
-{% asset_img renkenn.jpg %}
-
 ## StackWalk64(32位程序)栈回溯原理
 
 ### 1 目标
