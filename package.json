@@ -29,5 +29,8 @@
     "hexo-tag-aplayer": "^3.0.4",
     "hexo-theme-landscape": "^0.0.3",
     "valine": "^1.4.14"
+  },
+  "devDependencies": {
+    "increase-memory-limit": "^1.0.7"
   }
 }
