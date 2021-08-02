@@ -7,8 +7,6 @@ date: 2021-08-01 18:07:31
 tags:
 ---
 
-{% meting "5461446138" "netease" "playlist" %}
-
 这里浅谈一下VMP、Safengine和Themida的反虚拟机的分析过程，关于反调试下面会说下值得注意的地方。
 
 VMP的反调试请参考https://bbs.pediy.com/thread-226455.htm，Safengine和Themida的反调试与VMP差不多。
