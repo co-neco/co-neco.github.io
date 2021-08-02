@@ -6,7 +6,8 @@
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "server": "hexo server"
+    "server": "hexo server",
+    "fix-memroy-limit": "cross-env LIMIT=4096 increase-memory-limit"
   },
   "hexo": {
     "version": "5.3.0"
@@ -31,6 +32,7 @@
     "valine": "^1.4.14"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "increase-memory-limit": "^1.0.7"
   }
 }
