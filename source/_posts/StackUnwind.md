@@ -22,7 +22,7 @@ StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWal
 
 ### 3 概要流程
 
-{% asset_img 栈回溯大致流程.png %}
+![](栈回溯大致流程.jpg)
 
 栈回溯使用StackWalk64函数，根据有无符号文件，会分别处理。无论有无符号，都会判断是否是回溯第一层栈。
 
@@ -30,7 +30,7 @@ StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWal
 
 ### 4 细节流程
 
-![](栈回溯细节流程.png)
+![](栈回溯细节流程.jpg)
 
 DoDbhUnwind为栈回溯的真正起点，由StackWalk64到DoDbhUnwind的过程都可理解为包装。
 
@@ -89,7 +89,7 @@ BOOL DbsX86StackUnwinder::UnwindInternalContextUsingEbp(){
 
 #### 4.2 第二层栈回溯（无符号）
 
-![](第二层栈回溯.png)
+![](第二层栈回溯.jpg)
 
 从第二层栈回溯开始，都需要走这样的流程。
 
