@@ -15,15 +15,15 @@ VMP的反调试请参考https://bbs.pediy.com/thread-226455.htm，Safengine和Th
 
 > 关于64bit程序，反调试和反虚拟机都更简单。其中反调试只包含IsDebuggerPresent、NtGlobalFlag、CheckRemoteDebuggerPresent。不过需注意的是程序在OEP后，IsDebuggerPresent之前保存NtGlobalFlag标志，在IsDebuggerPresent之后同时检测BeingDebugged和NtGlobalFlag标志，最后调用CheckRemoteDebuggerPresent。反虚拟机则只有注册表检测，没有in指令检测，因此只需修改注册表，就可在虚拟机运行。
 
-### 1 反调试
+### 反调试
 
-#### 1.1 VMP反调试
+#### VMP反调试
 
   VMP的某些版本有tls保护，该tls用于检测调试器，具体方法不明。目前排除了tls对软件断点、硬件断点、SEH、NtGlobalFlag、BeingDebugged、Heap结构的ForceFlags和Flags检测，包括堆中的调试记号（0xbababa,badf00d等）。虽然不明检测方法，但要过掉还是挺简单的，直接跳过该tls。跳过的步骤是用调试器启动程序，在加载ntdll后，把TLS的DataDirectory清零，让系统读不到tls callback，当走到OEP时，再还原。当然，如果程序没有文件完整性检测，可以直接修改文件中TLS的DataDirectory项。
 
-### 2 反虚拟机
+### 反虚拟机
 
-#### 2.1 VMP反虚拟机
+#### VMP反虚拟机
 
   从结果来说，VMP反虚拟机只使用了一个方法，特殊指令，该特殊指令是cpuid。检测原理是赋eax为1，执行cpuid后，如果ecx的31st位为0，表示真机，否则为虚拟机。
 
@@ -71,7 +71,7 @@ handler      <===============具体执行内容
 
   一般执行cpuid时，ecx的31st位为0，所以cpuid直接用两个nop替换即可。
 
-#### 2.2 Safengine反虚拟机
+#### Safengine反虚拟机
 
 使用in指令和RegQueryValueExA检查SystemManufacturer(在注册表里)，in指令的原理请参考https://bbs.pediy.com/thread-225735.htm。这里说下如何定位in指令和过掉。
 
@@ -81,9 +81,9 @@ in指令在真机中会产生0xC0000096异常，而在虚拟机中不会产生�
 
 稍微了解了in指令后，现在说明两个过掉方法。一是换成int3，二是重设eip。关于一，in和int3指令只占用一个字节，且int3也可产生异常，因此非常合适。但不排除程序的SEH会检测该异常的ExceptionCode，如果是这样，那就用第二种方法。关于二，调试程序，走到in指令后（下硬件断点），手动给eip赋值，该值是SEH里指定的值。
 
-#### 2.3 Themida反虚拟机
+#### Themida反虚拟机
 
-##### 2.3.1 检测方法
+##### 检测方法
 
 -  注册表检测
 
@@ -101,7 +101,7 @@ in指令在真机中会产生0xC0000096异常，而在虚拟机中不会产生�
   - ecx为0x14时，VMware® Workstation 14 Pro返回的eax为0x800，在真机中会跳到SEH，将eax赋值为0
   - ecx为0xA时，虚拟机中的ebx为 'VMXh'，在真机中进入SEH，并在SEH中直接修改eip跳转
 
-##### 2.3.2 in指令定位过程
+##### in指令定位过程
 
 - 检测相关函数
 
@@ -205,7 +205,7 @@ in指令在真机中会产生0xC0000096异常，而在虚拟机中不会产生�
 
  
 
-##### 2.3.3 Themida反虚拟机需注意的点
+##### Themida反虚拟机需注意的点
 
 - 真机和虚拟机中都会解密“Sorry, this application cannot run under a Virtual Machine”这段文字，所以不能跟踪这段文字来找到in特殊指令。另外Themida使用MessageBoxExA(不管程序是否使用Unicode)输出错误信息。
 

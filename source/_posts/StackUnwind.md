@@ -10,17 +10,17 @@ tags:
 
 ## StackWalk64(32位程序)栈回溯原理
 
-### 1 目标
+### 目标
 
 StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWalk如何回溯32位程序的栈
 
 > 注：本次分析集中于无符号信息，有符号信息的情况将略讲。
 
-### 2 环境
+### 环境
 
 本次分析以dbghelp.dll,版本为10.0.18362.1139 (WinBuild.160101.0800)。
 
-### 3 概要流程
+### 概要流程
 
 ![](栈回溯大致流程.jpg)
 
@@ -28,7 +28,7 @@ StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWal
 
 因为一般情况下没有符号文件， 所以这里只重点分析无符号文件的情况，并在合适的时机提出有符号文件的处理流程。
 
-### 4 细节流程
+### 细节流程
 
 ![](栈回溯细节流程.jpg)
 
@@ -42,7 +42,7 @@ DoDbhUnwind为栈回溯的真正起点，由StackWalk64到DoDbhUnwind的过程�
   - 第一层：调用UnwindInternalContextUsingEbp，读取ebp的值返回上一层的ebp和eip
   - 第二层或以上：调用UnwindUsingPrologueSummary，解析栈
 
-#### 4.1 第一层栈回溯（无符号）
+#### 第一层栈回溯（无符号）
 
 ```c++
 0:000> k
@@ -87,7 +87,7 @@ BOOL DbsX86StackUnwinder::UnwindInternalContextUsingEbp(){
 
 > 注：本例只分析ebp回溯的情况，esp回溯的情况（等下周填充）
 
-#### 4.2 第二层栈回溯（无符号）
+#### 第二层栈回溯（无符号）
 
 ![](第二层栈回溯.jpg)
 
@@ -102,7 +102,7 @@ SearchForReturnAddress获取ebp和eip是通过评定分数来确认的，分数�
 
 > 注：前三次base ebp不变，只是传给ComputeScoreForReturnAddress的其中一个参数会变（根据这个参数，获取的分数会不一样）
 
-#### 4.3 获取分数的算法
+#### 获取分数的算法
 
 - 上层通过call imm16/imm32（E8 xxxx/E8 xxxxxxxx），根据ComputeScoreForReturnAddress的参数(通常最高为0x9000)
 - 上层通过call reg16/reg32(FF xx)，根据ComputeScoreForReturnAddress的参数，获取分数（通常最高为0xA000）
@@ -113,14 +113,14 @@ SearchForReturnAddress获取ebp和eip是通过评定分数来确认的，分数�
 > - 如果以上三种情况都不是，那base ebp将持续加4，继续寻找。这样的结果就是跳过调用栈中不规则的调用层。
 > - 算法的详细讲解请参考第五节。
 
-#### 4.4 被忽略的不规则调用层
+#### 被忽略的不规则调用层
 
 - jmp指令，jmp指令是0xEB or 0xE9 or 0xFF25，所以会被跳过
 - 通过esp调节堆栈的函数（如果没有符号文件）
 
-### 5 细节讲解
+### 细节讲解
 
-#### 5.1 **DbsStackUnwinder::DoDbhUnwind函数**
+#### **DbsStackUnwinder::DoDbhUnwind函数**
 
 DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代表回溯完一层栈。
 
@@ -165,19 +165,19 @@ DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代�
 
   在回溯第二层栈时(Round1)，会像Round0一样先从函数A的ebp获取函数A的返回地址（UnwindInternalContextUsingEbp）。又因为只有nonFirstFlag为FALSE时，才会走UnwindInternalContextUsingEbp分支，所以ImportPreviousFrameSummary的其中一个作用就是在第二层栈回溯中，第一次调用UnwindAndUpdateInternalContext时，将nonFirstFlag置为FALSE（注意在第二层或之后的栈回溯，nonFirstFlag都为TRUE）。第二次调用UnwindAndUpdateInternalContext之前，nonFirstFlag会被恢复为TRUE。
 
-#### 5.2 UnwindAndUpdateInternalContext
+#### UnwindAndUpdateInternalContext
 
 回顾第四节的细节流程图，该函数是栈回溯真正功能的起始点。首先执行完初始化之后，会调用UnwindInternalContextUsingDiaFrame，去寻找返回地址（从context.ebp+4地址处获取）的符号文件，如果找到，则直接通过符号文件回溯栈，然后直接从UnwindAndUpdateInternalContext返回，完成该轮的栈回溯。如果没找到，则UnwindInternalContextUsingDiaFrame返回错误0x80004002，之后做无符号的栈回溯（通过ebp），如下图：
 
 ![](DoUnwindUsingInternalContext.png)
 
-#### 5.3 UnwindUsingPrologueSummary
+#### UnwindUsingPrologueSummary
 
 回顾4.2节的第二层栈回溯流程图，该函数先调用CollectFullFunctionInformation和FindStackStateOnFunctionEntry获取一些函数状态信息，之后调用SearchForReturnAddress，通过windows自定义的算法去寻找真正符合要求的返回地址。之后再调用SearchForFramePointer寻找framePointer(帧指针)，不过这个过程往往是直接从ebp读取出新的ebp。
 
 找到ebp和eip之后，将其保存到DbhStackServices类的0x388和0x38C偏移处。到这里，UnwindAndUpdateInternalContext就结束返回了，最后将DbhStackServices类获取到的eip交给STACKFRAME64结构体（StackWalk64提供的参数）。
 
-#### 5.4 ComputeScoreForReturnAddress(获取分数的算法细节)
+#### ComputeScoreForReturnAddress(获取分数的算法细节)
 
 ```c++
 // psudo code
@@ -271,7 +271,7 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
 
 ### 附录：
 
-#### 1 实验：StackWalk64返回的CONTEXT（上下文）
+#### 实验：StackWalk64返回的CONTEXT（上下文）
   - 1.StackWalk64原型（[详情可参考MSDN](https://docs.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-stackwalk64)）：
 
     ```c++
