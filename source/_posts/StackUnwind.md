@@ -44,7 +44,7 @@ DoDbhUnwind为栈回溯的真正起点，由StackWalk64到DoDbhUnwind的过程�
 
 #### 第一层栈回溯（无符号）
 
-```c++
+``` c
 0:000> k
  # ChildEBP RetAddr  
 00 0019e98c 72f92d16 dbghelp!DbsX86StackUnwinder::UnwindInternalContextUsingEbp
@@ -68,7 +68,7 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 
 该函数实现如下：
 
-```c++
+```c
 BOOL DbsX86StackUnwinder::UnwindInternalContextUsingEbp(){
     BOOL result;
     
@@ -179,7 +179,7 @@ DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代�
 
 #### ComputeScoreForReturnAddress(获取分数的算法细节)
 
-```c++
+```c
 // psudo code
 int DbsX86HeuristicTool::SearchForReturnAddress(DWORD ebp){
     
@@ -274,7 +274,7 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
 #### 实验：StackWalk64返回的CONTEXT（上下文）
   - 1.StackWalk64原型（[详情可参考MSDN](https://docs.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-stackwalk64)）：
 
-    ```c++
+    ```c
     BOOL IMAGEAPI StackWalk64(
       DWORD                            MachineType,
       HANDLE                           hProcess,
@@ -292,7 +292,7 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
 
   - 2.StackWalk64的使用：
 
-    ```c++
+    ```c
     #define GET_CURRENT_THREAD_CONTEXT(c, contextFlags) \
       do                                                              \
       {                                                               \
@@ -345,7 +345,7 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
 
     - 当前的栈（由windbg打印）
 
-      ```c++
+      ```c
       ...
       0b 00daefa4 00a4e4c5 dbghelp!StackWalk64+0x89
       0c 00daf640 00a69ef3 cpp_test_ano+0xfe4c5     //函数A
@@ -359,7 +359,7 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
       
     - 程序输出结果
 
-      ```c++
+      ```c
       // 为执行StackWalk64的初始值如下
       // context ebp: daf640
       // context eip: a4e34d

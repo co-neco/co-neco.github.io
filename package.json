@@ -6,8 +6,7 @@
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "server": "hexo server",
-    "fix-memroy-limit": "cross-env LIMIT=4096 increase-memory-limit"
+    "server": "hexo server"
   },
   "hexo": {
     "version": "5.3.0"
@@ -16,6 +15,7 @@
     "hexo": "^5.0.0",
     "hexo-algoliasearch": "^1.0.0",
     "hexo-autoprefixer": "^2.0.0",
+    "hexo-deployer-git": "^3.0.0",
     "hexo-feed": "^1.1.0",
     "hexo-generator-archive": "^1.0.0",
     "hexo-generator-category": "^1.0.0",
@@ -29,10 +29,8 @@
     "hexo-symbols-count-time": "^0.7.1",
     "hexo-tag-aplayer": "^3.0.4",
     "hexo-theme-landscape": "^0.0.3",
+    "hexo-util": "^2.5.0",
+    "remark-pangu": "^2.2.0",
     "valine": "^1.4.14"
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3",
-    "increase-memory-limit": "^1.0.7"
   }
 }

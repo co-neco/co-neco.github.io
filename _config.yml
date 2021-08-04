@@ -46,16 +46,16 @@ relative_link: false
 future: true
 highlight:
   enable: false
-  # line_number: true
-  # auto_detect: true
-  # tab_replace: ''
-  # wrap: true
-  # hljs: false
+  line_number: true
+  auto_detect: true
+  tab_replace: ''
+  wrap: true
+  hljs: false
 prismjs:
   enable: false
-  # preprocess: true
-  # line_number: true
-  # tab_replace: ''
+  preprocess: true
+  line_number: true
+  tab_replace: ''
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -105,11 +105,11 @@ theme: shoka
 deploy:
   type: ''
 
-search:
-  path: search.xml
-  field: post
-  format: html
-  limit: 10000
+# search:
+#   path: search.xml
+#   field: post
+#   format: html
+#   limit: 10000
 
 ## configuration for shoka =================================
 # edit for Theme.shoka
