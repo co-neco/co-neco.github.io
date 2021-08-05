@@ -62,9 +62,9 @@ tags:
 
 - 在该命令的最后添加：x86(architecture/架构) -vcvars_ver=14.25(不是14.25.xxxxx)，添加后如下：
 
-  - ```bash
-    %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat" x86 -vcvars_ver=14.25
-    ```
+  ```bash
+  %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat" x86 -vcvars_ver=14.25
+  ```
 
 ### 参考
 
