@@ -53,7 +53,7 @@ tags:
 
 ### EXE编译时采用MD运行时库
 
-不管EXE依赖的其他库是静态库还是动态库，它们都必须采用MD来编译。这种情况下编译出来的EXE和DLL（或EXE和LIB）都依赖MD运行时库（即VCRUNTIMExx.dll和MSVCPxx.dll）。因为都依赖MD运行时库，所以EXE和DLL（或EXE和LIB）用的是同一套运行时库。
+不管EXE依赖的其他库是静态库还是动态库，它们都必须采用MD来编译。这种情况下编译出来的EXE和DLL（或EXE和LIB）都依赖MD运行时库（即VCRUNTIMExx.dll、MSVCPxx.dll、ucrtbase.dll）。因为都依赖MD运行时库，所以EXE和DLL（或EXE和LIB）用的是同一套运行时库。
 
 ### EXE依赖DLL，EXE和DLL都采用MT时可能会遇到的错误
 
