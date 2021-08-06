@@ -5,7 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: 当前文件",
+            "name": "add_hyphen_for_image_url.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "E:\\github\\co-neco.github.io\\source\\_data"
+            ]
+        },
+        {
+            "name": "parse_bilibili_imgs.py",
             "type": "python",
             "request": "launch",
             "program": "${file}",
