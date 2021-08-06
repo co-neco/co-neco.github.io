@@ -14,13 +14,11 @@ tags:
 
 ### VS Runtime(运行时)库的介绍
 
-在VS编译程序时，我们指定了入口函数。但这不是真正的入口函数，MSVC会提供真正的入口函数，对应关系举例如下：
+运行时库提供了很多变量（包括常量），还有很多类函数，比如字符串处理、输入与输出等。它们可以被静态编译到可执行文件（EXE或DLL），也可以被动态加载。
 
-- main -> mainCRTStartup
-- winMain -> _WinMainCRTStartup
-- DllMain -> _DllMainCRTStartup
+详细的说明可参考[C runtime library (CRT) reference - Microsoft Docs](https://docs.microsoft.com/en-us/cpp/c-runtime-library/c-run-time-library-reference)。关于用到的库可参考[C runtime (CRT) and C++ Standard Library (STL) `.lib` files](https://docs.microsoft.com/en-us/cpp/c-runtime-library/crt-library-features?view=msvc-160)。
 
-我们可以暂且将mainCRTStartup到main之间的代码理解为VS编译时插入的运行时库。
+本文重点阐述运行时库在MT和MD之间的区别。
 
 ### 运行时库的区别
 
@@ -111,7 +109,7 @@ __acrt_first_block == header
 
    运行时库管理堆时，有三个比较重要的变量
 
-    - __acrt_heap，都使用进程默认堆
+    - __acrt_heap，都指向进程默认堆
     - __acrt_first_block指向最新被分配的堆块（初始值为nullptr）
     - __acrt_last_block指向最久被分配的堆块（初始值为nullptr）
 
@@ -140,4 +138,32 @@ __acrt_first_block == header
    观察上一节的代码，因为DLL返回的str字符串在EXE的代码空间里（领空）被释放，所以EXE的运行时库会去检查字符串的堆块是否与EXE运行时库的\_\_acrt_first_block相等。但由于这个堆块是DLL的运行时库分配的，所以该堆块与DLL运行时库的\_\_acrt_first_block相等，与EXE运行时库的\_\_acrt_first_block不相等。
    
    如果出现不相等的情况，在Debug模式会弹出对话框，这就是上一节出现错误的原因。由于Release版本去掉了断言，所以之后可能会产生更严重的后果，因为两个运行时库的堆管理出现了交叉。
+
+### 解决方法
+
+根据前两节的描述，问题在于一个运行时库分配堆块，另一个运行时库释放堆块。那么解决的方法就是在传递参数或返回参数时，通过指针或引用的方式，直接传递，防止中间的类复制（调用复制构造函数）。
+
+### 一个应用存在多个运行时库存在的问题
+
+在MSDN发现了很值得一读的一节，这里直接献上原汁原味的原文：
+
+{% blockquote MSDN https://docs.microsoft.com/en-us/cpp/c-runtime-library/crt-library-features?view=msvc-160 C runtime (CRT) and C++ Standard Library %}
+
+Every executable image (EXE or DLL) can have its own statically linked CRT, or can dynamically link to a CRT. The version of the CRT statically included in or dynamically loaded by a particular image depends on the version of the tools and libraries it was built with. A single process may load multiple EXE and DLL images, each with its own CRT. Each of those CRTs may use a different allocator, may have different internal structure layouts, and may use different storage arrangements. This means allocated memory, CRT resources, or classes passed across a DLL boundary can cause problems in memory management, internal static usage, or layout interpretation. For example, if a class is allocated in one DLL but passed to and deleted by another, which CRT deallocator is used? The errors caused can range from the subtle to the immediately fatal, and therefore direct transfer of such resources is strongly discouraged.
+
+
+
+You can avoid many of these issues by using Application Binary Interface (ABI) technologies instead, as they are designed to be stable and versionable. Design your DLL export interfaces to pass information by value, or to work on memory that is passed in by the caller rather than allocated locally and returned to the caller. Use marshaling techniques to copy structured data between executable images. Encapsulate resources locally and only allow manipulation through handles or functions you expose to clients.
+
+
+
+It's also possible to avoid some of these issues if all of the images in your process use the same dynamically loaded version of the CRT. To ensure that all components use the same DLL version of the CRT, build them by using the **`/MD`** option, and use the same compiler toolset and property settings.
+
+Be careful if your program passes certain CRT resources across DLL boundaries. Resources such as file handles, locales, and environment variables can cause problems, even when using the same version of the CRT. For more information on the issues involved and how to resolve them, see [Potential Errors Passing CRT Objects Across DLL Boundaries](https://docs.microsoft.com/en-us/cpp/c-runtime-library/potential-errors-passing-crt-objects-across-dll-boundaries?view=msvc-160).
+
+{% endblockquote %}
+
+### 参考
+
+- [C runtime (CRT) and C++ Standard Library (STL) .lib files](https://docs.microsoft.com/en-us/cpp/c-runtime-library/crt-library-features?view=msvc-160)
 
