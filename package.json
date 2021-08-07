@@ -32,5 +32,8 @@
     "hexo-util": "^2.5.0",
     "remark-pangu": "^2.2.0",
     "valine": "^1.4.14"
+  },
+  "devDependencies": {
+    "hexo-cli": "^4.3.0"
   }
 }

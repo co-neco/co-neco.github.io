@@ -1,4 +1,6 @@
 import sys
+import os
+
 
 def read_file(file_path):
     f = open(file_path, "rb")
@@ -7,11 +9,12 @@ def read_file(file_path):
     return content
 
 
-def add_hyphen(image_content):
+def add_hyphen(file, image_content, day):
     image_list = image_content.split('\r\n')
-    image_hyphen_content = ""
+    image_hyphen_content = "# " + file + "\r\n"
     for image in image_list:
-        image_hyphen_content += "- " + image + "\r\n"
+        image_hyphen_content += "- " + str(day) + image + "\r\n"
+    image_hyphen_content += "\r\n"
     return image_hyphen_content
 
 
@@ -22,9 +25,14 @@ def write_file(image_yml_file_path, image_content):
 
 
 def main(image_host_data_path):
-    image_content = read_file(image_host_data_path + "\\image_host\\aokana.txt")
-    image_content = add_hyphen(image_content)
-    write_file(image_host_data_path + "\\images.yml", image_content)
+    image_host_walk = os.walk(image_host_data_path + "\\image_host")
+    for root, directories, files in image_host_walk:
+        day = 1
+        for file in files:
+            image_content = read_file(root + "\\" + file)
+            image_content = add_hyphen(file, image_content, day)
+            write_file(image_host_data_path + "\\images.yml", image_content)
+            day += 1
 
 
 def usage():
