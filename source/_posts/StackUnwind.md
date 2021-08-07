@@ -22,7 +22,7 @@ StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWal
 
 ### 概要流程
 
-![](栈回溯大致流程.jpg)
+![栈回溯大致流程](https://gitee.com/co-neco/pic_bed/raw/master/typora/%E6%A0%88%E5%9B%9E%E6%BA%AF%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B.jpg)
 
 栈回溯使用StackWalk64函数，根据有无符号文件，会分别处理。无论有无符号，都会判断是否是回溯第一层栈。
 
@@ -30,7 +30,7 @@ StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWal
 
 ### 细节流程
 
-![](栈回溯细节流程.jpg)
+![](https://gitee.com/co-neco/pic_bed/raw/master/typora/%E6%A0%88%E5%9B%9E%E6%BA%AF%E7%BB%86%E8%8A%82%E6%B5%81%E7%A8%8B.jpg)
 
 DoDbhUnwind为栈回溯的真正起点，由StackWalk64到DoDbhUnwind的过程都可理解为包装。
 
@@ -89,7 +89,7 @@ BOOL DbsX86StackUnwinder::UnwindInternalContextUsingEbp(){
 
 #### 第二层栈回溯（无符号）
 
-![](第二层栈回溯.jpg)
+![](https://gitee.com/co-neco/pic_bed/raw/master/typora/%E7%AC%AC%E4%BA%8C%E5%B1%82%E6%A0%88%E5%9B%9E%E6%BA%AF.jpg)
 
 从第二层栈回溯开始，都需要走这样的流程。
 
@@ -124,7 +124,7 @@ SearchForReturnAddress获取ebp和eip是通过评定分数来确认的，分数�
 
 DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代表回溯完一层栈。
 
-![](DoDbhUnwind.png)
+![](https://gitee.com/co-neco/pic_bed/raw/master/typora/DoDbhUnwind.png)
 
 上图为DoDbhUnwind的大致流程，重点如下：
 
@@ -135,7 +135,7 @@ DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代�
 
   根据4.1节和4.2节的描述，我们知道第一层栈回溯是通过UnwindInternalContextUsingEbp实现的，第二层或之后的栈回溯是通过UnwindUsingPrologueSummary实现的，选择执行哪条分支是通过nonFirstStackFlag来判断的，如下图：
 
-  ![](nonFirstStackFlag.png)
+  ![](https://gitee.com/co-neco/pic_bed/raw/master/typora/nonFirstStackFlag.png)
 
   > 注：第二层或以上，为何要调用两次UnwindAndUpdateInternalContext将在之后下一小节讲解。
 
@@ -155,7 +155,7 @@ DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代�
 
   根据逆向分析结果，再补充以下结论：
 
-  ![](回溯方法相同.png)
+  ![](https://gitee.com/co-neco/pic_bed/raw/master/typora/%E5%9B%9E%E6%BA%AF%E6%96%B9%E6%B3%95%E7%9B%B8%E5%90%8C.png)
 
   - Round1由FuncB到FuncC的回溯与Round2由FuncB到FuncC的回溯是一样的
 
@@ -169,7 +169,7 @@ DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代�
 
 回顾第四节的细节流程图，该函数是栈回溯真正功能的起始点。首先执行完初始化之后，会调用UnwindInternalContextUsingDiaFrame，去寻找返回地址（从context.ebp+4地址处获取）的符号文件，如果找到，则直接通过符号文件回溯栈，然后直接从UnwindAndUpdateInternalContext返回，完成该轮的栈回溯。如果没找到，则UnwindInternalContextUsingDiaFrame返回错误0x80004002，之后做无符号的栈回溯（通过ebp），如下图：
 
-![](DoUnwindUsingInternalContext.png)
+![](https://gitee.com/co-neco/pic_bed/raw/master/typora/DoUnwindUsingInternalContext.png)
 
 #### UnwindUsingPrologueSummary
 

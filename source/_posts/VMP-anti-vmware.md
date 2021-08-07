@@ -29,7 +29,7 @@ VMP的反调试请参考https://bbs.pediy.com/thread-226455.htm，Safengine和Th
 
   从分析过程来说，主要分为3步。 一是分析虚拟机框架，二是逐步接近特殊指令，三是定位特殊指令，如下图：
 
-![img](clip_image001.png)
+![img](https://gitee.com/co-neco/pic_bed/raw/master/typora/clip_image001.png)
 
 - 虚拟机框架：
 
@@ -51,7 +51,7 @@ handler      //具体执行内容
 
 其中值得注意的是字节码的表示，esi和edx轮换表示字节码的当前获取地址，这些地址是一段一段的，且可以重复利用，如下图：
 
-![img](clip_image004.png)
+![img](https://gitee.com/co-neco/pic_bed/raw/master/typora/clip_image004.png)
 
 - 逐步接近特殊指令：
 
