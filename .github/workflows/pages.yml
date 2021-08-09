@@ -3,9 +3,9 @@ name: Pages
 on:
   schedule: 
     - cron: '*/2 * * * *'
-  # push:
-  #   branches:
-  #     - source  # default branch
+  push:
+    branches:
+      - source  # default branch
 
 jobs:
   pages:
