@@ -3,7 +3,7 @@ name: Pages
 on:
   schedule: 
     - cron: '0 1 * * *'
-  # push:
+  push:
   #   branches:
   #     - source  # default branch
 
