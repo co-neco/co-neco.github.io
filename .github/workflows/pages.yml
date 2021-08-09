@@ -2,7 +2,7 @@ name: Pages
 
 on:
   schedule: 
-    - cron: '*/2 * * * *'
+    - cron: '* * * * *'
   # push:
   #   branches:
   #     - source  # default branch
