@@ -104,6 +104,10 @@ theme: shoka
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+  # type: git
+  # repository:
+  #   github: 'git@github.com:co-neco/co-neco.github.io.git'
+  # branch: master
 
 # search:
 #   path: search.xml
