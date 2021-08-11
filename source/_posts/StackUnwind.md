@@ -8,13 +8,16 @@ tags:
  - StackUnwind
 ---
 
-## StackWalk64(32位程序)栈回溯原理
+## StackWalk64(32位)栈回溯原理
 
 ### 目标
 
 StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWalk如何回溯32位程序的栈
 
-> 注：本次分析集中于无符号信息，有符号信息的情况将略讲。
+> 注：
+>
+> - 本次分析集中于无符号文件，有符号信息的情况将略讲
+> - 64位的栈回溯主要依赖程序的Exception Directory数据节，所以相对32位，64位在栈回溯上不用考虑无符号文件(pdb)的问题，因此也不会出现类似32位的问题，比如跳过某一层的函数（在32位无符号文件的情况下）。
 
 ### 环境
 
@@ -120,7 +123,7 @@ SearchForReturnAddress获取ebp和eip是通过评定分数来确认的，分数�
 
 ### 细节讲解
 
-#### **DbsStackUnwinder::DoDbhUnwind函数**
+#### DbsStackUnwinder::DoDbhUnwind函数
 
 DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代表回溯完一层栈。
 
@@ -128,7 +131,7 @@ DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代�
 
 上图为DoDbhUnwind的大致流程，重点如下：
 
-- nonFirstStackFlag(***(_DWORD *)(a2 + 0x7C)**)的含义：
+- nonFirstStackFlag(**\*(DWORD \*)(a2 + 0x7C)**)的含义：
 
   - 第一层栈时，该字段为0，只执行105行的UnwindAndUpdateInternalContext，回溯一次
   - 第二层或以上时，该字段为1，执行78行和105行的UnwindAndUpdateInternalContext，回溯两次
@@ -265,7 +268,22 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
 }
 ```
 
+#### winXP和win10的dbghelp.dll在栈回溯的细微区别
 
+如果在栈回溯时，遇到返回地址不属于任何模块的情况（比如执行的是一段shellcode），winXP和win10的行为如下：
+
+- win10：win10会判断一个标志位是否为0，如果为0，则忽略返回地址，ebp继续加4，然后读取ebp指向的内容，继续解析下一个（参考上一节的算法细节）；如果为1，则继续解析该返回地址，即强制认为这个地址是有效的。
+
+  > 注：这个标志位在DbsX86StackUnwinder类的构造函数被置为1(写死的)，初始化路径为StackWalk64->StackWalkEx->DoUnwindStackFrameUsingServices->New_DbsStackUnwinderhan->DbsX86StackUnwinder。
+
+- winXP：winXP直接视该返回地址无效，ebp继续加4，继续解析下一个。
+
+#### Debug版和Release版程序在栈回溯的区别
+
+debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方便栈溢出的检测，而release版本没有。这个区别导致栈回溯会出现以下区别：
+
+- Debug版：因为栈多出了很多0xCC，所以在寻找正确的返回地址时，可能会达到循环次数的上限，导致栈回溯找不到正确的返回地址，这种情况下，dbghelp（winXP和win10一样）会视最初的ebp+4指向的内容为返回地址，即使该返回地址是无效的。
+- Release版：因为栈排布很紧密，所以基本上不存在上述问题。
 
 
 
@@ -325,8 +343,8 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
     	std::cout << "context ebp: " << std::hex << context.Ebp << "\n";
     	std::cout << "context eip: " << std::hex << context.Eip << "\n";
     #elif defined(_M_AMD64)
-    	std::cout << "context ebp: " << std::hex << context.Rbp << "\n";
-    	std::cout << "context eip: " << std::hex << context.Rip << "\n";
+    	std::cout << "context rbp: " << std::hex << context.Rbp << "\n";
+    	std::cout << "context rip: " << std::hex << context.Rip << "\n";
     #endif
     	std::cout << "Frame ebp: " << std::hex << frame64.AddrFrame.Offset << "\n";
     	std::cout << "Frame eip: " << std::hex << frame64.AddrReturn.Offset << "\n\n\n";
