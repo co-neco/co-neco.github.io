@@ -435,3 +435,14 @@ debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方�
       > 注：context的ebp和eip对应的是函数B，并不是函数C。与下次要获取的函数D差两层
     
     观察之后的层数，其结果与Round1一样。**context的ebp和eip对应的函数与下一次要回溯的函数差两层**。
+
+### 总结
+
+- 本来由来：在栈回溯时，发现release版本的栈回溯会跳过一层函数，这层函数是jmp XXXXXXXX。为了明确何时会跳过函数，所以做了一系列分析，于是有了这篇文章。
+
+- winXP和win10在栈回溯的差异不大，大致流程基本一样（函数的封装有所变化，比如win10的DbsStackUnwinder::DoDbhUnwind函数在winXP是DbsStackUnwinder::DbhUnwind）。因此win7、win8各位也可以类推，找到其栈回溯的大致流程。
+
+- 在栈回溯时，有符号与无符号的执行流程是有差别的。有符号的情况下，UnwindInternalContextUsingDiaFrame(win10下)会读取符号，解析符号，直接返回。如果要分析有符号的情况，各位重点查看这个函数即可（winXP下是DbsX86StackUnwinder::ApplyUnwindInfo）。
+- 关于ComputeScoreForReturnAddress的算法，这里简化了参数验证等无关代码，流程上也做了简化。同时这里省略了一些不重要的细节，比如检验是否是热更新代码；检验call [addr A]的情况下，call的地址和addr A是否属于同一个模块。类似这些都属于常规检测，在栈回溯时情况基本相同，可暂时忽略。
+
+- 64位栈回溯在无符号的情况下，会根据Exception Directory数据节的函数信息进行回溯。在分析winXP时，发现dbghelp.dll会缓存一份Exception Directory数据节进行分析，所以对分析模块的Exception Directory数据节下硬件断点，可能端不下来，找不到dbghelp.dll回溯的代码。虽然64位的分析流程和32位完全不同，但主流程是一样的，都会调用\*Unwind函数，然后做一些基础检测，分析call、jmp这些基础操作。
