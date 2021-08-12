@@ -549,6 +549,24 @@
 &lt;p&gt;观察之后的层数，其结果与 Round1 一样。&lt;strong&gt;context 的 ebp 和 eip 对应的函数与下一次要回溯的函数差两层&lt;/strong&gt;。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;h3 id=&#34;总结&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#总结&#34;&gt;#&lt;/a&gt; 总结&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;本来由来：在栈回溯时，发现 release 版本的栈回溯会跳过一层函数，这层函数是 jmp XXXXXXXX。为了明确何时会跳过函数，所以做了一系列分析，于是有了这篇文章。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;winXP 和 win10 在栈回溯的差异不大，大致流程基本一样（函数的封装有所变化，比如 win10 的 DbsStackUnwinder::DoDbhUnwind 函数在 winXP 是 DbsStackUnwinder::DbhUnwind）。因此 win7、win8 各位也可以类推，找到其栈回溯的大致流程。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在栈回溯时，有符号与无符号的执行流程是有差别的。有符号的情况下，UnwindInternalContextUsingDiaFrame (win10 下) 会读取符号，解析符号，直接返回。如果要分析有符号的情况，各位重点查看这个函数即可（winXP 下是 DbsX86StackUnwinder::ApplyUnwindInfo）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;关于 ComputeScoreForReturnAddress 的算法，这里简化了参数验证等无关代码，流程上也做了简化。同时这里省略了一些不重要的细节，比如检验是否是热更新代码；检验 call [addr A] 的情况下，call 的地址和 addr A 是否属于同一个模块。类似这些都属于常规检测，在栈回溯时情况基本相同，可暂时忽略。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;64 位栈回溯在无符号的情况下，会根据 Exception Directory 数据节的函数信息进行回溯。在分析 winXP 时，发现 dbghelp.dll 会缓存一份 Exception Directory 数据节进行分析，所以对分析模块的 Exception Directory 数据节下硬件断点，可能端不下来，找不到 dbghelp.dll 回溯的代码。虽然 64 位的分析流程和 32 位完全不同，但主流程是一样的，都会调用 * Unwind 函数，然后做一些基础检测，分析 call、jmp 这些基础操作。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 </content>
         <category term="Technology" scheme="https://co-neco.github.io/categories/Technology/" />
         <category term="Reverse" scheme="https://co-neco.github.io/categories/Technology/Reverse/" />
