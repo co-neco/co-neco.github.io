@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://co-neco.github.io</id>
+    <id>https://co-neco.gitee.io/co-neco.github.io</id>
     <title>Coneco&#39;s diary</title>
     <subtitle></subtitle>
-    <icon>https://co-neco.github.io/images/favicon.ico</icon>
-    <link href="https://co-neco.github.io" />
+    <icon>https://co-neco.gitee.io/co-neco.github.io/images/favicon.ico</icon>
+    <link href="https://co-neco.gitee.io/co-neco.github.io" />
     <author>
       <name>coneco</name>
     </author>
@@ -13,9 +13,9 @@
     <category term=" music" />
     <category term=" galgame" />
     <entry>
-        <id>https://co-neco.github.io/Technology/Reverse/Mechnism-of-LFH/</id>
+        <id>https://co-neco.gitee.io/co-neco.github.io/Technology/Reverse/Mechnism-of-LFH/</id>
         <title>Mechnism_of_LFH</title>
-        <link rel="alternate" href="https://co-neco.github.io/Technology/Reverse/Mechnism-of-LFH/"/>
+        <link rel="alternate" href="https://co-neco.gitee.io/co-neco.github.io/Technology/Reverse/Mechnism-of-LFH/"/>
         <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h2 id=&#34;lfh原理解析&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#lfh原理解析&#34;&gt;#&lt;/a&gt; LFH 原理解析&lt;/h2&gt;
 &lt;p&gt;​		为了精确地利用堆相关的漏洞，了解操作系统的堆管理方式是极其有必要的。这篇文章重点想阐述的是，在 win7 的各种堆保护措施下，我们能实施哪些利用手段，获得 EIP 的控制权。&lt;/p&gt;
 &lt;p&gt;​		本篇文章将说明两种 Win7 下可能利用的方式：&lt;/p&gt;
@@ -227,18 +227,18 @@ _HEAP.FrontEndHeap.Buckets 数组的索引，如下：&lt;/p&gt;
 &lt;figure class=&#34;highlight c&#34;&gt;&lt;figcaption data-lang=&#34;c&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;nextChunk&lt;span class=&#34;token operator&#34;&gt;-&gt;&lt;/span&gt;Blink&lt;span class=&#34;token operator&#34;&gt;-&gt;&lt;/span&gt;Flink &lt;span class=&#34;token operator&#34;&gt;!=&lt;/span&gt; nextChunk&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;   &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; false&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;这样就可有效防止以上的问题了。&lt;/p&gt;
 &lt;p&gt;根据前面的分析，后端堆 “戒备森严”，而前端堆 “有机可乘”，只要根据前端堆的分配释放逻辑找利用点即可，因为没有任何相关的检查。&lt;/p&gt;
 </content>
-        <category term="Technology" scheme="https://co-neco.github.io/categories/Technology/" />
-        <category term="Reverse" scheme="https://co-neco.github.io/categories/Technology/Reverse/" />
-        <category term="LFH" scheme="https://co-neco.github.io/tags/LFH/" />
-        <category term="heap" scheme="https://co-neco.github.io/tags/heap/" />
-        <category term="vulnerability" scheme="https://co-neco.github.io/tags/vulnerability/" />
-        <category term="Win7" scheme="https://co-neco.github.io/tags/Win7/" />
+        <category term="Technology" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/" />
+        <category term="Reverse" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/Reverse/" />
+        <category term="LFH" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/LFH/" />
+        <category term="heap" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/heap/" />
+        <category term="vulnerability" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/vulnerability/" />
+        <category term="Win7" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/Win7/" />
         <updated>2021-08-18T12:29:18.000Z</updated>
     </entry>
     <entry>
-        <id>https://co-neco.github.io/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/</id>
+        <id>https://co-neco.gitee.io/co-neco.github.io/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/</id>
         <title>runtime运行时库在MT与MD之间的差别</title>
-        <link rel="alternate" href="https://co-neco.github.io/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/"/>
+        <link rel="alternate" href="https://co-neco.gitee.io/co-neco.github.io/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/"/>
         <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h3 id=&#34;vs-runtime运行时库的介绍&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#vs-runtime运行时库的介绍&#34;&gt;#&lt;/a&gt; VS Runtime (运行时) 库的介绍&lt;/h3&gt;
 &lt;p&gt;运行时库提供了很多变量（包括常量），还有很多类函数，比如字符串处理、输入与输出等。它们可以被静态编译到可执行文件（EXE 或 DLL），也可以被动态加载。&lt;/p&gt;
 &lt;p&gt;详细的说明可参考&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2MtcnVudGltZS1saWJyYXJ5L2MtcnVuLXRpbWUtbGlicmFyeS1yZWZlcmVuY2U=&#34;&gt; C runtime library (CRT) reference - Microsoft Docs&lt;/span&gt;。关于用到的库可参考&lt;a href=&#34;https://docs.microsoft.com/en-us/cpp/c-runtime-library/crt-library-features?view=msvc-160&#34;&gt; C runtime (CRT) and C++ Standard Library (STL)  &lt;code&gt;.lib&lt;/code&gt;  files&lt;/a&gt;。&lt;/p&gt;
@@ -342,19 +342,19 @@ _HEAP.FrontEndHeap.Buckets 数组的索引，如下：&lt;/p&gt;
 &lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2MtcnVudGltZS1saWJyYXJ5L2NydC1saWJyYXJ5LWZlYXR1cmVzP3ZpZXc9bXN2Yy0xNjA=&#34;&gt;C runtime (CRT) and C++ Standard Library (STL) .lib files&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
-        <category term="Technology" scheme="https://co-neco.github.io/categories/Technology/" />
-        <category term="Development" scheme="https://co-neco.github.io/categories/Technology/Development/" />
-        <category term="VS" scheme="https://co-neco.github.io/tags/VS/" />
-        <category term="MT" scheme="https://co-neco.github.io/tags/MT/" />
-        <category term="MD" scheme="https://co-neco.github.io/tags/MD/" />
-        <category term="Runtime" scheme="https://co-neco.github.io/tags/Runtime/" />
-        <category term="运行时" scheme="https://co-neco.github.io/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" />
+        <category term="Technology" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/" />
+        <category term="Development" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/Development/" />
+        <category term="VS" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/VS/" />
+        <category term="MT" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/MT/" />
+        <category term="MD" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/MD/" />
+        <category term="Runtime" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/Runtime/" />
+        <category term="运行时" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" />
         <updated>2021-08-05T12:54:42.000Z</updated>
     </entry>
     <entry>
-        <id>https://co-neco.github.io/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</id>
+        <id>https://co-neco.gitee.io/co-neco.github.io/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</id>
         <title>VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</title>
-        <link rel="alternate" href="https://co-neco.github.io/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/"/>
+        <link rel="alternate" href="https://co-neco.gitee.io/co-neco.github.io/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/"/>
         <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h3 id=&#34;本文产生的原因&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#本文产生的原因&#34;&gt;#&lt;/a&gt; 本文产生的原因&lt;/h3&gt;
 &lt;p&gt;最近在用 VS 2019 来编译兼容 WinXP 的程序时，发现高版本 (14.29.xxxxx) 的 MSVC 的 runtime 代码部分不兼容 winXP。之后使用低版本（14.25.xxxxx）的 MSVC 就可以运行在 winXP 上，所以本文的目的是记录整个问题的解决工程，方便其他朋友参考。&lt;/p&gt;
 &lt;blockquote&gt;
@@ -411,19 +411,19 @@ _HEAP.FrontEndHeap.Buckets 数组的索引，如下：&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 </content>
-        <category term="Technology" scheme="https://co-neco.github.io/categories/Technology/" />
-        <category term="Development" scheme="https://co-neco.github.io/categories/Technology/Development/" />
-        <category term="VS" scheme="https://co-neco.github.io/tags/VS/" />
-        <category term="Visual Studio" scheme="https://co-neco.github.io/tags/Visual-Studio/" />
-        <category term="MSVC" scheme="https://co-neco.github.io/tags/MSVC/" />
-        <category term="toolset" scheme="https://co-neco.github.io/tags/toolset/" />
-        <category term="工具集" scheme="https://co-neco.github.io/tags/%E5%B7%A5%E5%85%B7%E9%9B%86/" />
+        <category term="Technology" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/" />
+        <category term="Development" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/Development/" />
+        <category term="VS" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/VS/" />
+        <category term="Visual Studio" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/Visual-Studio/" />
+        <category term="MSVC" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/MSVC/" />
+        <category term="toolset" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/toolset/" />
+        <category term="工具集" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/%E5%B7%A5%E5%85%B7%E9%9B%86/" />
         <updated>2021-08-04T15:17:01.000Z</updated>
     </entry>
     <entry>
-        <id>https://co-neco.github.io/Technology/Reverse/VMP-anti-vmware/</id>
+        <id>https://co-neco.gitee.io/co-neco.github.io/Technology/Reverse/VMP-anti-vmware/</id>
         <title>浅谈VMP、SafeEngine、Themida反虚拟机</title>
-        <link rel="alternate" href="https://co-neco.github.io/Technology/Reverse/VMP-anti-vmware/"/>
+        <link rel="alternate" href="https://co-neco.gitee.io/co-neco.github.io/Technology/Reverse/VMP-anti-vmware/"/>
         <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;p&gt;这里浅谈一下 VMP、Safengine 和 Themida 的反虚拟机的分析过程，关于反调试下面会说下值得注意的地方。&lt;/p&gt;
 &lt;p&gt;VMP 的反调试请参考 https://bbs.pediy.com/thread-226455.htm，Safengine 和 Themida 的反调试与 VMP 差不多。&lt;/p&gt;
 &lt;p&gt;分析的 VMP 版本为 3.0.9，Themida 版本为 2.4.6.30，Safengine 不知道是什么版本了，程序是 32bit 。&lt;/p&gt;
@@ -581,14 +581,14 @@ _HEAP.FrontEndHeap.Buckets 数组的索引，如下：&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 </content>
-        <category term="Technology" scheme="https://co-neco.github.io/categories/Technology/" />
-        <category term="Reverse" scheme="https://co-neco.github.io/categories/Technology/Reverse/" />
+        <category term="Technology" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/" />
+        <category term="Reverse" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/Reverse/" />
         <updated>2021-08-01T10:07:31.000Z</updated>
     </entry>
     <entry>
-        <id>https://co-neco.github.io/Technology/Reverse/StackUnwind/</id>
+        <id>https://co-neco.gitee.io/co-neco.github.io/Technology/Reverse/StackUnwind/</id>
         <title>StackUnwind</title>
-        <link rel="alternate" href="https://co-neco.github.io/Technology/Reverse/StackUnwind/"/>
+        <link rel="alternate" href="https://co-neco.gitee.io/co-neco.github.io/Technology/Reverse/StackUnwind/"/>
         <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h2 id=&#34;stackwalk6432位栈回溯原理&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#stackwalk6432位栈回溯原理&#34;&gt;#&lt;/a&gt; StackWalk64 (32 位) 栈回溯原理&lt;/h2&gt;
 &lt;h3 id=&#34;目标&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#目标&#34;&gt;#&lt;/a&gt; 目标&lt;/h3&gt;
 &lt;p&gt;StackWalk64 是用于回溯栈的，32 位和 64 位皆可。本次目标为 StackWalk 如何回溯 32 位程序的栈&lt;/p&gt;
@@ -791,9 +791,9 @@ _HEAP.FrontEndHeap.Buckets 数组的索引，如下：&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 </content>
-        <category term="Technology" scheme="https://co-neco.github.io/categories/Technology/" />
-        <category term="Reverse" scheme="https://co-neco.github.io/categories/Technology/Reverse/" />
-        <category term="StackUnwind" scheme="https://co-neco.github.io/tags/StackUnwind/" />
+        <category term="Technology" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/" />
+        <category term="Reverse" scheme="https://co-neco.gitee.io/co-neco.github.io/categories/Technology/Reverse/" />
+        <category term="StackUnwind" scheme="https://co-neco.gitee.io/co-neco.github.io/tags/StackUnwind/" />
         <updated>2021-07-31T14:42:18.000Z</updated>
     </entry>
 </feed>
