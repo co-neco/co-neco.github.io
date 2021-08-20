@@ -571,8 +571,8 @@
     <title>Mechnism_of_LFH</title>
     <url>/Technology/Reverse/Mechanism-of-LFH/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="lfh原理解析"><a class="anchor" href="#lfh原理解析">#</a> LFH 原理解析</h1>
-<p>​		为了精确地利用堆相关的漏洞，了解操作系统的堆管理方式是极其有必要的。这篇文章重点想阐述的是，在 win7 的各种堆保护措施下，我们能实施哪些利用手段，获得 EIP 的控制权。</p>
-<p>​		本篇文章将说明两种 Win7 下可能利用的方式：</p>
+<p>​		为了精确利用堆相关的漏洞，了解操作系统的堆管理方式是很重要的。这篇文章的主题是在 win7 的各种堆保护措施下，我们能实施哪些利用手段，获得 EIP 的控制权。</p>
+<p>​		本篇文章将分析两种 win7 下可能利用的方式：</p>
 <ul>
 <li>
 <p>对_HEAP_ENTRY.SegmentOffset 的利用</p>
