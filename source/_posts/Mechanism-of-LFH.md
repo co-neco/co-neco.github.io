@@ -1,5 +1,5 @@
 ---
-title: Mechnism_of_LFH
+title: Mechanism_of_LFH
 categories:
   - Technology
   - Reverse
