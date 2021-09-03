@@ -878,23 +878,4 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
         <tag>Win7</tag>
       </tags>
   </entry>
-  <entry>
-    <title>auto_deploy_test</title>
-    <url>/Technology/Reverse/auto-deploy-test/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>dsfkjdhk</p>
-]]></content>
-      <categories>
-        <category>Technology</category>
-        <category>Reverse</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>auto-deploy-test2</title>
-    <url>/Technology/Reverse/auto-deploy-test2/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script>]]></content>
-      <categories>
-        <category>Technology</category>
-        <category>Reverse</category>
-      </categories>
-  </entry>
 </search>
