@@ -888,4 +888,13 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
         <category>Reverse</category>
       </categories>
   </entry>
+  <entry>
+    <title>auto-deploy-test2</title>
+    <url>/Technology/Reverse/auto-deploy-test2/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script>]]></content>
+      <categories>
+        <category>Technology</category>
+        <category>Reverse</category>
+      </categories>
+  </entry>
 </search>

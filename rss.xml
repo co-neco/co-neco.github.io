@@ -10,11 +10,20 @@
         </author>
         <description>Hello, welcome to coneco&#39;s diary</description>
         <language>zh-CN</language>
-        <pubDate>Fri, 03 Sep 2021 23:58:51 +0800</pubDate>
-        <lastBuildDate>Fri, 03 Sep 2021 23:58:51 +0800</lastBuildDate>
+        <pubDate>Sat, 04 Sep 2021 00:38:45 +0800</pubDate>
+        <lastBuildDate>Sat, 04 Sep 2021 00:38:45 +0800</lastBuildDate>
         <category term="anime" />
         <category term=" music" />
         <category term=" galgame" />
+        <item>
+            <guid isPermalink="true">https://co-neco.github.io/Technology/Reverse/auto-deploy-test2/</guid>
+            <title>auto-deploy-test2</title>
+            <link>https://co-neco.github.io/Technology/Reverse/auto-deploy-test2/</link>
+            <category term="Technology" scheme="https://co-neco.github.io/categories/Technology/" />
+            <category term="Reverse" scheme="https://co-neco.github.io/categories/Technology/Reverse/" />
+            <pubDate>Sat, 04 Sep 2021 00:38:45 +0800</pubDate>
+            <description><![CDATA[ &lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt; ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://co-neco.github.io/Technology/Reverse/auto-deploy-test/</guid>
             <title>auto_deploy_test</title>
