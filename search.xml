@@ -1,77 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</title>
-    <url>/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h3 id="本文产生的原因"><a class="anchor" href="#本文产生的原因">#</a> 本文产生的原因</h3>
-<p>最近在用 VS 2019 来编译兼容 WinXP 的程序时，发现高版本 (14.29.xxxxx) 的 MSVC 的 runtime 代码部分不兼容 winXP。之后使用低版本（14.25.xxxxx）的 MSVC 就可以运行在 winXP 上，所以本文的目的是记录整个问题的解决工程，方便其他朋友参考。</p>
-<blockquote>
-<p>以上方案解决的问题如下：</p>
-<p>用 “Visual Studio 2017 - Windows XP (v141_xp)” 工具集，使用 14.29.xxxx 版本的 MSVC 编译程序，最后程序在 winXP 无法运行，报错 “无法定位程序输入点 InitializeCriticalSectionEx 于动态链接库 KERNEL32.dll 上”。</p>
-<p>这个错误的原因是 14.29.xxxx 版本的 MSVC 不兼容 winXP，直接使用了 InitializeCriticalSectionEx 函数，该函数从 winVista 开始支持。</p>
-</blockquote>
-<h3 id="msvc多版本的需求"><a class="anchor" href="#msvc多版本的需求">#</a> MSVC 多版本的需求</h3>
-<p>如果工程需要支持 Win7、WinXP 等低版本，且有用 VS 2019 的需求，那么此时就需要安装 MSVC 的低版本工具集。</p>
-<blockquote>
-<p>使用多版本的情况，一般存在于使用 VS 2019 版本时。因为高版本的 MSVC 不兼容 winXP，所以我们需要用低版本的 MSVC 去编译工程。（VS 2019 安装时会默认安装最高版本，如果手动去除，会导致很多配置问题，所以不能去除）<br />
-如果大家有需求要兼容低版本的 windows，请下载 VS 2017。VS 2017 附带的 MSVC 版本为 14.16.xxxxx，用该版本已足够编译兼容低版本的 windows 的程序，且不会遇到本文提到的问题。</p>
-</blockquote>
-<h3 id="msvc多版本的安装"><a class="anchor" href="#msvc多版本的安装">#</a> MSVC 多版本的安装</h3>
-<p>打开 Visual Studio Installer，转到 “修改” 界面，在 “单个组件” 中搜索 “MSVC”，可安装多个版本。</p>
-<blockquote>
-<p>注：</p>
-<ul>
-<li>如果要支持 WinXP，还需要下载 “<strong>C++ Windows XP Support for VS 2017 (v141) tools [Deprecated]</strong>”。</li>
-<li>关于 WinXP 的兼容编译，请参考<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2J1aWxkL2NvbmZpZ3VyaW5nLXByb2dyYW1zLWZvci13aW5kb3dzLXhw"> Configuring Programs for Windows XP</span></li>
-</ul>
-</blockquote>
-<h3 id="msvc多版本的编译"><a class="anchor" href="#msvc多版本的编译">#</a> MSVC 多版本的编译</h3>
-<h4 id="选择msvc版本"><a class="anchor" href="#选择msvc版本">#</a> 选择 MSVC 版本</h4>
-<p>索引到工程属性<em> Configuration Properies</em>，“General-&gt;Platform Toolset” 选择 v142 版本的工具集，“Advanced-&gt;MSVC Toolset Version” 选择你需要的 MSVC 版本。</p>
-<blockquote>
-<p>如果你要用 v141 工具集，可在以上操作之后，再将 “General-&gt;Platform Toolset” 切换到 v141。因为切换到 v141 之后，<em>Configuration Properies</em> 下就没有 Advanced 选项了。</p>
-</blockquote>
-<h4 id="编译需要用vs-command-prompt来编译的库"><a class="anchor" href="#编译需要用vs-command-prompt来编译的库">#</a> 编译需要用 VS Command Prompt 来编译的库</h4>
-<p>这里拿 boost 举例。</p>
-<p>为选择低版本的 MSVC 编译，需要给 vcvarsall.bat 设置参数，改变 MSVC 版本。</p>
-<blockquote>
-<p>这里改变 MSVC 版本，将会设置一些对应的环境变量，比如 INCLUDE、LIBPATH 路径等。</p>
-</blockquote>
-<p>方法（举例：x86 Native Tools Command Prompt for VS 2019）：</p>
-<ul>
-<li>
-<p>点击 “开始”，搜索 command，右键出现的 “x86 Native Tools Command Prompt for VS 2019”，找到文件位置</p>
-</li>
-<li>
-<p>右键该文件，找到 “目标” 一栏，该栏描述了该快捷文件执行的命令，默认命令是：% comspec% /k &quot;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat&quot;</p>
-</li>
-<li>
-<p>在该命令的最后添加：x86 (architecture / 架构) -vcvars_ver=14.25 (不是 14.25.xxxxx)，添加后如下：</p>
-<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>%comspec% /k <span class="token string">"C:\Program Files (x86)\Microsoft Visual Studio<span class="token entity" title="\201">\201</span>9\Community\VC\Auxiliary\Build<span class="token entity" title="\v">\v</span>cvars32.bat"</span> x86 -vcvars_ver<span class="token operator">=</span><span class="token number">14.25</span></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="参考"><a class="anchor" href="#参考">#</a> 参考</h3>
-<ul>
-<li>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2J1aWxkL2J1aWxkaW5nLW9uLXRoZS1jb21tYW5kLWxpbmU=">Use the Microsoft C++ toolset from the command line ...</span></p>
-</li>
-<li>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2J1aWxkL2NvbmZpZ3VyaW5nLXByb2dyYW1zLWZvci13aW5kb3dzLXhw">Configuring Programs for Windows XP</span></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Technology</category>
-        <category>Development</category>
-      </categories>
-      <tags>
-        <tag>VS</tag>
-        <tag>Visual Studio</tag>
-        <tag>MSVC</tag>
-        <tag>toolset</tag>
-        <tag>工具集</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>浅谈VMP、SafeEngine、Themida反虚拟机</title>
     <url>/Technology/Reverse/VMP-anti-vmware/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>这里浅谈一下 VMP、Safengine 和 Themida 的反虚拟机的分析过程，关于反调试下面会说下值得注意的地方。</p>
@@ -235,6 +164,77 @@
         <category>Technology</category>
         <category>Reverse</category>
       </categories>
+  </entry>
+  <entry>
+    <title>VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</title>
+    <url>/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h3 id="本文产生的原因"><a class="anchor" href="#本文产生的原因">#</a> 本文产生的原因</h3>
+<p>最近在用 VS 2019 来编译兼容 WinXP 的程序时，发现高版本 (14.29.xxxxx) 的 MSVC 的 runtime 代码部分不兼容 winXP。之后使用低版本（14.25.xxxxx）的 MSVC 就可以运行在 winXP 上，所以本文的目的是记录整个问题的解决工程，方便其他朋友参考。</p>
+<blockquote>
+<p>以上方案解决的问题如下：</p>
+<p>用 “Visual Studio 2017 - Windows XP (v141_xp)” 工具集，使用 14.29.xxxx 版本的 MSVC 编译程序，最后程序在 winXP 无法运行，报错 “无法定位程序输入点 InitializeCriticalSectionEx 于动态链接库 KERNEL32.dll 上”。</p>
+<p>这个错误的原因是 14.29.xxxx 版本的 MSVC 不兼容 winXP，直接使用了 InitializeCriticalSectionEx 函数，该函数从 winVista 开始支持。</p>
+</blockquote>
+<h3 id="msvc多版本的需求"><a class="anchor" href="#msvc多版本的需求">#</a> MSVC 多版本的需求</h3>
+<p>如果工程需要支持 Win7、WinXP 等低版本，且有用 VS 2019 的需求，那么此时就需要安装 MSVC 的低版本工具集。</p>
+<blockquote>
+<p>使用多版本的情况，一般存在于使用 VS 2019 版本时。因为高版本的 MSVC 不兼容 winXP，所以我们需要用低版本的 MSVC 去编译工程。（VS 2019 安装时会默认安装最高版本，如果手动去除，会导致很多配置问题，所以不能去除）<br />
+如果大家有需求要兼容低版本的 windows，请下载 VS 2017。VS 2017 附带的 MSVC 版本为 14.16.xxxxx，用该版本已足够编译兼容低版本的 windows 的程序，且不会遇到本文提到的问题。</p>
+</blockquote>
+<h3 id="msvc多版本的安装"><a class="anchor" href="#msvc多版本的安装">#</a> MSVC 多版本的安装</h3>
+<p>打开 Visual Studio Installer，转到 “修改” 界面，在 “单个组件” 中搜索 “MSVC”，可安装多个版本。</p>
+<blockquote>
+<p>注：</p>
+<ul>
+<li>如果要支持 WinXP，还需要下载 “<strong>C++ Windows XP Support for VS 2017 (v141) tools [Deprecated]</strong>”。</li>
+<li>关于 WinXP 的兼容编译，请参考<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2J1aWxkL2NvbmZpZ3VyaW5nLXByb2dyYW1zLWZvci13aW5kb3dzLXhw"> Configuring Programs for Windows XP</span></li>
+</ul>
+</blockquote>
+<h3 id="msvc多版本的编译"><a class="anchor" href="#msvc多版本的编译">#</a> MSVC 多版本的编译</h3>
+<h4 id="选择msvc版本"><a class="anchor" href="#选择msvc版本">#</a> 选择 MSVC 版本</h4>
+<p>索引到工程属性<em> Configuration Properies</em>，“General-&gt;Platform Toolset” 选择 v142 版本的工具集，“Advanced-&gt;MSVC Toolset Version” 选择你需要的 MSVC 版本。</p>
+<blockquote>
+<p>如果你要用 v141 工具集，可在以上操作之后，再将 “General-&gt;Platform Toolset” 切换到 v141。因为切换到 v141 之后，<em>Configuration Properies</em> 下就没有 Advanced 选项了。</p>
+</blockquote>
+<h4 id="编译需要用vs-command-prompt来编译的库"><a class="anchor" href="#编译需要用vs-command-prompt来编译的库">#</a> 编译需要用 VS Command Prompt 来编译的库</h4>
+<p>这里拿 boost 举例。</p>
+<p>为选择低版本的 MSVC 编译，需要给 vcvarsall.bat 设置参数，改变 MSVC 版本。</p>
+<blockquote>
+<p>这里改变 MSVC 版本，将会设置一些对应的环境变量，比如 INCLUDE、LIBPATH 路径等。</p>
+</blockquote>
+<p>方法（举例：x86 Native Tools Command Prompt for VS 2019）：</p>
+<ul>
+<li>
+<p>点击 “开始”，搜索 command，右键出现的 “x86 Native Tools Command Prompt for VS 2019”，找到文件位置</p>
+</li>
+<li>
+<p>右键该文件，找到 “目标” 一栏，该栏描述了该快捷文件执行的命令，默认命令是：% comspec% /k &quot;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat&quot;</p>
+</li>
+<li>
+<p>在该命令的最后添加：x86 (architecture / 架构) -vcvars_ver=14.25 (不是 14.25.xxxxx)，添加后如下：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>%comspec% /k <span class="token string">"C:\Program Files (x86)\Microsoft Visual Studio<span class="token entity" title="\201">\201</span>9\Community\VC\Auxiliary\Build<span class="token entity" title="\v">\v</span>cvars32.bat"</span> x86 -vcvars_ver<span class="token operator">=</span><span class="token number">14.25</span></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="参考"><a class="anchor" href="#参考">#</a> 参考</h3>
+<ul>
+<li>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2J1aWxkL2J1aWxkaW5nLW9uLXRoZS1jb21tYW5kLWxpbmU=">Use the Microsoft C++ toolset from the command line ...</span></p>
+</li>
+<li>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2J1aWxkL2NvbmZpZ3VyaW5nLXByb2dyYW1zLWZvci13aW5kb3dzLXhw">Configuring Programs for Windows XP</span></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Technology</category>
+        <category>Development</category>
+      </categories>
+      <tags>
+        <tag>VS</tag>
+        <tag>Visual Studio</tag>
+        <tag>MSVC</tag>
+        <tag>toolset</tag>
+        <tag>工具集</tag>
+      </tags>
   </entry>
   <entry>
     <title>runtime运行时库在MT与MD之间的差别</title>
