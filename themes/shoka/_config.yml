@@ -182,7 +182,7 @@ creative_commons:
 valine:
   appId: 0PN8lgYA6cq6o1hCj51lm8gI-gzGzoHsz
   appKey: 9PNRp6NQe1F0o9a0GQoYQM7u
-  placeholder: ヽ(○´∀`)ﾉ♪ # Comment box placeholder
+  placeholder:  添加昵称和邮箱后，就可以发送评论哦，欢迎畅所欲言ヽ(○´∀`)ﾉ♪ # Comment box placeholder
   avatar: mp # Gravatar style : mp, identicon, monsterid, wavatar, robohash, retro
   pageSize: 10 # Pagination size
   lang: zh-CN
