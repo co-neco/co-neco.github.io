@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "pwa-node",
+            "program": "${workspaceFolder}/node_modules/hexo/node_modules/hexo-cli/bin/hexo",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "args": [
+                "server"
+            ]
+        }
+        //,
+        // {
+        //     "name": "add_hyphen_for_image_url.py",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "program": "${file}",
+        //     "console": "integratedTerminal",
+        //     "args": [
+        //         "E:\\github\\co-neco.github.io\\source\\_data"
+        //     ]
+        // },
+        // {
+        //     "name": "parse_bilibili_imgs.py",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "program": "${file}",
+        //     "console": "integratedTerminal",
+        //     "args": [
+        //         "E:\\tmp\\bilibili_saenai_cg_2.txt",
+        //         "E:\\github\\co-neco.github.io\\source\\_data\\images"
+        //     ]
+        // }
+    ]
+}
