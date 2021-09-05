@@ -3,7 +3,7 @@
   <entry>
     <title>浅谈VMP、SafeEngine、Themida反虚拟机</title>
     <url>/Technology/Reverse/VMP-anti-vmware/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>这里浅谈一下 VMP、Safengine 和 Themida 的反虚拟机的分析过程，关于反调试下面会说下值得注意的地方。</p>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>这里浅谈一下 VMP、Safengine 和 Themida 的反虚拟机的分析过程，关于反调试下面会说下值得注意的地方。</p>
 <p>VMP 的反调试请参考 https://bbs.pediy.com/thread-226455.htm，Safengine 和 Themida 的反调试与 VMP 差不多。</p>
 <p>分析的 VMP 版本为 3.0.9，Themida 版本为 2.4.6.30，Safengine 不知道是什么版本了，程序是 32bit 。</p>
 <blockquote>
@@ -168,7 +168,7 @@
   <entry>
     <title>VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</title>
     <url>/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h3 id="本文产生的原因"><a class="anchor" href="#本文产生的原因">#</a> 本文产生的原因</h3>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h3 id="本文产生的原因"><a class="anchor" href="#本文产生的原因">#</a> 本文产生的原因</h3>
 <p>最近在用 VS 2019 来编译兼容 WinXP 的程序时，发现高版本 (14.29.xxxxx) 的 MSVC 的 runtime 代码部分不兼容 winXP。之后使用低版本（14.25.xxxxx）的 MSVC 就可以运行在 winXP 上，所以本文的目的是记录整个问题的解决工程，方便其他朋友参考。</p>
 <blockquote>
 <p>以上方案解决的问题如下：</p>
@@ -239,7 +239,7 @@
   <entry>
     <title>runtime运行时库在MT与MD之间的差别</title>
     <url>/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h3 id="vs-runtime运行时库的介绍"><a class="anchor" href="#vs-runtime运行时库的介绍">#</a> VS Runtime (运行时) 库的介绍</h3>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h3 id="vs-runtime运行时库的介绍"><a class="anchor" href="#vs-runtime运行时库的介绍">#</a> VS Runtime (运行时) 库的介绍</h3>
 <p>运行时库提供了很多变量（包括常量），还有很多类函数，比如字符串处理、输入与输出等。它们可以被静态编译到可执行文件（EXE 或 DLL），也可以被动态加载。</p>
 <p>详细的说明可参考<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvY3BwL2MtcnVudGltZS1saWJyYXJ5L2MtcnVuLXRpbWUtbGlicmFyeS1yZWZlcmVuY2U="> C runtime library (CRT) reference - Microsoft Docs</span>。关于用到的库可参考<a href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/crt-library-features?view=msvc-160"> C runtime (CRT) and C++ Standard Library (STL)  <code>.lib</code>  files</a>。</p>
 <p>本文重点阐述运行时库在 MT 和 MD 之间的区别。</p>
@@ -357,7 +357,7 @@
   <entry>
     <title>StackUnwind</title>
     <url>/Technology/Reverse/StackUnwind/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="stackwalk6432位栈回溯原理"><a class="anchor" href="#stackwalk6432位栈回溯原理">#</a> StackWalk64 (32 位) 栈回溯原理</h2>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="stackwalk6432位栈回溯原理"><a class="anchor" href="#stackwalk6432位栈回溯原理">#</a> StackWalk64 (32 位) 栈回溯原理</h2>
 <h3 id="目标"><a class="anchor" href="#目标">#</a> 目标</h3>
 <p>StackWalk64 是用于回溯栈的，32 位和 64 位皆可。本次目标为 StackWalk 如何回溯 32 位程序的栈</p>
 <blockquote>
@@ -570,7 +570,7 @@
   <entry>
     <title>Mechanism_of_LFH</title>
     <url>/Technology/Reverse/Mechanism-of-LFH/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="lfh原理解析"><a class="anchor" href="#lfh原理解析">#</a> LFH 原理解析</h1>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="lfh原理解析"><a class="anchor" href="#lfh原理解析">#</a> LFH 原理解析</h1>
 <p>​		为了精确利用堆相关的漏洞，了解操作系统的堆管理方式是很重要的。这篇文章的主题是在 win7 的各种堆保护措施下，我们能实施哪些利用手段，获得 EIP 的控制权。</p>
 <p>​		本篇文章将分析两种 win7 下可能利用的方式：</p>
 <ul>
