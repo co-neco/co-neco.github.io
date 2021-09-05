@@ -105,7 +105,7 @@ theme: shoka
 deploy:
   type: git
   repository:
-    github: 'git@github.com:co-neco/co-neco.github.io.git'
+    github: 'git@gitee.com:co-neco/coneco.git'
   branch: master
 
 # search:
