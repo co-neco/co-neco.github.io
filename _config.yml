@@ -120,6 +120,10 @@ autoprefixer:
   exclude:
     - '*.min.css'
 
+# sitemap for search engine
+sitemap:
+  path: sitemap.xml
+
 symbols_count_time:
   symbols: true
   time: true
