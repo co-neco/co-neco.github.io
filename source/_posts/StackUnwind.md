@@ -235,7 +235,7 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
         rs = IsCodeReachableViaDirectCall(...);
         if (!rs)
             // IsCodeReachableViaDirectCall always returns FALSE
-            if (pFlag[3] == 1)
+            if (pFlag[2] == 1)
                 return 0x9000;
         	else
                 dwScore = 0x3000;
@@ -252,9 +252,9 @@ DWORD DbsX86HeuristicTool::ComputeScoreForReturnAddress(DWORD eip, PBYTE pFlag){
             else
                 continue;
             
-            if (pFlag[3] && dwScore <= 0x9000)
+            if (pFlag[2] && dwScore <= 0x9000)
                 dwScore = 0x9000;
-            else if (pFlag[2] && dwScore <= 0xA000)
+            else if (pFlag[1] && dwScore <= 0xA000)
                 dwScore = 0xA000;
             
             if (dwScore < 0x6000)
@@ -445,4 +445,4 @@ debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方�
 - 在栈回溯时，有符号与无符号的执行流程是有差别的。有符号的情况下，UnwindInternalContextUsingDiaFrame(win10下)会读取符号，解析符号，直接返回。如果要分析有符号的情况，各位重点查看这个函数即可（winXP下是DbsX86StackUnwinder::ApplyUnwindInfo）。
 - 关于ComputeScoreForReturnAddress的算法，这里简化了参数验证等无关代码，流程上也做了简化。同时这里省略了一些不重要的细节，比如检验是否是热更新代码；检验call [addr A]的情况下，call的地址和addr A是否属于同一个模块。类似这些都属于常规检测，在栈回溯时情况基本相同，可暂时忽略。
 
-- 64位栈回溯在无符号的情况下，会根据Exception Directory数据节的函数信息进行回溯。在分析winXP时，发现dbghelp.dll会缓存一份Exception Directory数据节进行分析，所以对分析模块的Exception Directory数据节下硬件断点，可能端不下来，找不到dbghelp.dll回溯的代码。虽然64位的分析流程和32位完全不同，但主流程是一样的，都会调用\*Unwind函数，然后做一些基础检测，分析call、jmp这些基础操作。
+- 64位栈回溯在无符号的情况下，会根据Exception Directory数据节的函数信息进行回溯。在分析winXP时，发现dbghelp.dll会缓存一份Exception Directory数据节进行分析，所以对分析模块的Exception Directory数据节下硬件断点，可能断不下来，找不到dbghelp.dll回溯的代码。虽然64位的分析流程和32位完全不同，但主流程是一样的，都会调用\*Unwind函数，然后做一些基础检测，分析call、jmp这些基础操作。
