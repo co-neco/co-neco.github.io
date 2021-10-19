@@ -15,7 +15,7 @@ tags:
 
 - 继承类是别人写的，那么继承类可能会有析构函数，如果调用以下代码，那么继承类的析构函数不会被调用：
 
-  ```c++
+  ```c
   BaseClass* = new InheritedClass;
   delete BaseClass;
   ```
@@ -30,7 +30,7 @@ tags:
 
 因为某些特殊原因，可能某个类的一个成员变量是void*，但该变量是指向一个类实例的，那么在使用delete时，需要指明这个成员变量的类型，否则delete不能正确调用类实例对应的析构函数，造成内存泄漏等问题：
 
-```c++
+```c
 class B {
     ...
 };
@@ -54,7 +54,7 @@ public:
 
 因为shared_ptr最终会使用delete关键字释放内容，所以如果内容是new分配的一个数组，那么程序将会出现问题。为避免这个问题，可以给shared_ptr具体的释放方法：
 
-```c++
+```c
 std::shared_ptr<WCHAR>(new WCHAR[nLen * sizeof(WCHAR)]{ 0 }, std::default_delete<WCHAR[]>());
 //释放方法：std::default_delete<WCHAR[]>()
 //释放方法也可以写成一个lambda
@@ -66,7 +66,7 @@ std::shared_ptr<WCHAR>(new WCHAR[nLen * sizeof(WCHAR)]{ 0 }, std::default_delete
 
 ## 释放后的指针应该赋值为NULL或nullptr
 
-```c++
+```c
 __try{
     PVOID p = VirtualAlloc(..., size, ...);
 }
@@ -92,7 +92,7 @@ if (p != NULL){
 
 因此，如果一个类有复制构造函数，并且没有重载复制赋值运算符，那么会出现隐患，这个类也是危险的类：
 
-```c++
+```c
 /* wrong definition*/ 
 class A{
 public:
@@ -117,7 +117,7 @@ b = a;  // b.b points to addr1 --> error
 
 因为复制构造函数和重载的复制赋值运算符必须成对存在，对于move语义的两个方法也是一样：
 
-```c++
+```c
 class A{
 public:
     A(){a = 1; b = new int;}
@@ -151,7 +151,7 @@ public:
 
 ## 包含运算符的宏要用括号括起来
 
-```c++
+```c
 #define MEM_BUFFER_NUMBER 2
 #define MEM_BUFFER_SIZE (sizeof(PVOID) * MEM_BUFFER_NUMBER)
 ```
