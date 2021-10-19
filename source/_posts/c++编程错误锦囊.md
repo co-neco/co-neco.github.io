@@ -1,5 +1,5 @@
 ---
-title: Mechanism_of_LFH
+title: c++编程错误锦囊
 categories:
   - Technology
   - Development
