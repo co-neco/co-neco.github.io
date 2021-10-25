@@ -8,19 +8,10 @@
     <author>
       <name>coneco</name>
     </author>
-    <updated>2021-10-25T14:47:49.000Z</updated>
+    <updated>2021-10-25T11:42:40.000Z</updated>
     <category term="anime" />
     <category term=" music" />
     <category term=" galgame" />
-    <entry>
-        <id>https://conecoy.cn/Technology/Reverse/aa/</id>
-        <title>aa</title>
-        <link rel="alternate" href="https://conecoy.cn/Technology/Reverse/aa/"/>
-        <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;</content>
-        <category term="Technology" scheme="https://conecoy.cn/categories/Technology/" />
-        <category term="Reverse" scheme="https://conecoy.cn/categories/Technology/Reverse/" />
-        <updated>2021-10-25T14:47:49.000Z</updated>
-    </entry>
     <entry>
         <id>https://conecoy.cn/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/</id>
         <title>记一次win10下程序兼容导致的死锁</title>
