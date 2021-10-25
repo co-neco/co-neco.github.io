@@ -49,7 +49,7 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 
 看02~03的调用，通过LocalReAlloc进入了AcLayers模块的堆管理部分。AcLayers是windows在winXP引入的垫片机制的一个垫片（apphelp.dll是垫片引擎）。为了兼容可能出现的堆错误，这里使用了AcLayers垫片的容错堆功能。
 
-> 注：堆有一些调试支持，比如堆尾检查（Heap Tail Check/HTC）、释放检查（Heap Free Check/HFC）等，和FTH名字很像，不过FTH是一个自win7以来提供的子系统，用于监控应用程序的崩溃（因堆相关错误导致），并在之后的启动中，提供缓解方法来避免崩溃。
+> 注：堆有一些调试支持，比如堆尾检查（Heap Tail Check/HTC）、释放检查（Heap Free Check/HFC）等，和FTH名字很像，不过FTH是一个自win7以来提供的子系统，用于监控应用程序的崩溃，并在之后的启动中，提供缓解方法来避免崩溃。
 
 看00~01的调用，发现AcLayers调用了ntdll的RtlAcquireSRWLockShared，这个函数是在等一个SRWLock，然后就一去不复返了。windbg没有srwlock相关的扩展命令，不过可以通过_RTL_SRWLOCK来观察结构体的内容，如下：
 
