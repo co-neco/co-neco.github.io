@@ -1,5 +1,5 @@
 ---
-title: 记一次win10下程序兼容导致的死锁
+title: 记一次win10下程序以兼容方式启动导致的死锁
 categories:
   - Technology
   - Development
@@ -24,45 +24,20 @@ tags:
 03 008feabc 74e9be65 00d30000 00140009 02c78f28 AcLayers!NS_FaultTolerantHeap::APIHook_RtlReAllocateHeap+0x843 (FPO: [Non-Fpo])
 04 008feb14 77455486 KERNELBASE!LocalReAlloc+0x135
 05 008feb74 77476827 MSCTF!CCategoryMgr::s_RegisterGUID+0x286
-06 008feb98 77467256 MSCTF!CCompartmentMgr::GetCompartment+0x27
-07 008febc4 774677f9 MSCTF!GetCompartment+0x6c
-08 008fec10 77466df5 MSCTF!CicInputContext::CreateInputContext+0x59
-09 008fec68 77466b70 MSCTF!CicBridge::CreateInputContext+0x275
+...
 0a 008fec7c 762c38dc MSCTF!CtfImeCreateInputContext+0x30
-0b 008feca0 762c2959 IMM32!CtfImmTIMCreateInputContext+0x1ec
-0c 008fecbc 762c3279 IMM32!CreateInputContext+0x199
-0d 008fecf0 762c2e8f IMM32!InternalImmLockIMC+0x3b9
+...
 0e 008fed1c 764e0f92 IMM32!ImmSetActiveContext+0x34f
-0f 008fed40 764e1471 USER32!FocusSetIMCContext+0x46
-10 008fef94 764e2175 USER32!ImeSystemHandler+0x55
-11 008fefc0 764e2055 USER32!ImeWndProcWorker+0x115
-12 008fefe0 765047ab USER32!ImeWndProcW+0x25
-13 008ff00c 764e52ac USER32!_InternalCallWinProc+0x2b
-14 008ff0f0 764e4e4a USER32!UserCallWinProcCheckWow+0x3ac
+...
 15 008ff154 764ee4cf USER32!DispatchClientMessage+0xea
 16 008ff190 7763537d USER32!__fnDWORD+0x3f
 17 008ff1c8 764a30ac ntdll!KiUserCallbackDispatcher+0x4d
 18 008ff1cc 76540ad9 win32u!NtUserSetFocus+0xc
-19 008ff1e8 765047ab USER32!MB_DlgProc+0x119
-1a 008ff214 764e62cd USER32!_InternalCallWinProc+0x2b
-1b 008ff2a8 764e58a1 USER32!UserCallDlgProcCheckWow+0x2ad
-1c 008ff318 764e57b8 USER32!DefDlgProcWorker+0xd1
-1d 008ff33c 765047ab USER32!DefDlgProcW+0x48
-1e 008ff368 764e52ac USER32!_InternalCallWinProc+0x2b
-1f 008ff44c 764e4a5d USER32!UserCallWinProcCheckWow+0x3ac
-20 008ff4b0 764df344 USER32!SendMessageWorker+0x1fd
-21 008ff5d4 764fb5f1 USER32!InternalCreateDialog+0xb34
-22 008ff618 765425cb USER32!InternalDialogBox+0xc6
-23 008ff6e4 76541361 USER32!SoftModalMessageBox+0x72b
-24 008ff840 76541e1f USER32!MessageBoxWorker+0x314
-25 008ff8cc 76541e95 USER32!MessageBoxTimeoutW+0x18f
+...
 26 008ff8ec 009c9d6d USER32!MessageBoxW+0x45
 WARNING: Stack unwind information not available. Following frames may be wrong.
-27 008ffab8 00a1157e JJDPS_tester+0xa9d6d
-28 008ffacc 00a11417 JJDPS_tester+0xf157e
-29 008ffb28 00a112ad JJDPS_tester+0xf1417
-2a 008ffb30 00a115f8 JJDPS_tester+0xf12ad
-2b 008ffb38 76676359 JJDPS_tester+0xf15f8
+27 008ffab8 00a1157e xx_tester+0xa9d6d
+...
 2c 008ffb48 77628944 KERNEL32!BaseThreadInitThunk+0x19
 2d 008ffba4 77628914 ntdll!__RtlUserThreadStart+0x2f
 2e 008ffbb4 00000000 ntdll!_RtlUserThreadStart+0x1b
@@ -70,7 +45,7 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 
 观察windbg打印的栈，可看出主线程调用MessageBox就没有返回了。
 
-> 注：调用MessageBox之前，xx_tester创建了一个线程，用于关掉该消息框。
+> 注：调用MessageBox之前，xx_tester创建了一个线程，用于关掉该消息框。不过主线程还没有创建好消息框就卡住了。另外，主线程弹出消息框只是用于测试windows的全局钩子，所以请大家不要模仿。
 
 看02~03的调用，通过LocalReAlloc进入了AcLayers模块的堆管理部分。AcLayers是windows在winXP引入的垫片机制的一个垫片（apphelp.dll是垫片引擎）。为了兼容可能出现的堆错误，这里使用了AcLayers垫片的容错堆功能。
 
