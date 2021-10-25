@@ -64,7 +64,7 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
    +0x000 Ptr              : 0x008fe923 Void
 ```
 
-从这个结构体的内容可看出，另外一个线程持有这个共享锁，因为SRWLock是微软内部使用的，没有公开文档，所以从该结构体，我们暂且还不知是哪个线程持有这个锁。
+从这个结构体的内容可看出，另外一个线程持有这个锁。因为SRWLock是微软内部使用的，没有公开文档，所以从该结构体，我们暂且还不知是哪个线程持有这个锁。
 
 > 注：SRWLock不能看出谁持有锁，但CRITICAL_SECTION可以看出。
 
@@ -144,11 +144,11 @@ OwningThread指明了线程ID为0x000047b8的线程持有这个锁，那我们�
 0a 096ee91c 6bddd1a3 AcLayers!NS_FaultTolerantHeap::FthValidateHeap+0x55
 0b 096ee928 74eccbf4 AcLayers!NS_FaultTolerantHeap::APIHook_RtlValidateHeap+0x13
 0c 096ee93c 7b2e2e4b KERNELBASE!HeapValidate+0x14
-0d 096ee950 7b2e11de JJDPS!_CrtIsValidHeapPointer+0x2b 
-0e 096ee968 7b2e46ec JJDPS!free_dbg_nolock+0xce 
-0f 096ee9a8 7b0a7d1e JJDPS!_free_dbg+0x7c 
-10 096ee9b8 7b0a678c JJDPS!operator delete+0xe 
-11 096ee9c4 7af6223e JJDPS!operator delete+0xc
+0d 096ee950 7b2e11de xx!_CrtIsValidHeapPointer+0x2b 
+0e 096ee968 7b2e46ec xx!free_dbg_nolock+0xce 
+0f 096ee9a8 7b0a7d1e xx!_free_dbg+0x7c 
+10 096ee9b8 7b0a678c xx!operator delete+0xe 
+11 096ee9c4 7af6223e xx!operator delete+0xc
 ...
 17 096eef4c 7af5fe72 xx!std::shared_ptr
 18 096ef03c 7af67c35 xx!nlohmann::detail::serializer
