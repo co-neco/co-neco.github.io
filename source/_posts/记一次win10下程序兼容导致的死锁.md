@@ -49,9 +49,9 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 
 看02~03的调用，通过LocalReAlloc进入了AcLayers模块的堆管理部分。AcLayers是windows在winXP引入的垫片机制的一个垫片（apphelp.dll是垫片引擎）。为了兼容可能出现的堆错误，这里使用了AcLayers垫片的容错堆功能。
 
-> 注：堆有一些调试支持，比如堆尾检查（Heap Tail Check/HTC）、释放检查（Heap Free Check/HFC）等，和FTH名字很像，不过FTH是一个自win7以来提供的一个子系统，用于监控应用程序的崩溃（因堆相关错误导致），并在之后的启动中，提供缓解方法来避免崩溃。
+> 注：堆有一些调试支持，比如堆尾检查（Heap Tail Check/HTC）、释放检查（Heap Free Check/HFC）等，和FTH名字很像，不过FTH是一个自win7以来提供的子系统，用于监控应用程序的崩溃（因堆相关错误导致），并在之后的启动中，提供缓解方法来避免崩溃。
 
-看00~01的调用，发现acLyaers调用了ntdll的RtlAcquireSRWLockShared，这个函数是在等一个SRWLock，然后就一去不复返了。windbg没有srwlock相关的扩展命令，不过可以通过_RTL_SRWLOCK来观察结构体的内容，如下：
+看00~01的调用，发现AcLayers调用了ntdll的RtlAcquireSRWLockShared，这个函数是在等一个SRWLock，然后就一去不复返了。windbg没有srwlock相关的扩展命令，不过可以通过_RTL_SRWLOCK来观察结构体的内容，如下：
 
 ```c
 0:000> dt ntdll!_RTL_SRWLOCK 6be0c9ac 
@@ -94,7 +94,6 @@ ntdll!NtWaitForAlertByThreadId+0xc:
 02 097ef1c0 7760d681 097ef3a0 097efa48 00000000 ntdll!RtlpWaitOnCriticalSection+0x18d (FPO: [Non-Fpo])
 03 097ef1f8 7760ae09 097ef20c 7b328b95 7b55f2a0 ntdll!RtlpEnterCriticalSectionContended+0x261 (FPO: [Non-Fpo])
 04 097ef200 7b328b95 7b55f2a0 097ef264 7b2e17f3 ntdll!RtlEnterCriticalSection+0x49 (FPO: [1,0,0])
-
 05 097ef20c 7b2e17f3 xx!__acrt_lock+0x15
 06 097ef264 7b2e1746 xx!heap_alloc_dbg_internal+0x43
 07 097ef288 7b2e476a xx!heap_alloc_dbg+0x36
@@ -107,11 +106,11 @@ ntdll!NtWaitForAlertByThreadId+0xc:
 
 观察13~14的调用，发现在切换到DbgUiRemoteBreakin之前，就已经卡住了。
 
-> 注：当创建新的线程时，都会先调用LdrInitializeThunk，做一些线程的初始化，然后调用NtContinue函数，然后NtContinue会将CONTEXT结构体的eip设置为线程真正的起始执行入口。
+> 注：当创建新的线程时，都会先调用LdrInitializeThunk，做一些线程的初始化，然后调用NtContinue函数。NtContinue会将CONTEXT结构体的eip设置为线程真正的起始执行入口。
 
-观察09~05的调用，在测试时，我对NtContinue做了inlinehook，NtContinueDetour就是inlinehook的中间函数。NtContinueDetour在检查的途中，分配了堆块，最后使用微软的C运行时库去获取\_\_acrt_lock。
+观察05~09的调用，在测试时，我对NtContinue做了inlinehook，NtContinueDetour就是inlinehook的中间函数。NtContinueDetour在检查的途中，分配了堆块，最后调用了微软的C运行时库函数_\_acrt_lock。
 
-观察04的调用，发现附加线程卡住的原因是在一直等待一个CRITICAL_SECTION，观察这个锁：
+观察04的调用，发现附加线程卡住的原因是在等待一个CRITICAL_SECTION，观察这个锁：
 
 ```c
 0:013> !cs 7b55f2a0 
@@ -168,7 +167,7 @@ OwningThread指明了线程ID为0x000047b8的线程持有这个锁，那我们�
 
 观察05~11的调用，发现也调用了AcLayers垫片的FTH。
 
-观察04的调用，可知7好线程也在等待一个CS锁，观察这个锁如下：
+观察04的调用，可知7号线程也在等待一个CS锁，观察这个锁如下：
 
 ```c
 0:007> !cs 00d30258 
@@ -186,7 +185,7 @@ SpinCount          = 0x020007cf
 
 这个cs锁的持有者是线程0x00004b38，这个线程就是主线程。
 
-通过以上的分析，可以猜想是主线程和7号线程发生了死锁，然后其他线程也因执行堆的相关操作而全都卡起。
+通过以上的分析，可以猜想是主线程和7号线程发生了死锁，然后其他线程也因执行堆的相关操作而全都卡住。
 
 ## 定位死锁的原因
 
@@ -221,7 +220,5 @@ FthDelayFreeQueueFlush函数做的第一件事就是以独占的方式获取FthD
 
 其他线程也因为处理堆时，进入了AcLayers垫片，进而尝试获取堆相关的CS锁，导致暂停，最后整个进程都死锁了。
 
-这个是调试器启动程序的调试版本+兼容模式（win10下）会导致的问题，所以程序正常启动是不会造成此问题的。如果不以兼容模式运行程序，那也不会造成此问题。
-
-
+这个问题是win10下，在调试器中启动程序的调试版本+兼容模式出现的，程序正常启动是不会造成此问题的（因为不会启用调试堆）。如果不以兼容模式运行程序，那也不会造成此问题（因为不会启用垫片引擎）。
 
