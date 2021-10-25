@@ -10,11 +10,20 @@
         </author>
         <description>Hello, welcome to coneco&#39;s diary</description>
         <language>zh-CN</language>
-        <pubDate>Mon, 25 Oct 2021 19:42:40 +0800</pubDate>
-        <lastBuildDate>Mon, 25 Oct 2021 19:42:40 +0800</lastBuildDate>
+        <pubDate>Mon, 25 Oct 2021 22:47:49 +0800</pubDate>
+        <lastBuildDate>Mon, 25 Oct 2021 22:47:49 +0800</lastBuildDate>
         <category term="anime" />
         <category term=" music" />
         <category term=" galgame" />
+        <item>
+            <guid isPermalink="true">https://conecoy.cn/Technology/Reverse/aa/</guid>
+            <title>aa</title>
+            <link>https://conecoy.cn/Technology/Reverse/aa/</link>
+            <category term="Technology" scheme="https://conecoy.cn/categories/Technology/" />
+            <category term="Reverse" scheme="https://conecoy.cn/categories/Technology/Reverse/" />
+            <pubDate>Mon, 25 Oct 2021 22:47:49 +0800</pubDate>
+            <description><![CDATA[ &lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt; ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://conecoy.cn/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/</guid>
             <title>记一次win10下程序兼容导致的死锁</title>
