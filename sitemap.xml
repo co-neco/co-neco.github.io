@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://conecoy.cn/Technology/Reverse/Study-of-C-Coding-Standards/</loc>
+    
+    <lastmod>2021-11-07</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://conecoy.cn/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/</loc>
     
     <lastmod>2021-10-25</lastmod>
@@ -88,7 +95,7 @@
 
   <url>
     <loc>https://conecoy.cn/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -96,112 +103,112 @@
   
   <url>
     <loc>https://conecoy.cn/tags/LFH/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/heap/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/vulnerability/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/Win7/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/StackUnwind/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/VS/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/Visual-Studio/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/MSVC/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/toolset/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/%E5%B7%A5%E5%85%B7%E9%9B%86/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/MT/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/MD/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/Runtime/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/C-Programming/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/tags/deadlock/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -210,21 +217,21 @@
   
   <url>
     <loc>https://conecoy.cn/categories/Technology/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/categories/Technology/Reverse/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://conecoy.cn/categories/Technology/Development/</loc>
-    <lastmod>2021-10-25</lastmod>
+    <lastmod>2021-11-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
