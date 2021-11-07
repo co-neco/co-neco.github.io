@@ -2,9 +2,11 @@
 title: Study of C++ Coding Standards
 categories:
   - Technology
-  - Reverse
+  - Development
 date: 2021-11-03 20:32:18
 tags:
+  - C++
+  - Coding Standards
 ---
 
 In this article, I would write my own comprehension of the book, C++ Coding Standards, for following aims:
