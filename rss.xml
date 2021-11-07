@@ -21,6 +21,8 @@
             <link>https://conecoy.cn/Technology/Reverse/Study-of-C-Coding-Standards/</link>
             <category term="Technology" scheme="https://conecoy.cn/categories/Technology/" />
             <category term="Reverse" scheme="https://conecoy.cn/categories/Technology/Reverse/" />
+            <category term="C++" scheme="https://conecoy.cn/tags/C/" />
+            <category term="Coding Standards" scheme="https://conecoy.cn/tags/Coding-Standards/" />
             <pubDate>Wed, 03 Nov 2021 20:32:18 +0800</pubDate>
             <description><![CDATA[ &lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;p&gt;In this article, I would write my own comprehension of the book, C++ Coding Standards, for following aims:&lt;/p&gt;
 &lt;ul&gt;
