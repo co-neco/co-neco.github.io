@@ -16,11 +16,11 @@
         <category term=" music" />
         <category term=" galgame" />
         <item>
-            <guid isPermalink="true">https://conecoy.cn/Technology/Reverse/Study-of-C-Coding-Standards/</guid>
+            <guid isPermalink="true">https://conecoy.cn/Technology/Development/Study-of-C-Coding-Standards/</guid>
             <title>Study of C++ Coding Standards</title>
-            <link>https://conecoy.cn/Technology/Reverse/Study-of-C-Coding-Standards/</link>
+            <link>https://conecoy.cn/Technology/Development/Study-of-C-Coding-Standards/</link>
             <category term="Technology" scheme="https://conecoy.cn/categories/Technology/" />
-            <category term="Reverse" scheme="https://conecoy.cn/categories/Technology/Reverse/" />
+            <category term="Development" scheme="https://conecoy.cn/categories/Technology/Development/" />
             <category term="C++" scheme="https://conecoy.cn/tags/C/" />
             <category term="Coding Standards" scheme="https://conecoy.cn/tags/Coding-Standards/" />
             <pubDate>Wed, 03 Nov 2021 20:32:18 +0800</pubDate>

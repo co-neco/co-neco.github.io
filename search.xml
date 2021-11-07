@@ -982,7 +982,7 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
   </entry>
   <entry>
     <title>Study of C++ Coding Standards</title>
-    <url>/Technology/Reverse/Study-of-C-Coding-Standards/</url>
+    <url>/Technology/Development/Study-of-C-Coding-Standards/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>In this article, I would write my own comprehension of the book, C++ Coding Standards, for following aims:</p>
 <ul>
 <li>Continuous study about design pattern, refactoring</li>
@@ -1060,7 +1060,7 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 ]]></content>
       <categories>
         <category>Technology</category>
-        <category>Reverse</category>
+        <category>Development</category>
       </categories>
       <tags>
         <tag>C++</tag>
