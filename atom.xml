@@ -13,9 +13,9 @@
     <category term=" music" />
     <category term=" galgame" />
     <entry>
-        <id>https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/</id>
+        <id>https://conecoy.cn/Technology/Reverse/%E5%87%86%E5%A4%87%E5%8F%91%E7%9A%84/Microsoft-Defender-ATP-ETW/</id>
         <title>&lt;翻译&gt; Microsoft_Defender_ATP_ETW</title>
-        <link rel="alternate" href="https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/"/>
+        <link rel="alternate" href="https://conecoy.cn/Technology/Reverse/%E5%87%86%E5%A4%87%E5%8F%91%E7%9A%84/Microsoft-Defender-ATP-ETW/"/>
         <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h1 id=&#34;从接到告警到发现驱动漏洞microsoft-defender-atp-检测出提权漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#从接到告警到发现驱动漏洞microsoft-defender-atp-检测出提权漏洞&#34;&gt;#&lt;/a&gt; 从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞&lt;/h1&gt;
 &lt;p&gt;随着 Microsoft 团队不断增强内核层的安全性、以及提升内核组件被利用的门槛，第三方开发的驱动渐渐成为了攻击者青睐的目标，同时第三方驱动也成为了漏洞分析的一个重要试验地。&lt;/p&gt;
 &lt;p&gt;一个签名的第三方驱动如果有一个漏洞，那么它可能会带来严重的影响：这个漏洞可能被攻击者利用，用来权限提升，或者用来过掉驱动签名验证。相对于用一个操作系统自身的 0day 漏洞来进行攻击，签名的第三方驱动的漏洞更容易被利用。&lt;/p&gt;
