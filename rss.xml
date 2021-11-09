@@ -17,13 +17,14 @@
         <category term=" galgame" />
         <item>
             <guid isPermalink="true">https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/</guid>
-            <title>Microsoft_Defender_ATP_ETW</title>
+            <title>&lt;翻译&gt; Microsoft_Defender_ATP_ETW</title>
             <link>https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/</link>
             <category term="Technology" scheme="https://conecoy.cn/categories/Technology/" />
             <category term="Reverse" scheme="https://conecoy.cn/categories/Technology/Reverse/" />
             <category term="Translation" scheme="https://conecoy.cn/tags/Translation/" />
             <category term="Microsoft Defender" scheme="https://conecoy.cn/tags/Microsoft-Defender/" />
             <category term="ETW" scheme="https://conecoy.cn/tags/ETW/" />
+            <category term="Privilege Escalation" scheme="https://conecoy.cn/tags/Privilege-Escalation/" />
             <pubDate>Tue, 09 Nov 2021 12:56:25 +0800</pubDate>
             <description><![CDATA[ &lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h1 id=&#34;从接到告警到发现驱动漏洞microsoft-defender-atp-检测出提权漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#从接到告警到发现驱动漏洞microsoft-defender-atp-检测出提权漏洞&#34;&gt;#&lt;/a&gt; 从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞&lt;/h1&gt;
 &lt;p&gt;随着 Microsoft 团队不断增强内核层的安全性、以及提升内核组件被利用的门槛，第三方开发的驱动渐渐成为了攻击者青睐的目标，同时第三方驱动也成为了漏洞分析的一个重要试验地。&lt;/p&gt;
