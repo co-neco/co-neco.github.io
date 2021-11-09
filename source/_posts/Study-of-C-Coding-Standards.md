@@ -192,11 +192,21 @@ This is the first rule of current section, and I think it's indeed the valuest a
 
 In short, Know which kind class you are writing. You can get a more detailed description of the rule from the [book](http://library.bagrintsev.me/CPP/Sutter.C%2B%2B%20Coding%20Standards.2005.pdf).
 
-## Prefer composition to inheritance
+## Avoid inheriting from classes that were not designed to be base classes
 
-If you learned design pattern, you should know what is composition.
+Bad eg: Inheriting a class with a public nonvirtual destructor.
 
-To avoid tight coupling and class explosion, you should use composition except inheritance is necessary.
+## Public inheritance is substitutability. Inheri, not to reuse, whereas to be reused
+
+The "is-a" description of public inheritance is misunderstood when people use it to draw irrelevant real-world analogies: 
+
+A Square "is-a" Rectangle(mathematically) but a Sqaure is not a Rectangle(behaviorally). Therfore you should design Square and Rectangle independently.
+
+Finally, I like following sentence:
+
+> The purpose of public inheritance is not for the derived class to reuse base class code to implement itself in terms of the base class's code. Such an is-implemented-in-terms-of relationship can be entirely proper, but should be modeled by composition--or, in special cases only, by nonpublic inheritance.
+
+
 
 
 
