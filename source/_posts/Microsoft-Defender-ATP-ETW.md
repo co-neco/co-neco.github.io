@@ -1,5 +1,5 @@
 ---
-title: Microsoft_Defender_ATP_ETW
+title: <翻译> Microsoft_Defender_ATP_ETW
 categories:
   - Technology
   - Reverse
@@ -8,6 +8,7 @@ tags:
   - Translation
   - Microsoft Defender
   - ETW
+  - Privilege Escalation
 ---
 
 # 从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞
