@@ -205,12 +205,3 @@ A Square "is-a" Rectangle(mathematically) but a Sqaure is not a Rectangle(behavi
 Finally, I like following sentence:
 
 > The purpose of public inheritance is not for the derived class to reuse base class code to implement itself in terms of the base class's code. Such an is-implemented-in-terms-of relationship can be entirely proper, but should be modeled by composition--or, in special cases only, by nonpublic inheritance.
-
-
-
-
-
-
-
-
-
