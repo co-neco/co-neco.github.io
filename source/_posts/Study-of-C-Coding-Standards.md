@@ -205,3 +205,92 @@ A Square "is-a" Rectangle(mathematically) but a Sqaure is not a Rectangle(behavi
 Finally, I like following sentence:
 
 > The purpose of public inheritance is not for the derived class to reuse base class code to implement itself in terms of the base class's code. Such an is-implemented-in-terms-of relationship can be entirely proper, but should be modeled by composition--or, in special cases only, by nonpublic inheritance.
+
+## Pimpl judiciously
+
+In short, this item means that you can encapsulate all one class' private variables and private methods into an strcuture. Therefore you can forward-declare the structure within that class and use a pointer pointing to the structure, such as following code snippet:
+
+```c
+class Map{
+	//...
+private:
+	struc Impl;
+    shared_ptr<Impl> pimpl_;
+}
+```
+
+This will produce following benefits:
+
+- Shorten compilation time because of forward declaration
+
+- Git rid of ambiguity of name lookup:
+
+  ```c
+  int Twice(int); // 1
+  
+  class Calc {
+  public:
+  	std::string Twice(std::string); // 2
+  private:
+  	char* Twice(char*);  // 3
+  
+  	int Test() {
+  		return Twice(21); // error: 2 and 3 are unviable(and 1 is hidden)
+  	}
+  };
+  
+  	Calc c;
+  	c.Twice("aaa") // error: although 2 is right(implicit conversion from char* to std::string)
+  				   // but its' private version(3) is more accurate
+  ```
+
+- Make some operations reversible:
+
+  ```c
+  class Widget {
+  public:
+  	Widget& operator=(const Widget&);
+  
+  private:
+  	T1 t1;
+  	T2 t2;
+  };
+  ```
+
+  Say we call the Widget's assignment constructor operator, if the assignment of t1 succeeded, but the assignment of t2 failed and throwed an exception, the whole assignment constructor operator failed and couldn't be reversible.
+  
+  If we use Pimpl as following:
+  
+  ```c
+  Widget& Widget::operator=(const Widget& widget) {
+  	std::shared_ptr<Impl> temp(new Impl(/*...*/));
+  	// change temp->t1 and temp->t2; if it fails then throw, else assigns temp
+  
+  	pimpl_ = temp;
+  	return *this;
+  }
+  
+  ```
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
