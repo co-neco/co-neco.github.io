@@ -271,8 +271,29 @@ This will produce following benefits:
   }
   
   ```
-  
-  
+
+## Define and initialize member variables in the same order
+
+Member variables are always initialized in the order they are declared in the class definition; the order you write them in the constructor initialization list is ignored:
+
+```c
+class Employee {
+public:
+	std::string m_email;
+	std::string m_firstName;
+	std::string m_lastName;
+
+	Employee(const char* firstName, const char* lastName) :
+		m_firstName(firstName), m_lastName(lastName),
+		m_email(m_firstName + "." + m_lastName) { }
+};
+
+Employee e("firstName", "lastName");
+```
+
+When I test above example, the compilation of it was successful, with no error and warning using VS. But when I ran it, it crashed. The reason is that the m_email member vairable was initialized firstly, using not-yet-initialized member variables(m_firstName and m_lastName).
+
+The reason for this language design decision is to ensure there is a unique order to destroy members.
 
 
 
