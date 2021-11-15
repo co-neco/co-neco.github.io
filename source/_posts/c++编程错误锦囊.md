@@ -26,8 +26,11 @@ tags:
 
 > 注：
 >
-> - 如果该基类是抽象类，且该类不需要多态析构（即该类的继承类没有额外的析构需求，比如继承类没有显式再分配内存，因此没有什么需要释放的），那么该基类的析构函数应该是nonpublic且不是virtual的。
-> - 因为编译器默认会给类添加public且nonvirtual的析构函数，所以我们应该总显示定义析构函数
+> - 如果该基类不需要多态析构（比如基类没有虚函数，或者基类本意不希望显式分配任何对象等），那么该基类的析构函数应该是protected且不是virtual的。
+>
+>   关于何时不需要析构函数是virtual的，可参考[这个讨论](https://stackoverflow.com/questions/300986/when-should-you-not-use-virtual-destructors)中，‘sep’和‘andy’的回答。
+>
+> - 因为编译器默认会给类添加public且nonvirtual的析构函数，所以我们应该总显式定义析构函数
 
 ## 使用delete关键字删除特定类型
 
