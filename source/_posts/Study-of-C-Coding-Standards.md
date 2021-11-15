@@ -295,6 +295,16 @@ When I test above example, the compilation of it was successful, with no error a
 
 The reason for this language design decision is to ensure there is a unique order to destroy members.
 
+## Copy and destroy consistently(The Rule of the Big Three)
+
+If you define any of the Big Five(copy constructor, copy assginment operator, move constructor, move assignment operator, destructor), you might need to define one or both of the others:
+
+- If you write/disable either a copy constructor or the copy assignment operator, you probably need to do the same for the other
+- If you explicitly write the copying functions, you probably need to write the destructor.
+- If you explicitly write the destructor, you probably need to explicitly write or disable copying: If you define a destructor, which means you may need to deallocate some resources, you should define copying constructors. If you don't define them, you should disable them so that your defined classes wouldn't be copied unexpectedly, such as a shallow copy.
+
+> See [The Rule of the BigFive](https://en.cppreference.com/w/cpp/language/rule_of_three) for more details.
+
 
 
 
