@@ -14,7 +14,7 @@
     <category term=" galgame" />
     <entry>
         <id>https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/</id>
-        <title>[翻译] Microsoft_Defender_ATP_ETW</title>
+        <title>[翻译] Microsoft Defender ATP ETW</title>
         <link rel="alternate" href="https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/"/>
         <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h1 id=&#34;翻译从接到告警到发现驱动漏洞microsoft-defender-atp-检测出提权漏洞&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#翻译从接到告警到发现驱动漏洞microsoft-defender-atp-检测出提权漏洞&#34;&gt;#&lt;/a&gt; [翻译] 从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞&lt;/h1&gt;
 &lt;p&gt;随着 Microsoft 团队不断增强内核层的安全性、以及提升内核组件被利用的门槛，第三方开发的驱动渐渐成为了攻击者青睐的目标，同时第三方驱动也成为了漏洞分析的一个重要试验地。&lt;/p&gt;
