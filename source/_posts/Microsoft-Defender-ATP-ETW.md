@@ -1,5 +1,5 @@
 ---
-title: "[翻译] Microsoft_Defender_ATP_ETW"
+title: "[翻译] Microsoft Defender ATP ETW"
 categories:
   - Technology
   - Reverse
