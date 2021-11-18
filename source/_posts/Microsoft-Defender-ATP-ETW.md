@@ -1,5 +1,5 @@
 ---
-title: <翻译> Microsoft_Defender_ATP_ETW
+title: "[翻译] Microsoft_Defender_ATP_ETW"
 categories:
   - Technology
   - Reverse
@@ -11,7 +11,7 @@ tags:
   - Privilege Escalation
 ---
 
-# 从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞
+# [翻译]从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞
 
 随着Microsoft团队不断增强内核层的安全性、以及提升内核组件被利用的门槛，第三方开发的驱动渐渐成为了攻击者青睐的目标，同时第三方驱动也成为了漏洞分析的一个重要试验地。
 
@@ -30,8 +30,6 @@ tags:
 从Windows 10, version 1809开始，内核新添了一些新的监测器（基于事件追踪--ETW），用于追踪从内核发起的UserAPC代码注入。这种方式使得一些内核攻击更容易被监测到。正如我们之前深入分析的[一篇文章](https://cloudblogs.microsoft.com/microsoftsecure/2017/06/30/exploring-the-crypt-analysis-of-the-wannacrypt-ransomware-smb-exploit-propagation/)，WannaCry利用DOUBLEPULSAR这个内核后门，向用户空间注入了代码（payload）。其原理是DOUBLEPULSAR从内核复制了一段代码到lsass.exe的用户空间。随后，DOUBLEPULSAR又向lsass.exe插入了一个UserAPC，去执行这段代码。
 
 ![](https://gitee.com/co-neco/pic_bed/raw/master/translation/figure-01-WannaCry-user-APC-injection-technique-schematic-diagram-768x384.png)
-
-图1. *WannaCry UserAPC 注入技术流程图*
 
 虽然UserAPC代码注入不是新知识了 (看 [Conficker](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Win32/Conficker) 或者 [Valerino’s earliest proof-of-concept](https://community.osr.com/discussion/88852))，但检测内核的恶意行为还是很难的。自从PatchGuard引入之后，对NTOSKRNL模块进行挂钩已经不允许了，驱动也因此没有官方方法去获取那些挂钩操作对应的通知了。因此，没有合适的方法，剩下的唯一可持续迭代的策略就是做内存分析，但内存分析很复杂。
 
