@@ -356,4 +356,3 @@ You should make sure following situations would not throw:
 - inside destructors(a destructor should not throw any exception to outer world, because which it might be called in many situations)
 
 
-
