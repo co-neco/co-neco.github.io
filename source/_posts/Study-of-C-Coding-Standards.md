@@ -214,7 +214,7 @@ In short, this item means that you can encapsulate all one class' private variab
 class Map{
 	//...
 private:
-	struc Impl;
+	struct Impl;
     shared_ptr<Impl> pimpl_;
 }
 ```
@@ -272,6 +272,8 @@ This will produce following benefits:
   
   ```
 
+# Construction, Destruction and Copying
+
 ## Define and initialize member variables in the same order
 
 Member variables are always initialized in the order they are declared in the class definition; the order you write them in the constructor initialization list is ignored:
@@ -305,23 +307,53 @@ If you define any of the Big Five(copy constructor, copy assginment operator, mo
 
 > See [The Rule of the BigFive](https://en.cppreference.com/w/cpp/language/rule_of_three) for more details.
 
+# Namespace and Modules
 
+## Don't define entities with linkage in a header file
 
+bad e.g.:
 
+- definition with external linkage in a header
 
+  ```c
+  int aa;
+  string hello("11");
+  void foo(){/*....*/}
+  ```
+  
+  When you include the header in multiple files, the linker would complain duplication of the same variables and functions. It's fine because the linker can tell you what's wrong after all. And you can work around it by just putting declarations in a header. 
+  
+- definition with internal linkage in a header
 
+  ```c
+  static int aa;
+  static string hello("11");
+  static void foo(){/*....*/}
+  ```
 
+  When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastfu. Besides, every copy of every variable is distinct one.
 
+  > Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.
+  >
+  > ```c
+  > namespace {
+  > int aa;
+  > string hello("11");
+  > void foo(){/*....*/}
+  > }
+  > ```
+  >
+  > However, you can define variables within a unnamed namespace in a source file.
 
+## Don't allow exceptions to propagete across module boundaries
 
+You should make sure following situations would not throw:
 
-
-
-
-
-
-
-
+- around main
+- callbacks you provide to system-provided mechnisms, such as an asynchronous read
+- around thread boundaries
+- around module interface boundaries that you expose to outer world
+- inside destructors(a destructor should not throw any exception to outer world, because which it might be called in many situations)
 
 
 
