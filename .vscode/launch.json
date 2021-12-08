@@ -5,7 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "pwa-node",
+            "name": "copy_images",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/py_scripts/rename_images.py",
+            "console": "integratedTerminal",
+            "args": [
+                "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you_compress",
+                "E:\\github\\coneco\\source\\_data\\image_host\\inochi",
+            ]
+        },
+        {
+            "name": "image_compression",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/py_scripts/image_compress.py",
+            "console": "integratedTerminal",
+            "args": [
+                "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you",
+            ]
+        },
+        {
+            "name": "hexo-node",
             "program": "${workspaceFolder}/node_modules/hexo/node_modules/hexo-cli/bin/hexo",
             "request": "launch",
             "skipFiles": [
@@ -16,27 +37,28 @@
                 "server"
             ]
         }
-        //,
-        // {
-        //     "name": "add_hyphen_for_image_url.py",
-        //     "type": "python",
-        //     "request": "launch",
-        //     "program": "${file}",
-        //     "console": "integratedTerminal",
-        //     "args": [
-        //         "E:\\github\\co-neco.github.io\\source\\_data"
-        //     ]
-        // },
-        // {
-        //     "name": "parse_bilibili_imgs.py",
-        //     "type": "python",
-        //     "request": "launch",
-        //     "program": "${file}",
-        //     "console": "integratedTerminal",
-        //     "args": [
-        //         "E:\\tmp\\bilibili_saenai_cg_2.txt",
-        //         "E:\\github\\co-neco.github.io\\source\\_data\\images"
-        //     ]
-        // }
+        ,
+        {
+            "name": "add_hyphen_for_image_url",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "E:\\github\\coneco\\source\\_data"
+            ]
+        }
+        ,
+        {
+            "name": "parse_bilibili_imgs",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/py_scripts/parse_bilibili_imgs.py",
+            "console": "integratedTerminal",
+            "args": [
+                "E:\\tmp\\honoguraki.txt",
+                "E:\\github\\coneco\\source\\_data\\image_host\\honogurakii"
+            ]
+        }
     ]
 }

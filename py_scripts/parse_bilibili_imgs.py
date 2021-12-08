@@ -44,7 +44,7 @@ def main(argv):
 def usage():
     print("\nusage: python parse_bilibili_imgs.py web_cotent_file_path save_path\n\n"
           "eg:\n"
-          "  python parse_bilibili_imgs.py E\\tmp\\bilibili_saenai_cg_2.txt E:\\github\\co-neco.github.io\\source\\_data\\images\n\n")
+          "  python parse_bilibili_imgs.py E\\tmp\\bilibili_saenai_cg_2.txt E:\\github\\coneco\\source\\_data\\image_host\\honoguraki\n\n")
 
 
 if __name__ == "__main__":

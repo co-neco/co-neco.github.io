@@ -13,6 +13,9 @@ def add_hyphen(file, image_content, day):
     image_list = image_content.split('\r\n')
     image_hyphen_content = "# " + file + "\r\n"
     for image in image_list:
+        if image.startswith("# "):
+            continue
+
         image_hyphen_content += "- " + str(day) + image + "\r\n"
     image_hyphen_content += "\r\n"
     return image_hyphen_content
@@ -25,6 +28,10 @@ def write_file(image_yml_file_path, image_content):
 
 
 def main(image_host_data_path):
+
+    image_yml_path = image_host_data_path + "\\images.yml"
+    os.remove(image_yml_path)
+
     image_host_walk = os.walk(image_host_data_path + "\\image_host")
     for root, directories, files in image_host_walk:
         day = 1
@@ -38,7 +45,7 @@ def main(image_host_data_path):
 def usage():
     print("\nusage: python add_hyphen_for_image_url.py image_host_data_path\n\n"
           "eg:\n"
-          "  python add_hyphen_for_image_url.py E:\\github\\co-neco.github.io\\source\\_data\n\n")
+          "  python add_hyphen_for_image_url.py E:\\github\\coneco\\source\\_data\n\n")
 
 
 if __name__ == "__main__":
