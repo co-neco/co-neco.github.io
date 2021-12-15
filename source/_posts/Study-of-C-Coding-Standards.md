@@ -321,7 +321,7 @@ bad e.g.:
   void foo(){/*....*/}
   ```
   
-  When you include the header in multiple files, the linker would complain duplication of the same variables and functions. It's fine because the linker can tell you what's wrong after all. And you can work around it by just putting declarations in a header. 
+  When you include the header in multiple files, the linker would complain duplication of the same variables and functions. It's fine because the linker can tell you what's wrong after all. And you can work around it by only putting declarations in a header. 
   
 - definition with internal linkage in a header
 
@@ -331,7 +331,7 @@ bad e.g.:
   static void foo(){/*....*/}
   ```
 
-  When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastfu. Besides, every copy of every variable is distinct one.
+  When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastfu. What's more, every copy of every variable is distinct one.
 
   > Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.
   >
@@ -351,8 +351,125 @@ You should make sure following situations would not throw:
 
 - around main
 - callbacks you provide to system-provided mechnisms, such as an asynchronous read
-- around thread boundaries
+- around thread boundaries(throw exceptions to system)
 - around module interface boundaries that you expose to outer world
 - inside destructors(a destructor should not throw any exception to outer world, because which it might be called in many situations)
 
+## Use sufficiently portable types in a module's interface
 
+If you build a module, this module should have some external interfaces. You should take care of its parameters, because which the caller and you may use different version of the same types, such as std::string with different memory layout.
+
+Consider following paramter traceoff of SummarizeFile, which need to read a file:
+
+- char* -> low-level abstraction, but high-level complexity and error-prone
+- std::string -> medium-level abstracetion ...
+- istream or File(maybe customed) -> high-level abstraction, but low-level complexity and errorless
+
+> Summay: When developing a module, use low-level abstraction in external interfaces, use the highest-level of abstraction internally.
+
+# Templatese and Genericity
+
+## Keep types and functions in separate namespaces unless they're specifically intended to work together
+
+Consider the following example:
+
+```c
+#include <iostream>
+#include <vector>
+
+namespace N {
+    struct X {int aa;};
+    
+    template<typename T>
+    int* operator+(T, unsigned){/* do something...*/}
+}
+
+int main(){
+    std::vector<N::X> v(5);
+    v[0];
+}
+```
+
+If the compiler reaches out into N namespace, it would find N::operator+, and it might think that N::operator++ is a better match than the std::operator+ for vector\<T\>::iterators, which may result in errrors.
+
+**Workaround**:
+
+- arrange for v.begin()'s type to not to depend in any way on the template paramter, which can disable ADL(argument-dependent lookup)
+- rewrite the call to operator+ as a qualified call[std::operator+(v.begin(), n)]
+
+**Conclusion**: Avoid putting nonmember functions that are not part of the interface of a type X into the same namespace as X, and especially never ever put templated functions or operators into the same namespace as a user-defined type, because ADL check would take the templated functions in the same namespace of X as the best match.
+
+## Customize intentionally and explicitly
+
+C++11 implementation:
+
+```c
+template<typename T>
+class Sample {
+    BOOST_STATIC_ASSERT((is_base_of<List, T>::value)); //Yes, the double parentheses are needed, otherwise the comma will be seen as macro argument separator
+    ...
+};
+
+//==================================
+#include <type_traits>
+
+template<typename T>
+class Sample {
+    static_assert(std::is_base_of<list, T>::value, "T must inherit from list");
+    // code here..
+};
+```
+
+or
+
+```c
+#include <type_traits>
+
+template <typename RealType>
+class A
+{
+  static_assert(std::is_same<RealType, double>::value || std::is_same<RealType, float>::value,
+                "some meaningful error message");
+};
+```
+
+**Before C++11**
+
+Option1:
+
+```c
+template<typename T>
+    void Sample1(T t) {
+        t.foo();
+        typename T::value_type x;
+
+        std::cout << "in Sample1: " << typeid(T::value_type).name() << "\n";
+    }
+```
+
+> The author of Sample1 must:
+>
+> - Call the function with member notation: Just use the natural member syntax[f.foo(11)]
+> - Document the point of customization: The type T must provide an accessible member function foo that can be called with given arguments(here, none)
+
+Option2:
+
+```c
+template<typename T>
+    void Sample2(T t) {
+        foo(t);
+    }
+```
+
+> The author of Sample2 must:
+>
+> - Call the function with unqualified nonmeber notation. Ensure template itself doesn't have a member function with the same name: It is essential for the template not to qualify the call to foo.
+> - Document the point of customization: The type T must provide an nonmember function foo that can be called with given arguments(here, none)
+
+**Note**: avoid providing points of customization unintentionally: put any helper functions your template uses internally into thier own nested namespace, and call them with explicit qualification to disable ADL.
+
+## Don't specialize function templates.
+
+Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey. Besides, you need add a specialization of std::swap into std namespace.
+
+**Conclusion**: Overload rather than specialize function templates, and the overloaded functions should be placed in the namespace of the type(s) the overload is designed to be used for. 
