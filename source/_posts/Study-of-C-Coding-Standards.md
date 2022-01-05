@@ -196,7 +196,7 @@ In short, Know which kind class you are writing. You can get a more detailed des
 
 Bad eg: Inheriting a class with a public nonvirtual destructor.
 
-## Public inheritance is substitutability. Inheri, not to reuse, whereas to be reused
+## Public inheritance is substitutability. Inherit, not to reuse, and to be reused
 
 The "is-a" description of public inheritance is misunderstood when people use it to draw irrelevant real-world analogies: 
 
@@ -473,3 +473,54 @@ template<typename T>
 Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey. Besides, you need add a specialization of std::swap into std namespace.
 
 **Conclusion**: Overload rather than specialize function templates, and the overloaded functions should be placed in the namespace of the type(s) the overload is designed to be used for. 
+
+## Write More generic code
+
+eg:
+
+- Use != instead of **<** to compare iterators, != is more generic and **<** is meaningful only to randome-access iterators.
+- Prefer iteration to indexed access, interation is more generic and most containers don't support indexed access.
+- Use empty() instead of *size == 0*
+
+# Type safety
+
+- Avoid type switching; prefer polymorphism
+
+- Avoid casting away const
+
+- Dont't use C-style casts with C++ classes(especially related about inheritance)
+
+  ```c
+  void Gun(Base* pb){
+      Derived* pd = (Derived*)pb;
+  	// if Gun has access to the definition of Derived class, the 
+      // compiler will have necessary object layout information to adjust the pointers.
+      // Whereas, if Gun has no access to the definition of Derived class, the compiler
+      // would do what reinterpreter_cast does which is bad.
+  }
+  ```
+
+  one more example:
+
+  ```c
+  #include <iostream>
+  
+  struct A { int a; };
+  struct B { int b; };
+  struct C : A, B { int c; };
+  
+  int main() {
+      C c;
+      std::cout << "C is at : " << (void*)(&c) << "\n";
+      std::cout << "B is at : " << (void*)static_cast<B*>(&c) << "\n";
+      std::cout << "A is at : " << (void*)static_cast<A*>(&c) << "\n";
+  
+  }
+  
+  // Output:
+  // C is at : 0x22ccd0
+  // B is at : 0x22ccd4
+  // A is at : 0x22ccd0
+  ```
+
+  Note that in order to convert correctly to B*, static_cast has to change the pointer value. If the compiler didn't have the class definition for C, then it wouldn't know that B was a base class, and it certainly wouldn't know what offset to apply.
