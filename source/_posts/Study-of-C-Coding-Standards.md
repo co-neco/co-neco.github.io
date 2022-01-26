@@ -331,8 +331,10 @@ bad e.g.:
   static void foo(){/*....*/}
   ```
 
-  When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastfu. What's more, every copy of every variable is distinct one.
+  When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastful. What's more, every copy of every variable is distinct one. 
 
+  If you call 'foo' function in another compilation unit, you will get "static function declared but not defined" error.
+  
   > Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.
   >
   > ```c
@@ -470,7 +472,29 @@ template<typename T>
 
 ## Don't specialize function templates.
 
-Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey. Besides, you need add a specialization of std::swap into std namespace.
+Before we talk about override and specialization, let's talk a little about their difference.
+
+```c++
+namespace std {
+    template <class T>
+	void swap(T& t1, T& t2);
+}
+
+// specialization
+namespace std{
+    template <>
+    void swap(Object& o1, Object& o2);
+}
+
+// override
+namespace XXX {
+    void swap(Object& o1, Object& o2);
+}
+```
+
+Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey, such as it's copiable. Besides, you need add a specialization of std::swap into std namespace. 
+
+If Object class is a template class, above specialization is even impossible, because you has already specialized class T with Object class, And where Object\<T\> can be placed in? 
 
 **Conclusion**: Overload rather than specialize function templates, and the overloaded functions should be placed in the namespace of the type(s) the overload is designed to be used for. 
 

@@ -66,6 +66,14 @@ tags:
   %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat" x86 -vcvars_ver=14.25
   ```
 
+> 注：windows SDk根据情况，你可能会有多个。因为历史原因，有些SDK是残缺的，当VS command prompt根据名称顺序找到这些SDK的时候，编译时会报各种文件找不到的错误。这时，我们需要把这些残缺的SDK删掉。
+>
+> > eg：
+> >
+> > C:\Windows Kits\10\Include目录下有三个文件夹，10.0.17763.0、10.0.10240.0、10.0.20348.0。
+> >
+> > 其中10.0.20348.0是残缺的SDK，但因为降序的原因，10.0.20348.0会作为编译是的Windows SDK，而其他两个则不会被用到。
+
 ### 参考
 
 - [Use the Microsoft C++ toolset from the command line ...](https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line)
