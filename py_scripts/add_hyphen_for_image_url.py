@@ -13,7 +13,7 @@ def add_hyphen(file, image_content, day):
     image_list = image_content.split('\r\n')
     image_hyphen_content = "# " + file + "\r\n"
     for image in image_list:
-        if image.startswith("# "):
+        if image.startswith("# ") or len(image) == 0:
             continue
 
         image_hyphen_content += "- " + str(day) + image + "\r\n"
