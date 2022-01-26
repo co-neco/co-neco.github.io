@@ -21,12 +21,12 @@ def get_image_parent_dir(image_path):
 
 def compress_one_file_internal(file_path, save_path):
 
-    if os.stat(file_path).st_size < 1024*1024:
+    if os.stat(file_path).st_size <= 1024*1024:
         copy2(file_path, save_path)
         return
 
     image = Image.open(file_path)
-    image = image.resize((int(image.width/2), int(image.height/2)), Image.ANTIALIAS)
+    image = image.resize((int(2*image.width/3), int(2*image.height/3)), Image.ANTIALIAS)
 
     image.save(save_path, optimize=True, quality=50)
 
@@ -49,7 +49,7 @@ def main(argv):
     traverse_dir_files.traverse(argv[0], compress_one_file)
 
 def usage():
-    print("\nusage: python image_compress.py image_dir image_prefix\n\n"
+    print("\nusage: python image_compress.py image_dir\n\n"
           "eg:\n"
           "  python image_compress.py "
           "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you \n\n")

@@ -8,11 +8,11 @@
             "name": "copy_images",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/py_scripts/rename_images.py",
+            "program": "${workspaceFolder}/py_scripts/copy_images.py",
             "console": "integratedTerminal",
             "args": [
                 "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you_compress",
-                "E:\\github\\coneco\\source\\_data\\image_host\\inochi",
+                "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you_compress_output",
             ]
         },
         {
@@ -42,7 +42,7 @@
             "name": "add_hyphen_for_image_url",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/py_scripts/add_hyphen_for_image_url.py",
             "console": "integratedTerminal",
             "args": [
                 "E:\\github\\coneco\\source\\_data"
@@ -59,6 +59,17 @@
                 "E:\\tmp\\honoguraki.txt",
                 "E:\\github\\coneco\\source\\_data\\image_host\\honogurakii"
             ]
-        }
+        },
+        {
+            "name": "write_image_urls_to_host",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/py_scripts/write_image_urls_to_host.py",
+            "console": "integratedTerminal",
+            "args": [
+                "D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\731.【暖色阁】蔷薇少女\\yande图库收集\\【暖色阁】蔷薇少女yande图库收集\\【暖色阁】蔷薇少女yande图库收集_compress_output_1",
+                "rozen_maiden",
+            ]
+        },
     ]
 }
