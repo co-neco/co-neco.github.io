@@ -8,10 +8,50 @@
     <author>
       <name>coneco</name>
     </author>
-    <updated>2021-11-09T04:56:25.000Z</updated>
+    <updated>2022-01-26T02:40:32.000Z</updated>
     <category term="anime" />
     <category term=" music" />
     <category term=" galgame" />
+    <entry>
+        <id>https://conecoy.cn/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/</id>
+        <title>新年の始まり</title>
+        <link rel="alternate" href="https://conecoy.cn/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/"/>
+        <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;h2 id=&#34;日文&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#日文&#34;&gt;#&lt;/a&gt; 日文&lt;/h2&gt;
+&lt;p&gt;もうすぐ新しい年がつき、去年の成績を顧みて、何となく満足しない自分がいた。おととしもそうだっだような気がする（笑＾＿＾）。&lt;br /&gt;
+去年、自分のウェブサイトができて、とても嬉しかった。hexo を選んだため、少々手間がかかったですが。それから、少しずつ技術の文章を書いて、後の仕事のメモにしたいと思っています。ウエブサイトのほか、いくつの本も読みました、例えば、「design pattern」、「Refactoring, Improving the Design of Existing Code Second Edition」、「C++ Coding Standards」、「软件调试第二版」、「Windows Internals 7th first part」。その中、「软件调试第一版」が全部読んだため、第二版の新しい部分を読みました。&lt;/p&gt;
+&lt;p&gt;今年もたくさん技術の本を読みたいと思って、すでにそのリストを作りました。&lt;/p&gt;
+&lt;p&gt;Windows System についてのリスト：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「Windows Internals 6th second part」&lt;/li&gt;
+&lt;li&gt;「Windows 10 System Programming second part」&lt;/li&gt;
+&lt;li&gt;「Windows Kernel Programming」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;実は、昔 windows system の本を少し読みました、例えば「windows-via-c-c_5th-edition」、「Windows Internals 6th first part」。だから、先並べた本に、読んだことのない部分を見ます。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;もう一つの本は「Compilers:Principles,Techniques,and Tools,Second Edition」です。今年の読書目標は以上の四冊をよみ終えることです。&lt;/p&gt;
+&lt;p&gt;他に記すに値することは多分バドミントンしかないですね。足が怪我をした前に、およそ 4 ヶ月ほどいっぱい遊びました。バドミントンのレッスンビデオを買って、外のクラブ活動に参加して、とりあえず遊び回りました。バドミントンには興味もあったし、運動の役にも立つし、一石二鳥じゃない、haha～～。&lt;/p&gt;
+&lt;p&gt;今年もいっぱい運動して、本を読んで、ゲームも少し遊んで、体と技術の基本能力を鍛えたいと思います。今年も無事に健康のままに頑張ります。&lt;/p&gt;
+&lt;h2 id=&#34;中文&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#中文&#34;&gt;#&lt;/a&gt; 中文：&lt;/h2&gt;
+&lt;p&gt;马上新的一年就要来了，回顾过去一年的成绩，还是感觉些许的不满足，似乎去年也是这样的感觉（笑＾＿＾）。&lt;/p&gt;
+&lt;p&gt;去年，我搭建了一个博客，感到非常高兴。由于选的框架是 hexo，所以稍微多花了一些时间。除此之外，我还读了基本书，比如 &amp;quot;design pattern&amp;quot;、&amp;quot;Refactoring, Improving the Design of Existing Code Second Edition&amp;quot;、&amp;quot;C++ Coding Standards&amp;quot;、&amp;quot;软件调试第二版&amp;quot;。因为软件调试的第一版都读完了，所以第二版学习了新添加的章节。&lt;/p&gt;
+&lt;p&gt;今年我也想读很多的技术书籍，下面制作了一个列表。&lt;/p&gt;
+&lt;p&gt;关于 windows 系统的书籍：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows Internals 6th second part&lt;/li&gt;
+&lt;li&gt;Windows 10 System Programming second part&lt;/li&gt;
+&lt;li&gt;Windows Kernel Programming&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;其实，以前也读了基本 windows 系统的书，比如 &amp;quot;windows-via-c-c_5th-edition&amp;quot;，&amp;quot;Windows Internals 6th first part&amp;quot;。所以，以上书籍会读没有看过的章节。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;除了 windows 系统的书籍，还有一本要读的书是编译原理，今天的阅读目标就是这四本书。&lt;/p&gt;
+&lt;p&gt;其他还值得记下来的应该只有羽毛球了。脚受伤之前，我大概打了 4 个月，经常打。买了教学视频，去外面的俱乐部打，总之打的非常开心。羽毛球是一个兴趣，也是一个很好的运动，一石二鸟了，haha～～。&lt;/p&gt;
+&lt;p&gt;今年也打算经常运动、读很多书和打一点游戏，让身体保持活力，让技术的基本功更加扎实。希望今年也能健康地度过这一年。&lt;/p&gt;
+</content>
+        <category term="新年計画" scheme="https://conecoy.cn/categories/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/" />
+        <updated>2022-01-26T02:40:32.000Z</updated>
+    </entry>
     <entry>
         <id>https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/</id>
         <title>[翻译] Microsoft Defender ATP ETW</title>
@@ -234,7 +274,8 @@
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;definition with internal linkage in a header&lt;/p&gt;
-&lt;figure class=&#34;highlight c&#34;&gt;&lt;figcaption data-lang=&#34;c&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; aa&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;static&lt;/span&gt; string &lt;span class=&#34;token function&#34;&gt;hello&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;11&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;/*....*/&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastfu. What&#39;s more, every copy of every variable is distinct one.&lt;/p&gt;
+&lt;figure class=&#34;highlight c&#34;&gt;&lt;figcaption data-lang=&#34;c&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; aa&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;static&lt;/span&gt; string &lt;span class=&#34;token function&#34;&gt;hello&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;11&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;/*....*/&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastful. What&#39;s more, every copy of every variable is distinct one.&lt;/p&gt;
+&lt;p&gt;If you call &#39;foo&#39; function in another compilation unit, you will get &amp;quot;static function declared but not defined&amp;quot; error.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.&lt;/p&gt;
 &lt;figure class=&#34;highlight c&#34;&gt;&lt;figcaption data-lang=&#34;c&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;namespace &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; aa&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;string &lt;span class=&#34;token function&#34;&gt;hello&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;11&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;/*....*/&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;However, you can define variables within a unnamed namespace in a source file.&lt;/p&gt;
@@ -293,7 +334,25 @@
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: avoid providing points of customization unintentionally: put any helper functions your template uses internally into thier own nested namespace, and call them with explicit qualification to disable ADL.&lt;/p&gt;
 &lt;h2 id=&#34;dont-specialize-function-templates&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#dont-specialize-function-templates&#34;&gt;#&lt;/a&gt; Don&#39;t specialize function templates.&lt;/h2&gt;
-&lt;p&gt;Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey. Besides, you need add a specialization of std::swap into std namespace.&lt;/p&gt;
+&lt;p&gt;Before we talk about override and specialization, let&#39;s talk a little about their difference.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;namespace std &amp;#123;
+    template &amp;lt;class T&amp;gt;
+	void swap(T&amp;amp; t1, T&amp;amp; t2);
+&amp;#125;
+
+// specialization
+namespace std&amp;#123;
+    template &amp;lt;&amp;gt;
+    void swap(Object&amp;amp; o1, Object&amp;amp; o2);
+&amp;#125;
+
+// override
+namespace XXX &amp;#123;
+    void swap(Object&amp;amp; o1, Object&amp;amp; o2);
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey, such as it&#39;s copiable. Besides, you need add a specialization of std::swap into std namespace.&lt;/p&gt;
+&lt;p&gt;If Object class is a template class, above specialization is even impossible, because you has already specialized class T with Object class, And where Object&amp;lt;T&amp;gt; can be placed in?&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;: Overload rather than specialize function templates, and the overloaded functions should be placed in the namespace of the type(s) the overload is designed to be used for.&lt;/p&gt;
 &lt;h2 id=&#34;write-more-generic-code&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#write-more-generic-code&#34;&gt;#&lt;/a&gt; Write More generic code&lt;/h2&gt;
 &lt;p&gt;eg:&lt;/p&gt;
@@ -905,6 +964,14 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 &lt;p&gt;在该命令的最后添加：x86 (architecture / 架构) -vcvars_ver=14.25 (不是 14.25.xxxxx)，添加后如下：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;%comspec% /k &lt;span class=&#34;token string&#34;&gt;&#34;C:\Program Files (x86)\Microsoft Visual Studio&lt;span class=&#34;token entity&#34; title=&#34;\201&#34;&gt;\201&lt;/span&gt;9\Community\VC\Auxiliary\Build&lt;span class=&#34;token entity&#34; title=&#34;\v&#34;&gt;\v&lt;/span&gt;cvars32.bat&#34;&lt;/span&gt; x86 -vcvars_ver&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;14.25&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注：windows SDk 根据情况，你可能会有多个。因为历史原因，有些 SDK 是残缺的，当 VS command prompt 根据名称顺序找到这些 SDK 的时候，编译时会报各种文件找不到的错误。这时，我们需要把这些残缺的 SDK 删掉。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;eg：&lt;/p&gt;
+&lt;p&gt;C:\Windows Kits\10\Include 目录下有三个文件夹，10.0.17763.0、10.0.10240.0、10.0.20348.0。&lt;/p&gt;
+&lt;p&gt;其中 10.0.20348.0 是残缺的 SDK，但因为降序的原因，10.0.20348.0 会作为编译是的 Windows SDK，而其他两个则不会被用到。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
 &lt;h3 id=&#34;参考&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#参考&#34;&gt;#&lt;/a&gt; 参考&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;

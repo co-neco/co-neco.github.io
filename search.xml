@@ -738,6 +738,14 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 <p>在该命令的最后添加：x86 (architecture / 架构) -vcvars_ver=14.25 (不是 14.25.xxxxx)，添加后如下：</p>
 <figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>%comspec% /k <span class="token string">"C:\Program Files (x86)\Microsoft Visual Studio<span class="token entity" title="\201">\201</span>9\Community\VC\Auxiliary\Build<span class="token entity" title="\v">\v</span>cvars32.bat"</span> x86 -vcvars_ver<span class="token operator">=</span><span class="token number">14.25</span></pre></td></tr></table></figure></li>
 </ul>
+<blockquote>
+<p>注：windows SDk 根据情况，你可能会有多个。因为历史原因，有些 SDK 是残缺的，当 VS command prompt 根据名称顺序找到这些 SDK 的时候，编译时会报各种文件找不到的错误。这时，我们需要把这些残缺的 SDK 删掉。</p>
+<blockquote>
+<p>eg：</p>
+<p>C:\Windows Kits\10\Include 目录下有三个文件夹，10.0.17763.0、10.0.10240.0、10.0.20348.0。</p>
+<p>其中 10.0.20348.0 是残缺的 SDK，但因为降序的原因，10.0.20348.0 会作为编译是的 Windows SDK，而其他两个则不会被用到。</p>
+</blockquote>
+</blockquote>
 <h3 id="参考"><a class="anchor" href="#参考">#</a> 参考</h3>
 <ul>
 <li>
@@ -1113,7 +1121,8 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 </li>
 <li>
 <p>definition with internal linkage in a header</p>
-<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">int</span> aa<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">static</span> string <span class="token function">hello</span><span class="token punctuation">(</span><span class="token string">"11"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token comment">/*....*/</span><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastfu. What's more, every copy of every variable is distinct one.</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">int</span> aa<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">static</span> string <span class="token function">hello</span><span class="token punctuation">(</span><span class="token string">"11"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token comment">/*....*/</span><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastful. What's more, every copy of every variable is distinct one.</p>
+<p>If you call 'foo' function in another compilation unit, you will get &quot;static function declared but not defined&quot; error.</p>
 <blockquote>
 <p>Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.</p>
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>namespace <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">int</span> aa<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>string <span class="token function">hello</span><span class="token punctuation">(</span><span class="token string">"11"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token comment">/*....*/</span><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>However, you can define variables within a unnamed namespace in a source file.</p>
@@ -1172,7 +1181,25 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 </blockquote>
 <p><strong>Note</strong>: avoid providing points of customization unintentionally: put any helper functions your template uses internally into thier own nested namespace, and call them with explicit qualification to disable ADL.</p>
 <h2 id="dont-specialize-function-templates"><a class="anchor" href="#dont-specialize-function-templates">#</a> Don't specialize function templates.</h2>
-<p>Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey. Besides, you need add a specialization of std::swap into std namespace.</p>
+<p>Before we talk about override and specialization, let's talk a little about their difference.</p>
+<pre><code class="language-c++">namespace std &#123;
+    template &lt;class T&gt;
+	void swap(T&amp; t1, T&amp; t2);
+&#125;
+
+// specialization
+namespace std&#123;
+    template &lt;&gt;
+    void swap(Object&amp; o1, Object&amp; o2);
+&#125;
+
+// override
+namespace XXX &#123;
+    void swap(Object&amp; o1, Object&amp; o2);
+&#125;
+</code></pre>
+<p>Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey, such as it's copiable. Besides, you need add a specialization of std::swap into std namespace.</p>
+<p>If Object class is a template class, above specialization is even impossible, because you has already specialized class T with Object class, And where Object&lt;T&gt; can be placed in?</p>
 <p><strong>Conclusion</strong>: Overload rather than specialize function templates, and the overloaded functions should be placed in the namespace of the type(s) the overload is designed to be used for.</p>
 <h2 id="write-more-generic-code"><a class="anchor" href="#write-more-generic-code">#</a> Write More generic code</h2>
 <p>eg:</p>
@@ -1303,5 +1330,45 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
         <tag>ETW</tag>
         <tag>Privilege Escalation</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>新年の始まり</title>
+    <url>/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="日文"><a class="anchor" href="#日文">#</a> 日文</h2>
+<p>もうすぐ新しい年がつき、去年の成績を顧みて、何となく満足しない自分がいた。おととしもそうだっだような気がする（笑＾＿＾）。<br />
+去年、自分のウェブサイトができて、とても嬉しかった。hexo を選んだため、少々手間がかかったですが。それから、少しずつ技術の文章を書いて、後の仕事のメモにしたいと思っています。ウエブサイトのほか、いくつの本も読みました、例えば、「design pattern」、「Refactoring, Improving the Design of Existing Code Second Edition」、「C++ Coding Standards」、「软件调试第二版」、「Windows Internals 7th first part」。その中、「软件调试第一版」が全部読んだため、第二版の新しい部分を読みました。</p>
+<p>今年もたくさん技術の本を読みたいと思って、すでにそのリストを作りました。</p>
+<p>Windows System についてのリスト：</p>
+<ul>
+<li>「Windows Internals 6th second part」</li>
+<li>「Windows 10 System Programming second part」</li>
+<li>「Windows Kernel Programming」</li>
+</ul>
+<blockquote>
+<p>実は、昔 windows system の本を少し読みました、例えば「windows-via-c-c_5th-edition」、「Windows Internals 6th first part」。だから、先並べた本に、読んだことのない部分を見ます。</p>
+</blockquote>
+<p>もう一つの本は「Compilers:Principles,Techniques,and Tools,Second Edition」です。今年の読書目標は以上の四冊をよみ終えることです。</p>
+<p>他に記すに値することは多分バドミントンしかないですね。足が怪我をした前に、およそ 4 ヶ月ほどいっぱい遊びました。バドミントンのレッスンビデオを買って、外のクラブ活動に参加して、とりあえず遊び回りました。バドミントンには興味もあったし、運動の役にも立つし、一石二鳥じゃない、haha～～。</p>
+<p>今年もいっぱい運動して、本を読んで、ゲームも少し遊んで、体と技術の基本能力を鍛えたいと思います。今年も無事に健康のままに頑張ります。</p>
+<h2 id="中文"><a class="anchor" href="#中文">#</a> 中文：</h2>
+<p>马上新的一年就要来了，回顾过去一年的成绩，还是感觉些许的不满足，似乎去年也是这样的感觉（笑＾＿＾）。</p>
+<p>去年，我搭建了一个博客，感到非常高兴。由于选的框架是 hexo，所以稍微多花了一些时间。除此之外，我还读了基本书，比如 &quot;design pattern&quot;、&quot;Refactoring, Improving the Design of Existing Code Second Edition&quot;、&quot;C++ Coding Standards&quot;、&quot;软件调试第二版&quot;。因为软件调试的第一版都读完了，所以第二版学习了新添加的章节。</p>
+<p>今年我也想读很多的技术书籍，下面制作了一个列表。</p>
+<p>关于 windows 系统的书籍：</p>
+<ul>
+<li>Windows Internals 6th second part</li>
+<li>Windows 10 System Programming second part</li>
+<li>Windows Kernel Programming</li>
+</ul>
+<blockquote>
+<p>其实，以前也读了基本 windows 系统的书，比如 &quot;windows-via-c-c_5th-edition&quot;，&quot;Windows Internals 6th first part&quot;。所以，以上书籍会读没有看过的章节。</p>
+</blockquote>
+<p>除了 windows 系统的书籍，还有一本要读的书是编译原理，今天的阅读目标就是这四本书。</p>
+<p>其他还值得记下来的应该只有羽毛球了。脚受伤之前，我大概打了 4 个月，经常打。买了教学视频，去外面的俱乐部打，总之打的非常开心。羽毛球是一个兴趣，也是一个很好的运动，一石二鸟了，haha～～。</p>
+<p>今年也打算经常运动、读很多书和打一点游戏，让身体保持活力，让技术的基本功更加扎实。希望今年也能健康地度过这一年。</p>
+]]></content>
+      <categories>
+        <category>新年計画</category>
+      </categories>
   </entry>
 </search>
