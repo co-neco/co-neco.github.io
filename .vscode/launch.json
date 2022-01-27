@@ -22,7 +22,8 @@
             "program": "${workspaceFolder}/py_scripts/image_compress.py",
             "console": "integratedTerminal",
             "args": [
-                "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you",
+                "D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\731.【暖色阁】蔷薇少女\\yande图库收集\\【暖色阁】蔷薇少女yande图库收集\\【暖色阁】蔷薇少女yande图库收集_compress_output_1",
+                //"D:\\pic_compress"
             ]
         },
         {
@@ -67,7 +68,7 @@
             "program": "${workspaceFolder}/py_scripts/write_image_urls_to_host.py",
             "console": "integratedTerminal",
             "args": [
-                "D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\731.【暖色阁】蔷薇少女\\yande图库收集\\【暖色阁】蔷薇少女yande图库收集\\【暖色阁】蔷薇少女yande图库收集_compress_output_1",
+                "D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\731.【暖色阁】蔷薇少女\\yande图库收集\\【暖色阁】蔷薇少女yande图库收集\\【暖色阁】蔷薇少女yande图库收集_compress_output_1_compress",
                 "rozen_maiden",
             ]
         },
