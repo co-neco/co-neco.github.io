@@ -58,10 +58,13 @@ def compress_one_file_internal(file_path, num):
     #image = image.resize((int(image.width/3), int(image.height/3)), Image.ANTIALIAS)
     image.save(save_path, optimize=True)
 
-    if os.stat(save_path).st_size > 1024*1024:
-        image.save(save_path, optimize=True, quality=40)
+    compress_ratio = 50
+    while os.stat(save_path).st_size > 1024*1024:
+        image.save(save_path, optimize=True, quality=compress_ratio)
 
-    assert(os.stat(save_path).st_size < 1024*1024)
+        compress_ratio -= 5
+        if compress_ratio == 0:
+            assert False
 
 def compress_one_file(file_path, num):
 
