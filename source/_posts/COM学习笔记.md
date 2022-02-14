@@ -11,7 +11,10 @@ tags:
 
 这是一篇关于COM基础开发的笔记，主要讲`in-process dll`和`out-of-process server`开发时，值得注意的一些细节，完整的代码请参考[github](https://github.com/co-neco/COM_study)。
 
-> 注：该工程目前只配置了Debug x64位。
+> 注：
+>
+> - 该工程目前只配置了Debug x64位。
+> - 建议读者看本文前，先阅读`Windows 10 System Programming_part2`的第二十一章，学习开发COM的基础知识。本文可当做开发COM的细节指导。
 
 ## 背景
 
