@@ -26,7 +26,11 @@
             <pubDate>Sun, 13 Feb 2022 23:06:16 +0800</pubDate>
             <description><![CDATA[ &lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;p&gt;这是一篇关于 COM 基础开发的笔记，主要讲 &lt;code&gt;in-process dll&lt;/code&gt;  和 &lt;code&gt;out-of-process server&lt;/code&gt;  开发时，值得注意的一些细节，完整的代码请参考&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28vQ09NX3N0dWR5&#34;&gt; github&lt;/span&gt;。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;注：该工程目前只配置了 Debug x64 位。&lt;/p&gt;
+&lt;p&gt;注：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;该工程目前只配置了 Debug x64 位。&lt;/li&gt;
+&lt;li&gt;建议读者看本文前，先阅读 &lt;code&gt;Windows 10 System Programming_part2&lt;/code&gt;  的第二十一章，学习开发 COM 的基础知识。本文可当做开发 COM 的细节指导。&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;背景&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#背景&#34;&gt;#&lt;/a&gt; 背景&lt;/h2&gt;
 &lt;p&gt;最近看了 &lt;code&gt;Pavel Yosisofich&lt;/code&gt;  的 &lt;code&gt;Windows 10 System Programming_part2&lt;/code&gt;  这本书，并实践了第二十一章：COM，于是有了本文。&lt;/p&gt;

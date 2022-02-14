@@ -1376,7 +1376,11 @@ namespace XXX &#123;
     <url>/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>这是一篇关于 COM 基础开发的笔记，主要讲 <code>in-process dll</code>  和 <code>out-of-process server</code>  开发时，值得注意的一些细节，完整的代码请参考<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28vQ09NX3N0dWR5"> github</span>。</p>
 <blockquote>
-<p>注：该工程目前只配置了 Debug x64 位。</p>
+<p>注：</p>
+<ul>
+<li>该工程目前只配置了 Debug x64 位。</li>
+<li>建议读者看本文前，先阅读 <code>Windows 10 System Programming_part2</code>  的第二十一章，学习开发 COM 的基础知识。本文可当做开发 COM 的细节指导。</li>
+</ul>
 </blockquote>
 <h2 id="背景"><a class="anchor" href="#背景">#</a> 背景</h2>
 <p>最近看了 <code>Pavel Yosisofich</code>  的 <code>Windows 10 System Programming_part2</code>  这本书，并实践了第二十一章：COM，于是有了本文。</p>
