@@ -13,6 +13,8 @@ tags:
 
 # [翻译]从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞
 
+> -> [原文链接](https://www.microsoft.com/security/blog/2019/03/25/from-alert-to-driver-vulnerability-microsoft-defender-atp-investigation-unearths-privilege-escalation-flaw/)
+
 随着Microsoft团队不断增强内核层的安全性、以及提升内核组件被利用的门槛，第三方开发的驱动渐渐成为了攻击者青睐的目标，同时第三方驱动也成为了漏洞分析的一个重要试验地。
 
 一个签名的第三方驱动如果有一个漏洞，那么它可能会带来严重的影响：这个漏洞可能被攻击者利用，用来权限提升，或者用来过掉驱动签名验证。相对于用一个操作系统自身的0day漏洞来进行攻击，签名的第三方驱动的漏洞更容易被利用。

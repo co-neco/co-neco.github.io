@@ -54,13 +54,13 @@ int main(){
 
 ### In-process DLL的实现
 
-关于COM开发的概念知识，这里就不再赘述了，对COM不了解的读者可参考`Windows 10 System Programming_part2`的第二十一章。
+关于COM开发的详细流程指导，读者可参考`Windows 10 System Programming_part2`的第二十一章，本文重点记录了书中未提到的一些细节部分。
 
-通过DLL方式提供功能的服务端是比较简单，容易理解的。它包含三个类，一个工厂类，一个接口，一个实现接口的类：
+通过DLL方式提供功能的服务端是比较简单，容易理解的，它包含两个类和一个接口（结构体）：
 
-- RPNCalculator.h
-- RPNCalculatorInterfaces.h
-- RPNCalculatorFactory.h
+- RPNCalculator.h:：实现接口的类
+- RPNCalculatorInterfaces.h：定义导出的方法
+- RPNCalculatorFactory.h：工厂类
 
 为了注册DLL，DLL需要自己实现以下三个函数（详情参考dllmain.cpp）：
 
@@ -74,6 +74,9 @@ int main(){
 
 ```c
 auto hr = CoInitialize(NULL);
+//...
+CComPtr<IRPNCalculator> spCalc;
+spCalc.CoCreateInstace(...);
 //...
 CoUninitialize();
 ```
@@ -123,7 +126,7 @@ if (FAILED(hr)) {
   #include <iostream>
   ```
 
-## Out-of-process EXE server（local server）
+## Out-of-process EXE server（local server）的细节
 
 关于如何写EXE Server，`Windows 10 System Programming_part2`书中并没有阐述，于是我在网上搜索，不过相关的资料是出奇的少。。。。最后几经周折，我参考了`COM技术内幕———微软组件对象模型` 书中的描述，完成了EXE Server的实验。
 
@@ -151,7 +154,7 @@ interface IRPNCalculator : IUnknown
 };
 ```
 
-> 如果没有proxy/stub的DLL，那么在客户端调用CoCreateInstance时，由于参数在跨进程的传输中没有定义传输方式（比如变量是输出参数还是输入参数），服务端收到的接口类GUID会是错误的，即不是CoCreateInstance指定的GUID。（在win10上测试是这样的）
+> 如果没有proxy/stub的DLL，那么在客户端调用CoCreateInstance时，由于参数在跨进程的传输中没有定义传输方式（比如变量是输出参数还是输入参数），服务端收到的接口类GUID会是错误的，即不是CoCreateInstance指定的GUID（在win10上测试是这样的）。
 
 > 关于IDL的语法请参考MSDN或`COM技术内幕`一书。
 
