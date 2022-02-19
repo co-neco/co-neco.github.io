@@ -345,3 +345,10 @@ lkd> dx -r1 ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)0xffffac0f066a6358)
 
 > - 该方法的源码可参考这个[仓库](https://github.com/jxy-s/herpaderping)。
 > - 该方法的作者用windbg进一步分析了共享的更多细节，可参考这个[文档](https://github.com/jxy-s/herpaderping/blob/main/res/DivingDeeper.md)。
+
+## Conclusion
+
+虽然进程注入在不断更新，不过安全厂商也在与时俱进，目前很多安全厂商都有这些方法的监控了（比如上面提到的分析文章，大部分是安全厂商写的）。从`Process Doppelganging`开始，我们能看到新的方法都是源于操作系统的不足，并慢慢衍生，可能以后的进程注入会越来越底层，越来越复杂。
+
+本文涉及的细节很多，不能面面俱到，推荐读者看本文各个小节的推荐文章，最后再来看本文，相信读者会有更多的收获。
+
