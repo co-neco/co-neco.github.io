@@ -118,7 +118,7 @@ social:
 
 sidebar:
   # Sidebar Position.
-  position: left
+  position: right
   # position: right
   # Replace the default avatar image and set the url here.
   avatar: https://tva4.sinaimg.cn/large/008igzrxly8gtc1b65u5cj30bm0gm750.jpg
@@ -131,7 +131,7 @@ widgets:
 
 footer:
   # Specify the date when the site was setup. If not defined, current year will be used.
-  since: 2010
+  since: 2021
   icon:
     name: sakura rotate
     # Change the color of icon, using Hex Code.
