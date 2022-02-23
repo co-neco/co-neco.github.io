@@ -118,7 +118,7 @@ social:
 
 sidebar:
   # Sidebar Position.
-  position: right
+  position:  right
   # position: right
   # Replace the default avatar image and set the url here.
   avatar: https://tva4.sinaimg.cn/large/008igzrxly8gtc1b65u5cj30bm0gm750.jpg
