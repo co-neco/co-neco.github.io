@@ -202,7 +202,7 @@ valine:
     investor: "var(--color-pink)"
   tagMember:
     master:
-      # - hash of master@email.com
+      - 0e931722ca3189d2b5d4e851bce1341b
       # - hash of master2@email.com
     friend:
       # - hash of friend@email.com
