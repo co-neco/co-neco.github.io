@@ -10,7 +10,7 @@ def get_cur_python_file_path():
 
 def output_image_urls(image_dir, host_image_dir_name):
 
-    host_dir_root = "https://gitee.com/co-neco/pic_bed/raw/master"
+    host_dir_root = "https://conecoy.cn/image_hosts"
     image_url_str = ""
     image_url_index = 0
 
