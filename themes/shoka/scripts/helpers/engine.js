@@ -142,7 +142,7 @@ hexo.extend.helper.register('_cover', function(item, num) {
       let filter_day = (day % get_image_cluster_num(image_list)) + 1
       for (let image of image_list) {
         // image eg: "5https://gitee.com/co-neco/pic_bed/raw/master/cg%20(1149).jpg"
-        if (get_image_day(image) == 6)
+        if (get_image_day(image) == 7)
           image_list_by_day.push(image.substring(image.search(/https/)))
       }
       return image_list_by_day
