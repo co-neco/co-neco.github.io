@@ -29,32 +29,25 @@ def get_save_path(file_path, num):
     return save_dir + "\\" + str(num) + file_path[-4:]
 
 def convert_png_to_jpg(file_path, num):
-    if file_path.endswith(".png"):
-        image = Image.open(file_path).convert('RGB')
-        save_path = get_save_path(file_path[:-4] + ".jpg", num)
-        image.save(save_path)
-        return True, save_path
-    else:
-        return False, file_path
+    image = Image.open(file_path).convert('RGB')
+    save_path = get_save_path(file_path[:-4] + ".jpg", num)
+    image.save(save_path)
+    return save_path
 
 def compress_one_file_internal(file_path, num):
 
-    result, converted_path = convert_png_to_jpg(file_path, num)
+    # used for Image class to operation on images
+    image_path = ""
+    save_path = ""
 
-    if result:
-        save_path = converted_path
+    if file_path.endswith(".png"):
+        image_path = convert_png_to_jpg(file_path, num)
+        save_path = image_path
     else:
-        save_path = get_save_path(converted_path, num)
+        image_path = file_path
+        save_path = get_save_path(image_path, num)
 
-    if os.stat(converted_path).st_size <= 1024*1024:
-        
-        if file_path.endswith(".png"):
-            return
-
-        copy2(converted_path, save_path)
-        return
-
-    image = Image.open(converted_path)
+    image = Image.open(image_path)
     #image = image.resize((int(image.width/3), int(image.height/3)), Image.ANTIALIAS)
     image.save(save_path, optimize=True)
 
