@@ -22,10 +22,10 @@
             "program": "${workspaceFolder}/py_scripts/image_compress.py",
             "console": "integratedTerminal",
             "args": [
-                //"D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总",
+                "D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总",
                 //"D:\\pic_compress"
                 //"D:\\BaiduNetdiskDownload\\画集\\冰菓\\冰菓总"
-                "C:\\Users\\yangcheng01\\Pictures\\冴えない彼女"
+                //"C:\\Users\\yangcheng01\\Pictures\\冴えない彼女"
             ]
         },
         {
@@ -72,12 +72,12 @@
             "args": [
                 //"D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\731.【暖色阁】蔷薇少女\\yande图库收集\\【暖色阁】蔷薇少女yande图库收集\\【暖色阁】蔷薇少女yande图库收集_compress_output_1_compress",
                 //"rozen_maiden",
-                //"D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总_compress",
-                //"sword_art_online"
+                "D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总_compress",
+                "sword_art_online"
                 // "D:\\BaiduNetdiskDownload\\画集\\冰菓\\冰菓总_compress",
                 // "hyouka"
-                "C:\\Users\\yangcheng01\\Pictures\\冴えない彼女_compress",
-                "saenai"
+                // "C:\\Users\\yangcheng01\\Pictures\\冴えない彼女_compress",
+                // "saenai"
             ]
         },
     ]

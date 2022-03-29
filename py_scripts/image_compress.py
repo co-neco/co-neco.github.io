@@ -52,7 +52,7 @@ def compress_one_file_internal(file_path, num):
     image.save(save_path, optimize=True)
 
     compress_ratio = 50
-    while os.stat(save_path).st_size > 1024*1024:
+    while os.stat(save_path).st_size > 1024*1024/2:
         image.save(save_path, optimize=True, quality=compress_ratio)
 
         compress_ratio -= 5
