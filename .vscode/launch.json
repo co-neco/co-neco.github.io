@@ -11,8 +11,8 @@
             "program": "${workspaceFolder}/py_scripts/copy_images.py",
             "console": "integratedTerminal",
             "args": [
-                "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you_compress",
-                "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you_compress_output",
+                "E:\\github\\pic_bed\\aokana",
+                "E:\\github\\pic_bed\\aokana_output"
             ]
         },
         {
@@ -22,10 +22,13 @@
             "program": "${workspaceFolder}/py_scripts/image_compress.py",
             "console": "integratedTerminal",
             "args": [
-                "D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总",
+                //"D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总",
                 //"D:\\pic_compress"
                 //"D:\\BaiduNetdiskDownload\\画集\\冰菓\\冰菓总"
                 //"C:\\Users\\yangcheng01\\Pictures\\冴えない彼女"
+                //"D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\蔷薇少女总"
+                //"C:\\Users\\yangcheng01\\Pictures\\[eufonie] 恋剣乙女～再燃～"
+                //"E:\\github\\pic_bed\\aokana"
             ]
         },
         {
@@ -72,12 +75,22 @@
             "args": [
                 //"D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\731.【暖色阁】蔷薇少女\\yande图库收集\\【暖色阁】蔷薇少女yande图库收集\\【暖色阁】蔷薇少女yande图库收集_compress_output_1_compress",
                 //"rozen_maiden",
-                "D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总_compress",
-                "sword_art_online"
+                // "D:\\BaiduNetdiskDownload\\画集\\刀剑神域\\刀剑神域总_compress",
+                // "sword_art_online"
                 // "D:\\BaiduNetdiskDownload\\画集\\冰菓\\冰菓总_compress",
                 // "hyouka"
                 // "C:\\Users\\yangcheng01\\Pictures\\冴えない彼女_compress",
                 // "saenai"
+                // "D:\\BaiduNetdiskDownload\\画集\\蔷薇少女\\蔷薇少女总_compress",
+                // "rozen_maiden"
+                // "C:\\Users\\yangcheng01\\Pictures\\[eufonie] 恋剣乙女～再燃～_compress",
+                // "rennkenn"
+                // "E:\\github\\pic_bed\\aokana_output",
+                // "aokana"
+                // "E:\\github\\pic_bed\\honoguraki",
+                // "honoguraki"
+                "E:\\github\\pic_bed\\inochi",
+                "others"
             ]
         },
     ]
