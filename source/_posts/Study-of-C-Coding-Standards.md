@@ -333,7 +333,7 @@ bad e.g.:
 
   When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastful. What's more, every copy of every variable is distinct one. 
 
-  If you call 'foo' function in another compilation unit, you will get "static function declared but not defined" error.
+  If you call 'foo' function in another compilation unit, you will get "function 'xxx' already has a body" error.
   
   > Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.
   >
@@ -364,10 +364,10 @@ If you build a module, this module should have some external interfaces. You sho
 Consider following paramter traceoff of SummarizeFile, which need to read a file:
 
 - char* -> low-level abstraction, but high-level complexity and error-prone
-- std::string -> medium-level abstracetion ...
+- std::string -> medium-level abstraction ...
 - istream or File(maybe customed) -> high-level abstraction, but low-level complexity and errorless
 
-> Summay: When developing a module, use low-level abstraction in external interfaces, use the highest-level of abstraction internally.
+Summay: When developing a module, use low-level abstraction in external interfaces, use the highest-level of abstraction internally.
 
 # Templatese and Genericity
 
@@ -451,7 +451,7 @@ template<typename T>
 
 > The author of Sample1 must:
 >
-> - Call the function with member notation: Just use the natural member syntax[f.foo(11)]
+> - Call the function with member notation: Just use the natural member syntax[t.foo()]
 > - Document the point of customization: The type T must provide an accessible member function foo that can be called with given arguments(here, none)
 
 Option2:
@@ -466,7 +466,7 @@ template<typename T>
 > The author of Sample2 must:
 >
 > - Call the function with unqualified nonmeber notation. Ensure template itself doesn't have a member function with the same name: It is essential for the template not to qualify the call to foo.
-> - Document the point of customization: The type T must provide an nonmember function foo that can be called with given arguments(here, none)
+> - Document the point of customization: The type T must provide an nonmember function foo that can be called with given arguments.
 
 **Note**: avoid providing points of customization unintentionally: put any helper functions your template uses internally into thier own nested namespace, and call them with explicit qualification to disable ADL.
 
@@ -474,7 +474,7 @@ template<typename T>
 
 Before we talk about override and specialization, let's talk a little about their difference.
 
-```c++
+```c
 namespace std {
     template <class T>
 	void swap(T& t1, T& t2);
