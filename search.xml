@@ -1106,7 +1106,7 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 <li>
 <p>definition with internal linkage in a header</p>
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">int</span> aa<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">static</span> string <span class="token function">hello</span><span class="token punctuation">(</span><span class="token string">"11"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token comment">/*....*/</span><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastful. What's more, every copy of every variable is distinct one.</p>
-<p>If you call 'foo' function in another compilation unit, you will get &quot;static function declared but not defined&quot; error.</p>
+<p>If you call 'foo' function in another compilation unit, you will get &quot;function 'xxx' already has a body&quot; error.</p>
 <blockquote>
 <p>Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.</p>
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>namespace <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">int</span> aa<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>string <span class="token function">hello</span><span class="token punctuation">(</span><span class="token string">"11"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token comment">/*....*/</span><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>However, you can define variables within a unnamed namespace in a source file.</p>
@@ -1127,12 +1127,10 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 <p>Consider following paramter traceoff of SummarizeFile, which need to read a file:</p>
 <ul>
 <li>char* -&gt; low-level abstraction, but high-level complexity and error-prone</li>
-<li>std::string -&gt; medium-level abstracetion ...</li>
+<li>std::string -&gt; medium-level abstraction ...</li>
 <li>istream or File(maybe customed) -&gt; high-level abstraction, but low-level complexity and errorless</li>
 </ul>
-<blockquote>
 <p>Summay: When developing a module, use low-level abstraction in external interfaces, use the highest-level of abstraction internally.</p>
-</blockquote>
 <h1 id="templatese-and-genericity"><a class="anchor" href="#templatese-and-genericity">#</a> Templatese and Genericity</h1>
 <h2 id="keep-types-and-functions-in-separate-namespaces-unless-theyre-specifically-intended-to-work-together"><a class="anchor" href="#keep-types-and-functions-in-separate-namespaces-unless-theyre-specifically-intended-to-work-together">#</a> Keep types and functions in separate namespaces unless they're specifically intended to work together</h2>
 <p>Consider the following example:</p>
@@ -1151,7 +1149,7 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>template<span class="token operator">&lt;</span>typename T<span class="token operator">></span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">void</span> <span class="token function">Sample1</span><span class="token punctuation">(</span>T t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        t<span class="token punctuation">.</span><span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        typename T<span class="token operator">::</span>value_type x<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>        std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"in Sample1: "</span> <span class="token operator">&lt;&lt;</span> <span class="token function">typeid</span><span class="token punctuation">(</span>T<span class="token operator">::</span>value_type<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token string">"\n"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr></table></figure><blockquote>
 <p>The author of Sample1 must:</p>
 <ul>
-<li>Call the function with member notation: Just use the natural member syntax[f.foo(11)]</li>
+<li>Call the function with member notation: Just use the natural member syntax[t.foo()]</li>
 <li>Document the point of customization: The type T must provide an accessible member function foo that can be called with given arguments(here, none)</li>
 </ul>
 </blockquote>
@@ -1160,29 +1158,13 @@ _HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从�
 <p>The author of Sample2 must:</p>
 <ul>
 <li>Call the function with unqualified nonmeber notation. Ensure template itself doesn't have a member function with the same name: It is essential for the template not to qualify the call to foo.</li>
-<li>Document the point of customization: The type T must provide an nonmember function foo that can be called with given arguments(here, none)</li>
+<li>Document the point of customization: The type T must provide an nonmember function foo that can be called with given arguments.</li>
 </ul>
 </blockquote>
 <p><strong>Note</strong>: avoid providing points of customization unintentionally: put any helper functions your template uses internally into thier own nested namespace, and call them with explicit qualification to disable ADL.</p>
 <h2 id="dont-specialize-function-templates"><a class="anchor" href="#dont-specialize-function-templates">#</a> Don't specialize function templates.</h2>
 <p>Before we talk about override and specialization, let's talk a little about their difference.</p>
-<pre><code class="language-c++">namespace std &#123;
-    template &lt;class T&gt;
-	void swap(T&amp; t1, T&amp; t2);
-&#125;
-
-// specialization
-namespace std&#123;
-    template &lt;&gt;
-    void swap(Object&amp; o1, Object&amp; o2);
-&#125;
-
-// override
-namespace XXX &#123;
-    void swap(Object&amp; o1, Object&amp; o2);
-&#125;
-</code></pre>
-<p>Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey, such as it's copiable. Besides, you need add a specialization of std::swap into std namespace.</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>namespace std <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    template <span class="token operator">&lt;</span>class T<span class="token operator">></span></pre></td></tr><tr><td data-num="3"></td><td><pre>	<span class="token keyword">void</span> <span class="token function">swap</span><span class="token punctuation">(</span>T<span class="token operator">&amp;</span> t1<span class="token punctuation">,</span> T<span class="token operator">&amp;</span> t2<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment">// specialization</span></pre></td></tr><tr><td data-num="7"></td><td><pre>namespace std<span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    template <span class="token operator">&lt;</span><span class="token operator">></span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">void</span> <span class="token function">swap</span><span class="token punctuation">(</span>Object<span class="token operator">&amp;</span> o1<span class="token punctuation">,</span> Object<span class="token operator">&amp;</span> o2<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment">// override</span></pre></td></tr><tr><td data-num="13"></td><td><pre>namespace XXX <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">void</span> <span class="token function">swap</span><span class="token punctuation">(</span>Object<span class="token operator">&amp;</span> o1<span class="token punctuation">,</span> Object<span class="token operator">&amp;</span> o2<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey, such as it's copiable. Besides, you need add a specialization of std::swap into std namespace.</p>
 <p>If Object class is a template class, above specialization is even impossible, because you has already specialized class T with Object class, And where Object&lt;T&gt; can be placed in?</p>
 <p><strong>Conclusion</strong>: Overload rather than specialize function templates, and the overloaded functions should be placed in the namespace of the type(s) the overload is designed to be used for.</p>
 <h2 id="write-more-generic-code"><a class="anchor" href="#write-more-generic-code">#</a> Write More generic code</h2>
