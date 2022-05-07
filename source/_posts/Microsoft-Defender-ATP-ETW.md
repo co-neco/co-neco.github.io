@@ -31,7 +31,7 @@ tags:
 
 从Windows 10, version 1809开始，内核新添了一些新的监测器（基于事件追踪--ETW），用于追踪从内核发起的UserAPC代码注入。这种方式使得一些内核攻击更容易被监测到。正如我们之前深入分析的[一篇文章](https://cloudblogs.microsoft.com/microsoftsecure/2017/06/30/exploring-the-crypt-analysis-of-the-wannacrypt-ransomware-smb-exploit-propagation/)，WannaCry利用DOUBLEPULSAR这个内核后门，向用户空间注入了代码（payload）。其原理是DOUBLEPULSAR从内核复制了一段代码到lsass.exe的用户空间。随后，DOUBLEPULSAR又向lsass.exe插入了一个UserAPC，去执行这段代码。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-01-WannaCry-user-APC-injection-technique-schematic-diagram-768x384.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-01-WannaCry-user-APC-injection-technique-schematic-diagram-768x384.png)
 
 虽然UserAPC代码注入不是新知识了 (看 [Conficker](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Win32/Conficker) 或者 [Valerino’s earliest proof-of-concept](https://community.osr.com/discussion/88852))，但检测内核的恶意行为还是很难的。自从PatchGuard引入之后，对NTOSKRNL模块进行挂钩已经不允许了，驱动也因此没有官方方法去获取那些挂钩操作对应的通知了。因此，没有合适的方法，剩下的唯一可持续迭代的策略就是做内存分析，但内存分析很复杂。
 
@@ -43,7 +43,7 @@ Microsoft Defender ATP使用这些监测器去监测可疑的内核行为，比�
 
 当监测与内核攻击相关的告警时，一个告警引起了我们的注意：
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-02-2-Microsoft-Defender-ATP-kernel-initiating-code-injection-alert.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-02-2-Microsoft-Defender-ATP-kernel-initiating-code-injection-alert.png)
 
 这个告警处理树展示了在services.exe的进程空间，异常内存的分配和代码执行。当进一步分析之后，我们发现在另一台机器上，几乎是相同的时间，一个相同的告警被触发了。
 
@@ -64,7 +64,7 @@ Microsoft Defender ATP使用这些监测器去监测可疑的内核行为，比�
 
 然后我们发现了一个相关函数：
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-03-dumpbin-utility-used-to-detect-user-APC-injection-primitives.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-03-dumpbin-utility-used-to-detect-user-APC-injection-primitives.png)
 
 ## *HwOs2Ec10x64.sys*：驱动的反常行为
 
@@ -81,29 +81,29 @@ Microsoft Defender ATP使用这些监测器去监测可疑的内核行为，比�
 
 参数块包含获取的函数地址和一个字符串，通过分析，该字符串判定是一个命令行：
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-04-User-APC-injection-code.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-04-User-APC-injection-code.png)
 
 这个APC的NormalRoutine是一段shellcode，其调用*CreateProcessW*，用刚提到的命令行创建了一个进程。这意味着通过APC向*services.exe*实施的代码注入的目的是生成一个子进程。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-05-User-shellcode-performing-process-creation.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-05-User-shellcode-performing-process-creation.png)
 
 观察交叉索引，我们发现代码注入是由一个创建进程的通知回调引起的，这个回调的Create参数是FALSE，意味着这个回调指的是某进程的结束。
 
 但这个命令行的具体内容是什么呢？我们附加了一个内核调试器，并在*memcpy_s*下了一个断点，*memcpy_s*用于从内核拷贝参数到用户空间。观察内存，我们发现创建的子进程是华为已安装的服务*MateBookService.exe*，创建子进程时带了*“/startup”*参数。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-06-2-Breakpoint-hit-on-the-call-to-memcpy_s-copying-shellcode-parameters.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-06-2-Breakpoint-hit-on-the-call-to-memcpy_s-copying-shellcode-parameters.png)
 
 为什么一个合法的服务要通过这种方式启动呢？观察*MateBookService.exe!main*函数，该函数会检测启动该进程时是否有*“/startup”*参数，如果有，就判断该服务是否被停止了。这意味着有一个看门狗，用于保证PC Manager的主服务正常运行。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-07-MateBookService-exe-startup-code-path.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-07-MateBookService-exe-startup-code-path.png)
 
 分析到这里，最后需要确定的是退出的进程，同时也是引发代码注入的这个进程是否就是*MateBookService.exe*。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-08-Validating-terminated-process-identity.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-08-Validating-terminated-process-identity.png)
 
 观察用于决定是否注入代码到*services.exe*的代码片段，该代码片段用了一个全局列表，这个全局列表包含了需要监控的进程名。通过在这个循环里设置一个断点，我们发现这个全局列表只有一个元素，是*MateBookService.exe*。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-09-Breakpoint-hit-during-process-name-comparison-against-global-list.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-09-Breakpoint-hit-during-process-name-comparison-against-global-list.png)
 
 *HwOs2Ec10x64.sys* 驱动也有进程保护，防止自身被恶意攻击。任务终止*MateBookService.exe*进程的行为都会失败，失败原因是*Access Denied*（拒绝访问）。
 
@@ -111,27 +111,27 @@ Microsoft Defender ATP使用这些监测器去监测可疑的内核行为，比�
 
 接下来我们的分析是确定攻击者是否可以修改这个全局列表。我们发现了一个IOCTL处理函数，这个函数可以向全局列表添加元素。当MateBookService.exe服务启动时，它似乎会通过这个IOCTL来注册自己。这个IOCTL会发向驱动控制设备，这个设备通过它对应的驱动入口函数（*DriverEntry*）创建。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-10-HwOs2Ec10x64.sys-control-device-creation-with-IoCreateDevice.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-10-HwOs2Ec10x64.sys-control-device-creation-with-IoCreateDevice.png)
 
 因为设备对象是通过*IoCreateDevice*创建的，所以每个人对这个设备都有读写权限。另外一个重要的发现是这个设备没有禁止同时访问，所以可以同时打开多个这个设备的句柄。
 
 然而，当我们尝试获取*\\.\HwOs2EcX64*的句柄时，我们失败了，错误码是537，代表*“应用程序验证器在当前进程发现一个错误”*。这个驱动拒绝了我们获取设备句柄的请求。我们是如何获取设备句柄的呢？它肯定是通过CreateFile获取的。也就是说，获取句柄必会走到*HwOs2Ec10x64.sys* 的*IRP_MJ_CREATE*分发函数。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-11-IRP_MJ_CREATE-dispatch-routine.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-11-IRP_MJ_CREATE-dispatch-routine.png)
 
 这个函数通过进程的路径名来验证当前进程是否在白名单（比如：*C:\Program Files\Huawei\PCManager\MateBookService.exe*）。简单地检测程序的进程名不能保证进程的身份不变。一个被攻击者控制的*MateBookService.exe*进程实例仍然有打开*\\.\HwOs2EcX64*设备的权限，也能够调用对应的一些IRP函数。攻击者可利用这种方式向*\\.\HwOs2EcX64*设备的全局列表注册一个自己设置的元素，也就是一个程序路径。因为一个父进程有子进程的所有权限，即使一个低权限的代码也可以创建被感染的*MateBookService.exe*进程，然后想这个感染的进程注入代码。在我们的POC中，我们使用了进程傀儡技术。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-12-Procmon-utility-results-showing-POC-process-start-exit-IL.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-12-Procmon-utility-results-showing-POC-process-start-exit-IL.png)
 
 因为被“照顾”的进程退出时，它们会被看门狗盲目地重启，所以攻击者控制的程序也会被services.exe重启，这意味着攻击者控制的进程的权限是LocalSystem用户和权限一样，也就是得到了提权。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-13-Procexp-utility-process-tree-view-showing-LPE_POC-running-as-LocalSystem.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-13-Procexp-utility-process-tree-view-showing-LPE_POC-running-as-LocalSystem.png)
 
 ## 漏洞的及时响应和保护用户
 
 我们有一个能利用的POC，用来将攻击者控制的进程提权之后，我们及时将这个bug通过Microsoft Security Vulnerability Research ([MSVR](https://www.microsoft.com/en-us/msrc/msvr)) 程序通知了华为。这个漏洞被取名CVE-2019-5241。同时，我们通过建立能产生告警的监测机制，保护了我们的用户，避免受到*HwOs2Ec10x64.sys*看门狗漏洞的攻击。
 
-![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/figure-14-2-Microsoft-Defender-ATP-alerting-on-the-privilege-escalation-POC-code.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-14-2-Microsoft-Defender-ATP-alerting-on-the-privilege-escalation-POC-code.png)
 
 ## 利用另一个IOCTL处理函数
 
