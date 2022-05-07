@@ -57,11 +57,11 @@ tags:
 
 在说明后端堆的管理方式前，先理清一些结构和成员之间的关系，如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/1.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/1.png)
 
 \_HEAP 结构是堆管理中最重要的结构，也是HeapCreate 返回的值。在其0xB8 偏移处，有一个BlocksIndex 的指针，该指针指向\_HEAP_LIST_LOOKUP，这个结构便是后端堆管理器主要操作的结构体，如下：
 
-![](https://gitee.com/co-neco/pic_bed/raw/master/LFH/2.png)
+![](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/2.png)
 
 \_HEAP_LIST_LOOKUP 的每个成员解释都已标注，不过包含‘(*)’的项还需要一些补充：
 
@@ -87,11 +87,11 @@ tags:
 
 首先查看进程的堆，这里以进程默认堆为例，第一步是获取默认堆的地址，如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/3.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/3.png)
 
 因为默认堆是第一个，所以0x005a0000 就是\_HEAP结构的地址了。接下来看下该结构的_HEAP_LIST_LOOKUP 结构： 
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/4.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/4.png)
 
 BlocksIndex 在\_HEAP 的0xB8 偏移处，其值为0x005a0150，类型为void*，但其真正的类型是\_HEAP_LIST_LOOKUP *（以下简称结构A）。
 
@@ -107,7 +107,7 @@ BlocksIndex 在\_HEAP 的0xB8 偏移处，其值为0x005a0150，类型为void*�
 
 在说ListHints数组的具体内容前，先把整个结构讲述完整，因此接下来观察扩展结构B:（由于操作失误，中间多输出了一个结果） 
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/5.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/5.png)
 
 - ExtendLookup：NULL，代表结构B没有扩展结构。
 - ArraySize：0x800，表示ListHints数组有 ArraySize - BaseIndex = 0x800 - 0x80 = 0x780  个元素，相应地，结构B 的Bitmap 大小也就是  0x780 / 8   = 0xF0  字节。
@@ -117,7 +117,7 @@ BlocksIndex 在\_HEAP 的0xB8 偏移处，其值为0x005a0150，类型为void*�
 
 OK，整个_HEAP_LIST_LOOKUP结构讲完了，接下来观察该结构中最重要的ListHints数组，这里用结构A的ListHints举例：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/6.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/6.png)
 
 调试器首先输出了ListsInUseUlong 的内容，大小为0x10 字节，紧接着就是ListHints 数组了。从图中可看出两个特点：
 
@@ -143,7 +143,7 @@ OK，整个_HEAP_LIST_LOOKUP结构讲完了，接下来观察该结构中最重�
 
 前端堆中涉及的结构比后端堆多，为了概括地描述整个前端堆的逻辑，这里只讨论其中的关键成员：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/7.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/7.png)
 
 距\_HEAP偏移0xD4的位置是FrontEndHeap，类型为void *，其真实类型为\_LFH_HEAP *，然后\_LFH_HEAP.LocalData.SegmentInfo这个数组是前端堆的核心。该数组的每个成员都是一个\_HEAP_LOCAL_SEGMENT_INFO，分别对应不同大小的堆块，其中Hint和ActiveSubsegment的作用一样，可以理解为ActiveSubsegment是Hint的补充，反过来理解也可以。因为在为某个特定大小的堆块开启LFH时，\_HEAP_LOCAL_SEGMENT_INFO结构会被创建，Hint为NULL，而ActiveSubsegment为非NULL。但有时Hint为非NULL，而ActiveSubsegment 为NULL。
 
@@ -159,7 +159,7 @@ Hint和ActiveSubsegment都指向_HEAP_SUNSEGMENT结构，该结构体是前端�
 
 简要说明了一下结构关系，我们用windbg来具体观察一下。以堆块大小为0x30，用户区大小为  0x30 - 8 = 0x28  为例（堆块包括头结构\_HEAP_ENTRY和用户区）。为了找到对应的\_HEAP_SUBSEGMENT结构，需执行一系列命令，如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/8.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/8.png)
 
 首先通过\_HEAP结构找到FrontEndHeap变量，该变量指向\_LFH_HEAP结构，然后定位\_LFH_HEAP.LocalData 变量，该变量指向\_HEAP_LOCAL_DATA 结构。之后定位LocalData.SegmentInfo，从(0x005a7d08 + 0x310 + 0x18)开始的一片内存，存放着前端堆中管理的所有大小对应的\_HEAP_LOCAL_SEGMENT_INFO数组（以下简称结构C）。为了找到堆块大小为0x30所对应的结构C元素，上图用了一个公式  0x005a7d08 + 310 + 18 + 68*(28 / 8)，其中的0x68为单个结构C的大
 小，因为第一个结构C保留不用，所以第二个结构C才开始存储对应大小的堆块，第二个结构C对应的堆块大小为0x10，用户区大小（UserSize）为0x8。因此为找到堆块大小为0x30（堆块用户区大小为0x28），需要定位到第6 个结构C 元素，即
@@ -199,7 +199,7 @@ SegmentInfo[5].BucketIndex意义相同。ActiveSubsegment.UserBlocks就是要管
 
 了解整个索引过程后，我们再来观察内容部分。UserBlocks中的第一个堆块地址为0x063c0608，通过!heap -p -a  命令可观察到该堆块的具体信息，如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/9.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/9.png)
 
 该堆块的大小为  6 * 8 = 0x30（6是Size的值），用户区地址为 0x063c0608 + 8 = 0x063c0610，该公式的8为\_HEAP_ENTRY结构大小。然后状态为Busy，这些信息与我们之前的分析一致。
 
@@ -207,17 +207,17 @@ SegmentInfo[5].BucketIndex意义相同。ActiveSubsegment.UserBlocks就是要管
 
 首先，前端堆中有一个相当重要的结构，它是\_INTERLOCK_SEQ，这里看下ActiveSubsegment.AggregateExchg 的内容，如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/10.png "_INTERLOCK_SEQ")
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/10.png "_INTERLOCK_SEQ")
 
 Depth 为0x272，表示该\_HEAP_SUBSEGMENT还有0x272 个空闲的堆块。FreeEntryOffset为0x2C，表示下一个即将被分配出去的堆块是 UserBlocks + FreeEntryOffset * 8 = 0x063c05f8 + 0x2C * 8 = 0x063c0758。再观察 0x063c0758 处的内容，如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/11.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/11.png)
 
 0x0x063c0758处的堆块是空闲的，从内存中的0x80(_HEAP_ENTRY.UnusedBytes)也可知晓，而0x063c0728处的堆块是繁忙的。由此可知，按顺序分配，0x0x063c0758就是下一个即将被分配的堆块。注意0x063c0728处的堆块，其用户大小为0x27，由于堆分配以8字节为单位，所以不足8字节的自动补齐。 
 
 再观察上图，可能会注意到一个奇怪点，下图标红了这部分区域。 
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/12.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/12.png)
 
 0x32, 0x38, 0x3E, 0x44这四个数都相差6，而6代表的就是堆块大小 0x30 / 8 = 6，也就是说每个空闲堆块用户区的前两字节存储着 ActiveSubsegment.AggregateExchg.FreeEntryOffset，这个值是紧接自己被分配出去后的下一个堆块的FreeEntryOffset，以0x063c0758 这个堆块为例，当它被分配出去后，0x063c0788 就是下一个被分配出去的堆块，而0x32 就是
 0x063c0788 这个堆块的的FreeEntryOffset( UserBlocks + FreeEntryOffset * 8 = 0x063c05f8 + 0x32 * 8 = 0x063c0788 )，如果这里没明白FreeEntryOffset，可根据下面的图文解释深入理解。
@@ -239,15 +239,15 @@ Depth 为0x272，表示该\_HEAP_SUBSEGMENT还有0x272 个空闲的堆块。Free
 
 以上的逻辑可能有点绕，这里用图的形式再来展现分配和释放过程，首先是分配：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/13.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/13.png)
 
 根据windbg的输出信息，初始状态如上图。 当分配一个大小为0x30 的堆块时，操作如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/14.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/14.png)
 
 紧接着，释放掉刚刚分配的堆块，操作如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/15.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/15.png)
 
 #### 小结
 
@@ -311,7 +311,7 @@ else
 
 为了能够用windbg复现LFH的激活过程，这里创建一个私有堆进行演示，顺便补充启动LFH的剩余细节，代码如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/16.png "ActivateLFH")
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/16.png "ActivateLFH")
 
 #### 创建私有堆
 
@@ -329,7 +329,7 @@ HeapCreate(2, 0x1000, 0x10000);
 
 在HeapCreate 调用完成后，用windbg观察Flags，结果是0x1000，第2个bit还是0。用IDA反汇编HeapCreate函数，发现只有HeapCreate的第三个参数为0，即该堆是可增长的情况下才能开启LFH。结果证实，我没有充分了解LFH的必要条件，导致绕了一个大圈。顺带说一下，LFH被创建的必要条件有三个，可增长、没有被调试、没有设置HEAP_NO_SERIALIZE（即操作堆时，如果没有同步，则不允许LFH 启动），资料链接为[HeapSetInformation](https://docs.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation)，内容如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/17.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/17.png)
 
 
 
@@ -347,31 +347,31 @@ __asm int 3;
 
 这条语句是让程序产生一个异常，然后走SEH，当程序无法处理这个异常时，就会弹窗，提示是否要调试该程序，这时就是windbg调试该程序的较好时机了。但为了方便，可以启动命令行，输入windbg -I（注意大写），使得windbg成为默认的JIT调试器，如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/18.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/18.png)
 
 这样，当打开测试程序时，windbg 就会自动启动，并指示到__asm int 3 这条语句上，如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/19.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/19.png)
 
 那么开始跟踪。当循环体分配第一个堆块后，来看看ListHints[7].Blink 的值，注意这里分配的堆块大小为0x38，用户大小为0x30，如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/20.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/20.png)
 
 观察上图，Blink为0x10002，这里只留意前两字节，即0x0002。第二次分配后，ListHints[7].Blink 如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/21.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/21.png)
 
 Blink的前两字节为0x0004，当分配0x10 次之后，ListHints[7].Blink如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/22.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/22.png)
 
 Blink的前两字节为0x0020，由此可知，每分配一次，Blink 的前两字节加2。同时还注意到此时LFH 还未被开启。CompatibilityFlags 为0，再分配一个堆块，结果如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/23.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/23.png)
 
 Blink的前两字节为0x0022，超过了0x20。同时CompatibilityFlags被修改为0x20000000，LFH 未开启。由此可知，当Blink的前两字节超过0x20 时，CompatibilityFlags 被修改。再分配一次堆块，即第0x12次，结果如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/24.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/24.png)
 
 Blink变成了一个奇怪的值，还是奇数，BLink - 1 = 0x00540171 - 1 = 0x00540170，指向了\_HEAP_BUCKET结构，其SizeIndex 为6，\_RtlpBucketBlockSizes[6] = 0x30  为该堆块的用户区大小，和分配的堆块用户区大小一致。接着，FrontEndHeap为非NULL，表示LFH 开启，CompatibilityFlags 被重置为0。如果再分配一个相同大小的堆块，那么这次分配就会由前端堆完成。OK，基础部分讲完了，接下来开始本文的重点。
 
@@ -379,7 +379,7 @@ Blink变成了一个奇怪的值，还是奇数，BLink - 1 = 0x00540171 - 1 = 0
 
 检测方法的分析过程其实就是用IDA阅读反编译的代码，分析整个分配和释放逻辑，然后进行总结。因此这里直接列出分配和释放对应的检测方法。由于代码阅读中可能有疏漏，所以检测的方法不一定举例完全，如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/25.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/25.png)
 
 ### 前端堆
 
@@ -418,14 +418,14 @@ if(freedChunk->UnusedBytes == 0x05)
 
 如果UnusedBytes为5，那么freedChunk就需要微调一下。如果攻击者能控制UnusedBytes和SegmentOffset，使得freedChunk微调后，指向另外一个堆块，那么前端堆会释放掉本不该被释放的堆块，这便是SegmentOffset overwrite test。示例代码如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/26.png "SegmentOffsetAttack")
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/26.png "SegmentOffsetAttack")
 
 这段代码做了分六部描述。
 
 ### 激活对应大小的堆块的LFH
 这里没有使用ActivateLFH函数，而是用的activateAttackSizeHeapChunk，该函数的实现如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/27.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/27.png)
 
 这段代码和ActivateLFH 一样，都是循环分配相同大小的堆块，但有一个不同的地方是循环的次数。为什么这个次数会不同呢？说明原因前，首先回看下图"SegmentOffsetAttack"中的第二条语句。 
 
@@ -435,13 +435,13 @@ test_class *pc = new test_class();
 
 这条语句用new运算符创建了一个类实例，new运算符在内部会调用HeapAlloc分配堆块，但是它是从进程默认堆中分配的。因此，在实验中我们也需要使用进程默认堆，其中main调用SegmentOffsetAttack的语句如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/28.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/28.png)
 
 由上图可知hHeap参数是由GetProcessHeap传来的。因为在程序初始化的过程中也会使用默认堆，所以无法判断堆块大小为0x38（用户区大小为0x30）的LFH 是否开启，因此为了保证通用性，需要在循环中多分配一些堆块，保证之后的堆块分配都是连续的，这也是分配次数为0x20次的原因。
 
 为何需要连续分配的原因之后会探讨，这里先补充另一点，即为何多分配一些堆块，就可以使得空闲堆块连续。如果LFH没有开启，那么分配0x12次堆块肯定会得到连续的、空闲的堆块；如果LFH 开启了，那么程序很可能在分配堆块之后又释放了一部分，因此使得UserBlocks的堆空间中零散分布着繁忙和空闲的堆块，所以在循环中多分配很多次，可以填满繁忙堆块之间的空闲堆块，使得剩余的空闲堆块都是连续的，以上解释如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/29.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/29.png)
 
 测试程序中只是演示性地把分配次数增加到了0x20，在实际应用中，一般会分配0x300,0x400 多次，使得LFH再分配一片新的堆空间，这片堆空间的空闲堆块就会是全部连续的。
 
@@ -449,17 +449,17 @@ test_class *pc = new test_class();
 
 test_class类的实现如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/30.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/30.png)
 
 这个类很简单，一个虚函数，两个int类型的变量。如果该类的实例是局部变量，其大小是 sizeof(ptr) + sizeof(int) * 2 = 0x0C。但是用new运算符时，其为该类实例分配的用户区大小为 0x0C + 0x24 = 0x30。那这0x24 字节的数据是什么呢？用windbg 观察如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/31.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/31.png)
 
 首先，'pc'变量的值为0x007ae0c0，而用户区真正的地址是0x007ae0a0，这个区间 0x007ae0c0 - 0x007ae0a0 = 0x20 便是0x24 的一部分，位于类实例的前面，剩下的一部分位于类实例的后面。注意到类实例的前后四字节都是0xFDFDFDFD，这明显是canary value(和GS 检查是一样的概念)，如果检查到该值改变了，那么就意味着溢出的发生。不过测试中覆盖类实例是在类实例被释放后，所以这个不用担心。顺便说一句，new运算符内部调用的是malloc，而malloc都是在指定的大小上再加0x24，并用做加法后的参数传给HeapAlloc。由于测试中使用的是HeapAlloc分配堆块，而不是malloc，所以需要注意这个区别。另外，LFH paper中使用的是malloc来分配堆块，所以在LFH paper的实验中不用在意此区别。
 ### 连续分配两个与类实例大小相同的堆块
 为和类实例的堆块相邻，需要分配与类实例大小相同的堆块。使得当分配的堆块溢出后，释放堆块时会释放掉'pc'所指向的堆块，分配结果如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/32.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/32.png)
 
 这三个变量指向的都是堆块的用户区，可看到它们之间的差值都是0x38，即一个堆块的大小。'pc'后是'c1'，'c1'后是'c2'。需要注意的一点是，虽然'pc'的值为0x0035e0c0，但其堆块的用户区首地址是0x0035e0a0，因为new运算符在堆块的头结构\_HEAP_ENTRY和类实例之间加入了0x20字节的数据。
 
@@ -475,7 +475,7 @@ memcpy_s(c1, size + overwriteSize,
 
 'c1'指向的堆块的用户区大小是'size'变量的值，而写入的字节数是'size' + 8，这个8是\_HEAP_ENTRY，即堆块头结构的大小，因此这个复制会覆盖'c2'所指向的\_HEAP_ENTRY。接下来查看复制的内容，segment_arr的数据如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/33.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/33.png)
 
 segment_arr数组每行有8个字节，当溢出发生时，其中的某一行正好会覆盖掉'c2'所指向的\_HEAP_ENTRY 头结构。
 
@@ -487,7 +487,7 @@ segment_arr数组每行有8个字节，当溢出发生时，其中的某一行�
 
 - 前4个字节，其值为0x00000002，这个值的作用很重要，为了说明原因，先看如下判断，如下图：
 
-   ![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/34.png "释放堆块时的判断")
+   ![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/34.png "释放堆块时的判断")
 
   上半部分是freedChunk指针的微调，下半部分是微调后的判断。下半部分的判断如下：
 
@@ -506,11 +506,11 @@ segment_arr数组每行有8个字节，当溢出发生时，其中的某一行�
   
   根据以上陈述，如果覆盖'c2'的\_HEAP_ENTRY时，其前4 字节是0 或者大于3，那么v9为0。v9为0 的后果就是访问异常，因为 call 0  就是去执行  0x00000000  这个地址的指令。因此，这里需要将\_HEAP_ENTRY前4 字节的值改成1、2 或3。如果是1、2 或3，那v9的值是什么呢？看下RtlpInterceptorRoutines数组，如下图：
   
-   ![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/35.png)
+   ![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/35.png)
 
   这个数组的元素都是函数地址，从名字能知道这三个函数与追踪并记录堆块有关。看下三个函数的实现，这三个函数没有敏感的操作，因此可推测即使执行了这些函数，对本次实验也不会有影响。结果证实确实如此，由于调用RtlpStackTraceDatabaseLogPrefix时，其返回0，使得图"释放堆块时的判断"中的if 判断不成立，从而避免返回错误。从以上分析可看出，覆盖的\_HEAP_ENTRY 的前四字节很重要，其值决定了本次测试是否成功。溢出完成后，结果如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/36.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/36.png)
 
 ### 释放堆块 'c2'
 
@@ -533,23 +533,23 @@ freedChunk = freedChunk - _HEAP_ENTRY.SegmentOffset * 8 = 0x0035e108 - 0xE * 8 =
 该测试与前端堆的分配逻辑密切相关，根据前端堆的描述，在UserBlocks的堆空间中，每一个空闲堆块的用户区的前两字节都保存着下一个空闲堆块的FreeEntryOffset，如果能覆盖这两字节，那么就能够控制
 \_HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从而控制接下来第二次被分配的堆块。如果能把接下来第二次分配的堆块调整为类实例所在的堆块，那么就能够覆盖其虚表，从而控制eip，以上思路的图解如下：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/37.png "分配堆块C后的布局")
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/37.png "分配堆块C后的布局")
 
 在堆溢出之前，堆的布局如上半部分所示，当第二个堆块溢出后，第三个即将被分配的堆块的FreeEntryOffset被覆盖，如下半部分。
 
 当再分配一次与类实例相同大小的堆块后，其结果如下图的下半部分（下图的上半部分与上图的下半部分一样）：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/38.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/38.png)
 
 现在\_HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset指向的是类实例的堆块，因此再分配一次与类实例相同大小的堆块，那么'pc'指向的堆块，即类实例所在的堆块就会被返回给调用者。
 
 以上为理论部分，接下来来看测试代码，如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/39.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/39.png)
 
 第三条语句是分配一个堆块，当分配完该堆块后，观察windbg的调试信息，此时下一个即将被分配的堆块，其用户区的前两个字节为0x0095，如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/40.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/40.png)
 
 之后是进行溢出，FreeEntryOffset的计算公式如下：
 
@@ -560,15 +560,15 @@ freedChunk = freedChunk - _HEAP_ENTRY.SegmentOffset * 8 = 0x0035e108 - 0xE * 8 =
 其中 'size + 8' 为堆块的大小，3 表示越过三个堆块，为什么是3 呢？回顾一下图"分配堆块C后的布局"，0x00??指向了第四个堆块，而类实例所在堆块是第一个，中间相差3 个。最后除以8 是堆管理中大小以8 为单位。溢出后的结果如下图，FreeEntryOffset
 为0x95 - ((0x30 + 8) * 3 / 8) = 0x0080：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/41.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/41.png)
 
 之后再分配一个堆块，此堆块的分配使得AggregateExchg.FreeEntryOffset被修改为堆溢出后的值，即上面做过减法的值0x0080。由于AggregateExchg.FreeEntryOffset指示着下一个即将被分配的堆块，因此紧接下一次的分配会把类实例所在的堆块返回给调用者，如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/42.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/42.png)
 
 获得类实例所在的堆块后，覆盖其虚表指针。最后，调用类实例的虚函数，获得eip 的控制权，其结果如下图：
 
-![img](https://gitee.com/co-neco/pic_bed/raw/master/LFH/43.png)
+![img](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/43.png)
 
 ## 总结
 

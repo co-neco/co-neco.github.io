@@ -42,7 +42,7 @@ int main(){
 }
 ```
 
-这里，我们从DLL获取了一个std::string类型的变量，当main函数退出时，`a`这个变量会被释放，如果这个变量表示的字符串足够长，那么`a`变量持有的堆块指针也会被释放。这时你的程序可能就崩了。因为DLL可能管理着自己的堆分配，然后用户端也管理着自己的堆分配。`a`变量析构时会用用户端的运行时库来释放DLL管理的堆块。详细的描述可参考[runtime运行时库在MT与MD之间的差别](https://conecoy.cn/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/)。
+这里，我们从DLL获取了一个std::string类型的变量，当main函数退出时，`a`这个变量会被释放，如果这个变量表示的字符串足够长，那么`a`变量持有的堆块指针也会被释放。这时你的程序可能就崩了。因为DLL可能管理着自己的堆分配，然后用户端也管理着自己的堆分配。`a`变量析构时会用用户端的运行时库来释放DLL管理的堆块。详细的描述可参考[runtime运行时库在MT与MD之间的差别](https://conecoy.cn/Technology/reverse/development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/)。
 
 `Windows 10 System Programming_part2`书中也有一个例子，其大意是在更新DLL二进制文件时，用户端无感知，在栈上分配的类实例大小与以前的不匹配，从而可能导致崩溃。
 

@@ -160,7 +160,7 @@ transact -> write -> map -> rollback -> execute
 
 - 如果覆盖用的是PE文件，创建进程成功，不过我们在procExp中看到的是名叫`System Idle Process`，观察该进程信息，其提示“请求的操作是在不再活动的事务的上下文中进行的”。
 
-![image-20220216102919516](https://gitee.com/co-neco/pic_bed/raw/master/process_injection/image-20220216102919516.png)
+![image-20220216102919516](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220216102919516.png)
 
 虽然该方法已经失效了，不过它的思路很好。之后介绍的`Process Herpaderping`借鉴了该方法，且目前也是有效的。
 
@@ -212,7 +212,7 @@ transact -> write -> map -> rollback -> execute
 
 了解完`Process Ghosting`，我们来看`Ghostly Hollowing`。与`Transacted Hollowing`类似，该方法也是为了免去创建进程和准备进程参数的复杂过程。于是可以得到以下结论：
 
-![image-20220219142624707](https://gitee.com/co-neco/pic_bed/raw/master/process_injection/image-20220219142624707.png)
+![image-20220219142624707](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219142624707.png)
 
 > - 关于该方法的实现，可参考这个[仓库](https://github.com/hasherezade/transacted_hollowing)。
 >
@@ -243,7 +243,7 @@ transact -> write -> map -> rollback -> execute
 
 一个有趣的现象是如果我们不关闭执行payload（计算器）的进程A，那么双击output.exe时会启动另一个进程B，弹出另一个计算器。其原因是进程A有一个section，这个section指向的文件路径是output.exe，当我们启动进程B时，操作系统发现路径一样，于是使用了进程A的section对应的SectionObjectPointer，以此实现文件的共享，也就是使用已经映射到内存的output.exe来启动另一个计算器。但如果我们打开output.exe文件，会发现内容又是lsass.exe的。因为文件映射到内存包括data和image类别，而读文件是data类，所以data类对应的内存和image类对应的内存是分开的，也就是说操作系统的内存有两份output.exe文件的数据。下面贴一张关于进程A的section对应的SectionObject示意图。
 
-![image-20220219143458739](https://gitee.com/co-neco/pic_bed/raw/master/process_injection/image-20220219143458739.png)
+![image-20220219143458739](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219143458739.png)
 
 **这里我们通过windbg讲述刚刚的解释**。首先拿到herpaderping的[demo源码](https://github.com/jxy-s/herpaderping)，用visual studio编译完成后，我们启动一个windbg，启动命令如下：
 
@@ -271,7 +271,7 @@ auto status = NtCreateSection(&sectionHandle,
 
 142行是创建section，类型是SEC_IMAGE。在创建section之前，我们观察一下目标文件（targetHadnle）的句柄：
 
-![image-20220219123625433](https://gitee.com/co-neco/pic_bed/raw/master/process_injection/image-20220219123625433.png)
+![image-20220219123625433](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219123625433.png)
 
 打开管理员权限的windbg，启动本地内核调试，查看这个句柄，如下：
 
@@ -316,7 +316,7 @@ lkd> dx -id 0,0,ffffac0f0ede7080 -r1 ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)0xfff
 
 执行`ProcessHerpaderping`的剩下部分，它会等待创建的cpp_test_ano.exe进程退出（实际执行的是CFF Explorer.exe）。这时，如果我们用二进制编辑器打开cpp_test_ano.exe，会发现全是明文数据，不是可执行代码：
 
-![image-20220219133338725](https://gitee.com/co-neco/pic_bed/raw/master/process_injection/image-20220219133338725.png)
+![image-20220219133338725](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219133338725.png)
 
 如果我们双击cpp_test_ano.exe，会发现又弹出了一个CFF Explorer.exe进程，这时观察我们刚刚创建的进程：
 

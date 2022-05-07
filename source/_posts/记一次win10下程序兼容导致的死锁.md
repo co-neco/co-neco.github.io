@@ -200,15 +200,15 @@ Set bu breakpoint
 
 这个SRWLock的名字叫FthDelayFreeQueueFlushLock。在IDA中，我们可以看到AcLayers垫片的FthDelayFreeQueueInsert函数是如何尝试获取SRWLock的：
 
-![image-20211025214331561](https://gitee.com/co-neco/pic_bed/raw/master/development/image-20211025214331561.png)
+![image-20211025214331561](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/development/image-20211025214331561.png)
 
 交叉引用FthDelayFreeQueueFlushLock，发现有多个函数会获取这个锁：
 
-![image-20211025214725855](https://gitee.com/co-neco/pic_bed/raw/master/development/image-20211025214725855.png)
+![image-20211025214725855](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/development/image-20211025214725855.png)
 
 再观察7号线程，发现7号线程在获取CS锁之前，调用了FthDelayFreeQueueFlush函数，通过IDA观察如下：
 
-![image-20211025220130896](https://gitee.com/co-neco/pic_bed/raw/master/development/image-20211025220130896.png)
+![image-20211025220130896](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/development/image-20211025220130896.png)
 
 FthDelayFreeQueueFlush函数做的第一件事就是以独占的方式获取FthDelayFreeQueueFlushLock。
 
