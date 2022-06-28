@@ -21,7 +21,7 @@ When you develop a large project, you should always do following two things:
 - Write a corresponding configuration project to automatically configure what you would configure manually otherwise.
     > As time goes by, you may need add some configurations, such as an addition of a new task. You may do so by adding following sentences:
     >
-    > ```c
+    > ```cpp
     > // Configuration file A
     > auto taskB = new TaskB(some parameters);
     > sm_allTasks.push_back(taskB);
@@ -67,7 +67,7 @@ Perform every explicit resource allocation(e.g., new) in its own statement that 
 
 If you define a function and use it like following example:
 
-```c
+```cpp
 void Func(shared_ptr<Widget> sp1, shared_ptr<Widget> sp2);
 //...
 Func(shared_ptr<Widget>(new Widget), shared_ptr<Widget>(new Widget));
@@ -77,14 +77,14 @@ Such usage is unsafe. Some compiler may allocate two widgets at first, and then 
 
 There is a workaround for it:
 
-```c
+```cpp
 shared_ptr<Widget> sp1(new Widget), sp2(new Widget);
 Func(sp1, sp2);
 ```
 
 There is one another example that I picked up from PVS SAST tool [blog](https://pvs-studio.com/en/blog/posts/cpp/0873/):
 
-```c
+```cpp
 std::vector<std::unique_ptr<Modifier>> Modifiers;
 Modifiers.emplace_back(new LoadModifier(BB, &PT, &R));
 Modifiers.emplace_back(new StoreModifier(BB, &PT, &R));
@@ -96,7 +96,7 @@ What if emplace_back throws an exception?  oops!!! That class instance would han
 
 There is a workaround  for it:
 
-```c
+```cpp
 std::vector<std::unique_ptr<Modifier>> Modifiers;
 Modifiers.emplace_back( std::unique_ptr<LoadModifier>(new LoadModifier(BB, &PT, &R)));
 ```
@@ -117,7 +117,7 @@ There is one another example: Visitor design pattern, which has a cyclic depende
 
 If you define 'a +b' operator, you should always define 'a += b' operator:
 
-```c
+```cpp
 T& T::operator@=(const T&){
 //... implementation
 return *this;
@@ -131,7 +131,7 @@ T operator@(const T& lhs, const T& rhs){
 
 Note that here operator@ is a nonmember function, so that it can accept the same implicit conversions on its left-hand side and right-hand side parameters, like following code snippet:
 
-```c
+```cpp
 'Char + String' and 'String + Char' are both OK.
 ```
 
@@ -145,13 +145,13 @@ If you do not need the original value, use the prefix version, which would not c
 
 Consider that if you made a string comparison, such as the following example:
 
-```c
+```cpp
 if (someString == "Hello") {...}
 ```
 
 If you just defined following operator==
 
-```c
+```cpp
 class String{
 bool operator==(const String&, const String&);
 }
@@ -161,7 +161,7 @@ There is a implicit type conversion from char* to String, which need a copy of "
 
 There is a workaround:
 
-```c
+```cpp
 bool operator==(const String&, const String&);
 bool operator==(const String&, const char*);
 bool operator==(const char*, const String&);
@@ -175,7 +175,7 @@ Try the rule if you make a library that must meets some performance need.
 
 Consider following situation:
 
-```c
+```cpp
 void Func(int, int);
 
 int count = 5;
@@ -210,7 +210,7 @@ Finally, I like following sentence:
 
 In short, this item means that you can encapsulate all one class' private variables and private methods into an strcuture. Therefore you can forward-declare the structure within that class and use a pointer pointing to the structure, such as following code snippet:
 
-```c
+```cpp
 class Map{
 	//...
 private:
@@ -225,7 +225,7 @@ This will produce following benefits:
 
 - Git rid of ambiguity of name lookup:
 
-  ```c
+  ```cpp
   int Twice(int); // 1
   
   class Calc {
@@ -246,7 +246,7 @@ This will produce following benefits:
 
 - Make some operations reversible:
 
-  ```c
+  ```cpp
   class Widget {
   public:
   	Widget& operator=(const Widget&);
@@ -261,7 +261,7 @@ This will produce following benefits:
   
   If we use Pimpl as following:
   
-  ```c
+  ```cpp
   Widget& Widget::operator=(const Widget& widget) {
   	std::shared_ptr<Impl> temp(new Impl(/*...*/));
   	// change temp->t1 and temp->t2; if it fails then throw, else assigns temp
@@ -278,7 +278,7 @@ This will produce following benefits:
 
 Member variables are always initialized in the order they are declared in the class definition; the order you write them in the constructor initialization list is ignored:
 
-```c
+```cpp
 class Employee {
 public:
 	std::string m_email;
@@ -315,7 +315,7 @@ bad e.g.:
 
 - definition with external linkage in a header
 
-  ```c
+  ```cpp
   int aa;
   string hello("11");
   void foo(){/*....*/}
@@ -325,7 +325,7 @@ bad e.g.:
   
 - definition with internal linkage in a header
 
-  ```c
+  ```cpp
   static int aa;
   static string hello("11");
   static void foo(){/*....*/}
@@ -337,7 +337,7 @@ bad e.g.:
   
   > Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.
   >
-  > ```c
+  > ```cpp
   > namespace {
   > int aa;
   > string hello("11");
@@ -375,7 +375,7 @@ Summay: When developing a module, use low-level abstraction in external interfac
 
 Consider the following example:
 
-```c
+```cpp
 #include <iostream>
 #include <vector>
 
@@ -405,7 +405,7 @@ If the compiler reaches out into N namespace, it would find N::operator+, and it
 
 C++11 implementation:
 
-```c
+```cpp
 template<typename T>
 class Sample {
     BOOST_STATIC_ASSERT((is_base_of<List, T>::value)); //Yes, the double parentheses are needed, otherwise the comma will be seen as macro argument separator
@@ -424,7 +424,7 @@ class Sample {
 
 or
 
-```c
+```cpp
 #include <type_traits>
 
 template <typename RealType>
@@ -439,7 +439,7 @@ class A
 
 Option1:
 
-```c
+```cpp
 template<typename T>
     void Sample1(T t) {
         t.foo();
@@ -456,7 +456,7 @@ template<typename T>
 
 Option2:
 
-```c
+```cpp
 template<typename T>
     void Sample2(T t) {
         foo(t);
@@ -474,7 +474,7 @@ template<typename T>
 
 Before we talk about override and specialization, let's talk a little about their difference.
 
-```c
+```cpp
 namespace std {
     template <class T>
 	void swap(T& t1, T& t2);
@@ -514,7 +514,7 @@ eg:
 
 - Dont't use C-style casts with C++ classes(especially related about inheritance)
 
-  ```c
+  ```cpp
   void Gun(Base* pb){
       Derived* pd = (Derived*)pb;
   	// if Gun has access to the definition of Derived class, the 
@@ -526,7 +526,7 @@ eg:
 
   one more example:
 
-  ```c
+  ```cpp
   #include <iostream>
   
   struct A { int a; };

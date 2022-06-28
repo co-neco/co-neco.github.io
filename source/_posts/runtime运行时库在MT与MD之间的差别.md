@@ -59,7 +59,7 @@ tags:
 
 根据上一节的描述，这种情况下，EXE和DLL会用各自的运行时库，这时会导致一种错误，如下代码所示：
 
-```c
+```cpp
 // In EXE test.cpp
 
 #include "dll.h"
@@ -70,7 +70,7 @@ int main(){
 }
 ```
 
-```c
+```cpp
 // In DLL dll.h
 #ifndef FUNC_TEST
 #define FUNC_TEST extern "C" __declspec(dllimport)
@@ -88,7 +88,7 @@ std::string GetString() {
 
 以上代码会导致如下错误：
 
-```c
+```cpp
 //assertion failed!
 __acrt_first_block == header 
 ```

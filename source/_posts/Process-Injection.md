@@ -34,7 +34,7 @@ tags:
 
 伪代码如下（省略错误检查）：
 
-```c
+```cpp
 HANDLE hTargetHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_ALL_ACCESS | PROCESS_SUSPEND_RESUME, FALSE, targetPid);
 //...
 
@@ -77,7 +77,7 @@ CreateRemoteThread(malwareDllEntryPoint);
 
 该方法也比较经典，并被广泛使用，其基本流程如下：
 
-```c
+```cpp
 CreateProcess(“svchost.exe” , …, CREATE_SUSPENDED, …);
 NtUnmapViewOfSection(…) and VirtualAllocEx(…);
 For each section:
@@ -148,7 +148,7 @@ ResumeThread(…);
 
 以上流程可抽象如下：
 
-```c
+```cpp
 transact -> write -> map -> rollback -> execute
 ```
 
@@ -255,7 +255,7 @@ transact -> write -> map -> rollback -> execute
 
 启动命令后，我们在herpaderp.cpp的142行下断点：
 
-```c
+```cpp
 wil::unique_handle sectionHandle;
 auto status = NtCreateSection(&sectionHandle,
                               SECTION_ALL_ACCESS,
@@ -275,7 +275,7 @@ auto status = NtCreateSection(&sectionHandle,
 
 打开管理员权限的windbg，启动本地内核调试，查看这个句柄，如下：
 
-```c
+```cpp
 lkd> !process 0 1 ProcessHerpaderping.exe
 PROCESS ffffac0f0ede7080
 ...
@@ -303,7 +303,7 @@ lkd> dx -id 0,0,ffffac0f0ede7080 -r1 ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)0xfff
 
 我们单步步过142行，再观察一下SectionObjectPointer：
 
-```c
+```cpp
 lkd> dx -id 0,0,ffffac0f0ede7080 -r1 ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)0xffffac0f066a6358)
 ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)0xffffac0f066a6358)                 : 0xffffac0f066a6358 [Type: _SECTION_OBJECT_POINTERS *]
     [+0x000] DataSectionObject : 0xffffac0f0727b1d0 [Type: void *]
@@ -320,7 +320,7 @@ lkd> dx -id 0,0,ffffac0f0ede7080 -r1 ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)0xfff
 
 如果我们双击cpp_test_ano.exe，会发现又弹出了一个CFF Explorer.exe进程，这时观察我们刚刚创建的进程：
 
-```c
+```cpp
 lkd> !process 0 1 cpp_test_ano.exe
 PROCESS ffffac0f2b92f080
 ...

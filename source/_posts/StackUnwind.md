@@ -71,7 +71,7 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 
 该函数实现如下：
 
-```c
+```cpp
 BOOL DbsX86StackUnwinder::UnwindInternalContextUsingEbp(){
     BOOL result;
     
@@ -182,7 +182,7 @@ DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代�
 
 #### ComputeScoreForReturnAddress(获取分数的算法细节)
 
-```c
+```cpp
 // psudo code
 int DbsX86HeuristicTool::SearchForReturnAddress(DWORD ebp){
     
@@ -292,7 +292,7 @@ debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方�
 #### 实验：StackWalk64返回的CONTEXT（上下文）
   - 1.StackWalk64原型（[详情可参考MSDN](https://docs.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-stackwalk64)）：
 
-    ```c
+    ```cpp
     BOOL IMAGEAPI StackWalk64(
       DWORD                            MachineType,
       HANDLE                           hProcess,
@@ -310,7 +310,7 @@ debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方�
 
   - 2.StackWalk64的使用：
 
-    ```c
+    ```cpp
     #define GET_CURRENT_THREAD_CONTEXT(c, contextFlags) \
       do                                                              \
       {                                                               \
@@ -363,7 +363,7 @@ debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方�
 
     - 当前的栈（由windbg打印）
 
-      ```c
+      ```cpp
       ...
       0b 00daefa4 00a4e4c5 dbghelp!StackWalk64+0x89
       0c 00daf640 00a69ef3 cpp_test_ano+0xfe4c5     //函数A
@@ -377,7 +377,7 @@ debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方�
       
     - 程序输出结果
 
-      ```c
+      ```cpp
       // 为执行StackWalk64的初始值如下
       // context ebp: daf640
       // context eip: a4e34d

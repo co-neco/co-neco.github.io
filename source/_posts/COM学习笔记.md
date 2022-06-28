@@ -28,7 +28,7 @@ COM的诞生是为了解决c/c++接口存在的诸多不便，以下举一个简
 
 我们使用一个DLL时（如果是我们开发的），会导入它的lib，加上dll的头文件（包含导出函数）。比如这个DLL有一个导出函数GetOneString，用户端调用如下：
 
-```c
+```cpp
 //dll.h
 extern "c" __declspec(dllimport) std::string GetOneString();
 
@@ -72,7 +72,7 @@ int main(){
 
 客户端的大致代码框架如下：
 
-```c
+```cpp
 auto hr = CoInitialize(NULL);
 //...
 CComPtr<IRPNCalculator> spCalc;
@@ -83,7 +83,7 @@ CoUninitialize();
 
 指定实现接口的类的CLSID时，一般有两种方法：
 
-```c
+```cpp
 CComPtr<IRPNCalculator> spCalc;
 //hr = spCalc.CoCreateInstance(__uuidof(RPNCalculator));
 hr = spCalc.CoCreateInstance(CLSID_RPNCalculator);
@@ -97,20 +97,20 @@ if (FAILED(hr)) {
 
   这种方式需要在DLL接口的头文件中声明类的CLSID：
 
-  ```c
+  ```cpp
   class __declspec(uuid("D4B830A5-7DFC-4C81-9268-8BB0BEA7CACE")) RPNCalculator;
   ```
 
 - 通过定义CLSID_RPNCalculator变量的方式（类型是GUID）
 
-  ```c
+  ```cpp
   DEFINE_GUID(CLSID_RPNCalculator,
   	0xd4b830a5, 0x7dfc, 0x4c81, 0x92, 0x68, 0x8b, 0xb0, 0xbe, 0xa7, 0xca, 0xce);
   ```
 
   这种方式需要注意的是，客户端在包含文件时，应该如下：
 
-  ```c
+  ```cpp
   // Come first, initguid.h has a INITGUID macro, which assigns 
   // DEFINE_GUID a command to define CLSID_RPNCalculator variable
   #include <initguid.h> 
@@ -136,7 +136,7 @@ if (FAILED(hr)) {
 
 IDL是`Interface Deginition Language`的缩写，其作用是通过微软的MIDL编译器生成接口类，便于跨平台（比如生成类型库，在c++、C#等不同的平台运行）、简化接口编写（比如代理和残根代码的自动化生成，在out-of-process EXE server的情况下，代理/残根的DLL是必需的），例子如下：
 
-```c
+```cpp
 import "unknwn.idl";
 
 [
@@ -227,7 +227,7 @@ regsvr32 /s proxy.dll
 
 包含MIDL生成的XX.h和XX_i.c文件，由于客户端还需要实现接口的类的CLSID，因此我们需要在XX_i.c文件中加入对应的CLSID，如下：
 
-```c
+```cpp
 MIDL_DEFINE_GUID(IID, CLSID_RPNCalculator,0xd4b830a5, 0x7dfc, 0x4c81, 0x92, 0x68, 0x8b, 0xb0, 0xbe, 0xa7, 0xca, 0xce);
 ```
 

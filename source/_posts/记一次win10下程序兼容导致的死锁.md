@@ -16,7 +16,7 @@ tags:
 
 ## 观察主线程状态
 
-```c
+```cpp
  # ChildEBP RetAddr  Args to Child              
 00 008fe8e0 775f57da 6be0c9ac 00000000 02c78f58 ntdll!NtWaitForAlertByThreadId+0xc (FPO: [2,0,0])
 01 008fe944 6bdddaa3 6be0c9ac 00000000 02c78f28 ntdll!RtlAcquireSRWLockShared+0x1ca (FPO: [1,17,4])
@@ -53,7 +53,7 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 
 看00~01的调用，发现AcLayers调用了ntdll的RtlAcquireSRWLockShared，这个函数是在等一个SRWLock，然后就一去不复返了。windbg没有srwlock相关的扩展命令，不过可以通过_RTL_SRWLOCK来观察结构体的内容，如下：
 
-```c
+```cpp
 0:000> dt ntdll!_RTL_SRWLOCK 6be0c9ac 
    +0x000 Locked           : 0y1
    +0x000 Waiting          : 0y1
@@ -72,7 +72,7 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 
 用windbg附加的时候，发现无法立刻中断下来，弹出如下内容：
 
-```c
+```cpp
 Break-in sent, waiting 30 seconds...
 WARNING: Break-in timed out, suspending.
          This is usually caused by another thread holding the loader lock
@@ -86,7 +86,7 @@ ntdll!NtWaitForAlertByThreadId+0xc:
 
 因为windbg附加时，是通过远线程的方式调用被调试进程的DbgUiRemoteBreakin函数，那为何附加线程无法中断呢？观察这个线程的栈如下：
 
-```c
+```cpp
 0:013> kv
  # ChildEBP RetAddr 
 00 097ef0e8 7761b79b 7b55f2a4 00000000 7b55f2a0 ntdll!NtWaitForAlertByThreadId+0xc (FPO: [2,0,0])
@@ -112,7 +112,7 @@ ntdll!NtWaitForAlertByThreadId+0xc:
 
 观察04的调用，发现附加线程卡住的原因是在等待一个CRITICAL_SECTION，观察这个锁：
 
-```c
+```cpp
 0:013> !cs 7b55f2a0 
 -----------------------------------------
 Critical section   = 0x7b55f2a0 (JJDPS!__acrt_lock_table+0x0)
@@ -128,7 +128,7 @@ SpinCount          = 0x00000fa0
 
 OwningThread指明了线程ID为0x000047b8的线程持有这个锁，那我们切换到这个线程，观察它的栈：
 
-```c
+```cpp
 0:007> kv
 # ChildEBP RetAddr  Args to Child  
 00 096ee580 7761b79b 00d3025c 00000000 00d30258 ntdll!NtWaitForAlertByThreadId+0xc (FPO: [2,0,0])
@@ -169,7 +169,7 @@ OwningThread指明了线程ID为0x000047b8的线程持有这个锁，那我们�
 
 观察04的调用，可知7号线程也在等待一个CS锁，观察这个锁如下：
 
-```c
+```cpp
 0:007> !cs 00d30258 
 -----------------------------------------
 Critical section   = 0x00d30258 (+0xD30258)
@@ -191,7 +191,7 @@ SpinCount          = 0x020007cf
 
 回想主线程等待的SRWLock，通过它的地址，我们可以知道这个锁的具体名字：
 
-```c
+```cpp
 ln 6be0c9ac 
 Browse module
 Set bu breakpoint

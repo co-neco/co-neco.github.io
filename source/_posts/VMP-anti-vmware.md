@@ -107,7 +107,7 @@ in指令在真机中会产生0xC0000096异常，而在虚拟机中不会产生�
 
   因为Themida没有用PSAPI.dll、IPHLPAPI.dll、shlwapi.dll，所以能用来反虚拟机的函数比较有限，除了与注册表相关的函数，剩下的是检查固件信息的函数，不过设断点后都没有触发，断点如下：
 
-  ```c
+  ```cpp
   ba e1 KERNELBASE!GetSystemFirmwareTable
   ba e1 KERNELBASE!EnumSystemFirmwareTables
   ```
@@ -138,7 +138,7 @@ in指令在真机中会产生0xC0000096异常，而在虚拟机中不会产生�
 
   Themida的虚拟机检测可以通过设置VMware选项过掉(不过我尝试没成功)，比如：
   
-  ```c
+  ```cpp
   disable_acceleration = "TRUE"
   monitor_control.restrict_backdoor = "TRUE"
   ```
@@ -157,7 +157,7 @@ in指令在真机中会产生0xC0000096异常，而在虚拟机中不会产生�
 
   - 对比代码段，发现关键条件跳转。使用x32dbg的trace功能，把两种环境下从分叉点执行的23000行代码dump下来，然后用BCompare进行文本比较，发现大概在1500行后，程序判断eflag的ZF标志，ZF为1对应真机，ZF为0对应虚拟机。从eflag的比较处开始回溯，发现一句关键的代码
 
-    ```c
+    ```cpp
     cmp [addr], 0
     ```
   
