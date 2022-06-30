@@ -882,8 +882,8 @@
 &lt;/blockquote&gt;
 &lt;p&gt;编程实践：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;在工程开始的最初，就只使用 unicode，只在显式需要的时候，再转换成 utf-8 编码的多字节字符（比如使用 json 时）。&lt;/li&gt;
-&lt;li&gt;可以使用一套代码，既支持多字节也支持 unicode，再这两种字符集切换时保持 windows ANSI 的编码，只在显式需要的时候，再转换成 utf-8 编码的多字节字符。&lt;/li&gt;
+&lt;li&gt;在工程开始的最初，就只使用 unicode。只在显式需要的时候，再转换成 utf-8 编码的多字节字符（比如使用 json 时）。&lt;/li&gt;
+&lt;li&gt;可以使用一套代码，既支持多字节也支持 unicode，在这两种字符集切换时保持 windows ANSI 的编码。只在显式需要的时候，再转换成 utf-8 编码的多字节字符。&lt;/li&gt;
 &lt;/ul&gt;
  ]]></description>
         </item>
