@@ -246,4 +246,21 @@ auto& A = GetA();
     }
     ```
 
+## windows平台字符集的处理
+
+需要传输到网络的数据中，字符串应该均用utf-8编码。因为windows使用的是默认windows ANSI编码，所以字符串在传输中应该转为utf-8编码。
+
+Windows平台在处理字符时，默认使用的代码页(code page)是CP_ACP，不是CP_UTF8。即windows平台默认的字符串可能与其他机器不兼容，其他机器解析会乱码，比如字符串包含中文时。
+
+另外，如果windows的系统语言是英语，那么windows本地的windows ANSI编码(CP_ACP)是不支持中文之类的。因此在这种情况下，需要先使用unicode字符集，然后再编程成utf-8。
+
+> Windows提供了**MultiByteToWideChar**和**WideCharToMultiByte**这两个winapi用于多字节字符和unicode字符的转换。由于unicode只是一种字符的表示方式（用两个code point表示一个字符），并不存在编码，因此在使用上述的两个winapi需要注意：
+>
+> - **WideCharToMultiByte**的CodePage参数表示将unicode字符串转换成哪个编码格式的多字节字符。
+> - **MultiByteToWideChar**的CodePage参数表示将哪种编码格式的多字节字符转换成unicode字符。如果这里提供的codePage错误，那么这次转换会成功，但结果是错误的。另外，如果多字节字符包含中文，但不是utf-8编码，比如是windows ANSI编码，那么编译的程序在中文系统是表示正确的，但是在英文系统就会乱码，因为英文系统的windows ANSI本地编码识别不了这些中文字符。
+
+编程实践：
+
+- 在工程开始的最初，就只使用unicode，只在显式需要的时候，再转换成utf-8编码的多字节字符（比如使用json时）。
+- 可以使用一套代码，即支持多字节也支持unicode，再这两种字符集切换时保持windows ANSI的编码，只在显式需要的时候，再转换成utf-8编码的多字节字符。
 
