@@ -42,12 +42,12 @@ HANDLE hTargetHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ |
 injectLoadLibrary(hTargetHandle, legitimateDll);
 //...
 
+if (has executable section)
+    BypassCFG();
+
 // Copy every malware dll's section into legitimate dll's corresponding sections within the target process address space.
 for(section : malwareDll){
-    WriteProcessMemory(hTargetHandle, legitimateDllSection, section, section_size...);
-    
-    if (has executable section)
-        BypassCFG();
+    WriteToMudole(hTargetHandle, legitimateDllSection, section, section_size...);
 }
 
 RebuildImportTable();
@@ -69,7 +69,7 @@ CreateRemoteThread(malwareDllEntryPoint);
 
 > 与CFG(control flow guard)相关的知识可参考`MSDN`或者`System Internals 7th part1` security chapter。
 
-不过该方法还是有明显的不足，比如会调用显眼的VirtualAllocEx、WriteProcessMemory、VirtualProtectEx和CreateRemoteThread，通常的EDR都能检测出可能的恶意行为。
+不过该方法还是有明显的不足，比如会调用显眼的VirtualAllocEx、WriteProcessMemory、VirtualProtectEx和CreateRemoteThread，通常的EDR(endpoint detection and response)都能检测出可能的恶意行为。
 
 > 该方法的详细细节可参考这篇[文章](https://blog.f-secure.com/hiding-malicious-code-with-module-stomping/)。
 
@@ -83,7 +83,7 @@ NtUnmapViewOfSection(…) and VirtualAllocEx(…);
 For each section:
 	WriteProcessMemory(..., EVIL_EXE, …);
 Relocate Image*;
-Set base address in PEB*;
+Set new base address in the NT header of EVIL_EXE;
 SetThreadContext(…);
 ResumeThread(…);
 ```
@@ -102,7 +102,7 @@ ResumeThread(…);
 
 该方法是2017年在黑客大会介绍的，演讲者首先说明了Process Hollowing涉及的敏感操作和一些不足：
 
-- Unmap目标进程的EXE模块（非常可疑），现代的安全检查一般都有Unmap检查。
+- Unmap目标进程的EXE模块（非常可疑），目前的的EDR一般都有Unmap检查。
 
 - 如果不Unmap，而是直接覆写程序，那么覆写地址的页属性就不是共享的，也很可疑。
 
@@ -152,9 +152,9 @@ ResumeThread(…);
 transact -> write -> map -> rollback -> execute
 ```
 
-该方法的新颖点在于通过Windows提供的`事务`API，将恶意代码写入打开的文件，并创建一个section，用其创建进程，之后回滚写入操作。这样可以隐藏执行的恶意代码，虽然你查看该进程时（比如procExp），其显示的是原程序的信息，但其真正执行的代码是恶意代码。同时，它比Process Hollowing更隐蔽，因为它不用Unmap，也不需要Remap，它就像正常启动一个进程一样。
+该方法的新颖点在于通过Windows提供的`事务`API，将恶意代码写入打开的文件，并根据这个文件句柄创建一个section，之后回滚写入操作，最后再根据创建的section创建进程。这样可以隐藏执行的恶意代码，虽然你查看该进程时（比如procExp），其显示的是原程序的信息，但其真正执行的代码是恶意代码。同时，它比Process Hollowing更隐蔽，因为它不用Unmap，也不需要Remap，它就像正常启动一个进程一样。
 
-最近，我编译了这份代码，发现win10、win8.1和win7都失败了，说明windows已经patch了该方法，以下是win10和win8.1测试的结果：
+最近，我编译了这份代码，发现win10、win8.1和win7都失败了，说明windows已经patch了该方法，以下是win10测试的结果：
 
 - 如果覆盖用的是非PE文件，NtCreateSection返回错误，提示无效的PE。
 
