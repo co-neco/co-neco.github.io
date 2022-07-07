@@ -251,7 +251,7 @@ transact -> write -> map -> rollback -> execute
 "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\windbg.exe" ProcessHerpaderping.exe "E:\my_knowledge\Reverse\Tools\CFF_Explorer\CFF Explorer.exe" E:\tmp\cpp_test_ano.exe
 ```
 
-其中CFF Explorer.exe是要执行的payload（实际利用场景下，一般没有这样的落地文件，payload是恶意进程解密的出来的），cpp_test_ano.exe是一个合法的可读可写文件。
+其中CFF Explorer.exe是要执行的payload（实际利用场景下，一般没有这样的落地文件，payload是恶意进程解密出来的），cpp_test_ano.exe是一个合法的可读可写文件。
 
 启动命令后，我们在herpaderp.cpp的142行下断点：
 
@@ -269,7 +269,7 @@ auto status = NtCreateSection(&sectionHandle,
     bp `ProcessHerpaderping!herpaderp.cpp:142`
 ```
 
-142行是创建section，类型是SEC_IMAGE。在创建section之前，我们观察一下目标文件（targetHadnle）的句柄：
+142行是创建section，类型是SEC_IMAGE。在创建section之前，我们观察一下目标文件（targetHandle）的句柄：
 
 ![image-20220219123625433](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219123625433.png)
 
