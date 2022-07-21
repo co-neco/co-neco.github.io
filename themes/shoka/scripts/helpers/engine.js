@@ -7,6 +7,7 @@ const url = require('url');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { assert } = require('console');
 
 const randomServer = parseInt(Math.random()*4,10)+1
 
@@ -145,6 +146,10 @@ hexo.extend.helper.register('_cover', function(item, num) {
         if (get_image_day(image) == filter_day)
           image_list_by_day.push(image.substring(image.search(/https/)))
       }
+
+      if (image_list_by_day.length == 0)
+        assert.ok(false)
+      
       return image_list_by_day
     }
 

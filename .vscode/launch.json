@@ -32,15 +32,15 @@
             ]
         },
         {
-            "name": "hexo-node",
+            "name": "hexo-debug",
             "program": "${workspaceFolder}/node_modules/hexo/node_modules/hexo-cli/bin/hexo",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node",
+            "type": "node",
             "args": [
-                "server"
+                "g"
             ]
         }
         ,
