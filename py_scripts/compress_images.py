@@ -1,7 +1,5 @@
-from statistics import quantiles
 import sys, os
 import traverse_dir_files
-from shutil import copy2
 
 from PIL import Image
 
@@ -71,9 +69,9 @@ def main(argv):
     traverse_dir_files.traverse(argv[0], compress_one_file)
 
 def usage():
-    print("\nusage: python image_compress.py image_dir\n\n"
+    print("\nusage: python compress_images.py image_dir\n\n"
           "eg:\n"
-          "  python image_compress.py "
+          "  python compress_images.py "
           "D:\\BaiduNetdiskDownload\\galgame_cg\\生命のスペア I was born for you \n\n")
 
 
