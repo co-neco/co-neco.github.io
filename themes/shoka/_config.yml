@@ -121,7 +121,7 @@ sidebar:
   position:  right
   # position: right
   # Replace the default avatar image and set the url here.
-  avatar: https://tva4.sinaimg.cn/large/008igzrxly8gtc1b65u5cj30bm0gm750.jpg
+  avatar: https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg
 
 widgets:
   # if true, will show random posts
