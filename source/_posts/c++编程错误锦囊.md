@@ -268,3 +268,42 @@ Windows平台在处理字符时，默认使用的代码页(code page)是CP_ACP�
 - 在工程开始的最初，就只使用unicode。只在显式需要的时候，再转换成utf-8编码的多字节字符（比如使用json时）。
 - 可以使用一套代码，既支持多字节也支持unicode，在这两种字符集切换时保持windows ANSI的编码。只在显式需要的时候，再转换成utf-8编码的多字节字符。
 
+## \_\_try和c++最好不要混用
+
+开发中，遇到\_\_try需要使用类的情况，如果该类没有析构函数的时候，可以正常编译；
+
+但如果该类有析构函数，就会编译失败，例子如下：
+
+```cpp
+class CLA {
+public:
+	CLA():a(3) {}
+	~CLA() { }
+	void ss() { a = 4; }
+public:
+	int a;
+};
+
+int main() {
+
+__try {
+	//sstring c("aaaa");
+	CLA c;
+}
+__finally {
+	printf("1111");
+}
+
+return 0;
+}
+```
+
+并报错：
+
+`error C2712: Cannot use __try in functions that require object unwinding`
+
+在之前的开发中，我以为是报c++异常（即使用了try关键字）时，才会出现这个情况。因此我尝试在CLA的析构函数加上noexcept，但仍然报同样的错误。
+
+再思考下报错信息里的`require object unwinding`，这里我最初理解的是使用try的情况下，会做unwinding。但根据目前的情况，应理解成如果一个类有析构函数，那么这个类的实例就需要unwinding，即使这个析构函数从开发者的视角是不会抛异常的。
+
+总结：在使用\_\_try的函数里，尽量不要使用类。
