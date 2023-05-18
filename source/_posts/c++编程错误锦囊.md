@@ -246,7 +246,7 @@ auto& A = GetA();
     }
     ```
 
-## windows平台字符集的处理
+## 9 windows平台字符集的处理
 
 需要传输到网络的数据中，字符串应该均用utf-8编码。因为windows使用的是默认windows ANSI编码，所以字符串在传输中应该转为utf-8编码。
 
@@ -268,7 +268,7 @@ Windows平台在处理字符时，默认使用的代码页(code page)是CP_ACP�
 - 在工程开始的最初，就只使用unicode。只在显式需要的时候，再转换成utf-8编码的多字节字符（比如使用json时）。
 - 可以使用一套代码，既支持多字节也支持unicode，在这两种字符集切换时保持windows ANSI的编码。只在显式需要的时候，再转换成utf-8编码的多字节字符。
 
-## \_\_try和c++最好不要混用
+## 10 \_\_try和c++最好不要混用
 
 开发中，遇到\_\_try需要使用类的情况，如果该类没有析构函数的时候，可以正常编译；
 
@@ -307,3 +307,82 @@ return 0;
 再思考下报错信息里的`require object unwinding`，这里我最初理解的是使用try的情况下，会做unwinding。但根据目前的情况，应理解成如果一个类有析构函数，那么这个类的实例就需要unwinding，即使这个析构函数从开发者的视角是不会抛异常的。
 
 总结：在使用\_\_try的函数里，尽量不要使用类。
+
+## 11 向前声明使用智能指针
+
+先来看一段代码：
+
+```cpp
+// B.h
+class A;
+
+class B {
+// method declarations
+private:
+    std::unique_ptr<A> ptr;
+// variable declarations
+};
+
+//--------------------------------
+// B.cpp
+#include "A.h"
+
+// B class implementation
+
+//--------------------------------
+// main.cpp
+#include "B.h"
+
+int main() {
+    B b;
+    // call B's methods.
+    
+    return 0;
+}
+```
+
+编译这份代码时，会报错`use of undefined type 'A'`，即没有找到A类的实现，所以报错了。
+
+不过我们已经向前声明了，为什么会出现这个问题呢？
+
+原因是使用std::unique_ptr时，unique_ptr会在合适的场所调用A的析构函数，以下是std::unique_ptr的声明：
+
+```cpp
+template<
+    class T,
+    class Deleter = std::default_delete<T>
+> class unique_ptr;
+```
+
+根据上面的例子，按理说B.h不会调用A类的析构函数，因为我们只是声明。
+
+接下来看一下`C++ reference documentation`中关于std::unique_ptr的一段描述：
+
+> `std::unique_ptr` *may be constructed for an incomplete type* `T`*, such as to facilitate the use as a handle in the Pimpl idiom.* **If the default deleter is used, `T` must be complete at the point in code where the deleter is invoked, which happens in the destructor, move assignment operator, and reset member function of `std::unique_ptr`***. (Conversely,* `std::shared_ptr` *can’t be constructed from a raw pointer to incomplete type, but can be destroyed where* `T` *is incomplete).*
+
+回想一下，上面的代码没有提供B类的析构函数，因此编译器会自动生成一个。
+
+自动生成的析构函数会调用A类的析构函数，也就需要A类的实现了。
+
+所以解决方法如下:
+
+```cpp
+// B.h
+class A;
+
+class B {
+// method declarations
+public:
+    ~B();
+private:
+    std::unique_ptr<A> ptr;
+// variable declarations
+};
+
+//--------------------------------
+// B.cpp
+#include "A.h"
+
+// B class implementation
+B::~B(){ }
+```
