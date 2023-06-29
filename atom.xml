@@ -8,10 +8,81 @@
     <author>
       <name>coneco</name>
     </author>
-    <updated>2022-11-25T02:08:09.000Z</updated>
+    <updated>2023-06-29T13:04:06.000Z</updated>
     <category term="anime" />
     <category term=" music" />
     <category term=" galgame" />
+    <entry>
+        <id>https://conecoy.cn/Technology/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/</id>
+        <title>C++工程预编译笔记.md</title>
+        <link rel="alternate" href="https://conecoy.cn/Technology/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/"/>
+        <content type="html">&lt;link rel=&#34;stylesheet&#34; class=&#34;aplayer-secondary-style-marker&#34; href=&#34;\assets\css\APlayer.min.css&#34;&gt;&lt;script src=&#34;\assets\js\APlayer.min.js&#34; class=&#34;aplayer-secondary-script-marker&#34;&gt;&lt;/script&gt;&lt;p&gt;随着一个工程的逐渐壮大，工程的编译时间会越来越长，也许你觉得编译时间长是正常的，因为引入了各种库，又开发了很多代码。&lt;/p&gt;
+&lt;p&gt;开发一个工程很长时间了，编译要花大概 100 秒左右，每次需要 rebuild 或者出包时都会觉得很慢，但也只能等待。无意间了解到一个预编译的概念，于是决定对整个工程添加预编译，看编译时间能否有明显变化。结果让我很吃惊，编译时间从 100 秒降到了 17 秒，让我之后的开发也相对快速了一点。这里记录一下过程和其中值得记录的点。&lt;/p&gt;
+&lt;h2 id=&#34;预编译precompiled-header&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#预编译precompiled-header&#34;&gt;#&lt;/a&gt; 预编译（precompiled header）&lt;/h2&gt;
+&lt;p&gt;预编译就是把需要包含的头文件预先编译成一种中间形式，这样在之后的编译中，每遇到这些已经编译过的头文件，就可以利用之前生成的中间形式，从而减少编译时长。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;预编译的资料可以查看&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvUHJlY29tcGlsZWRfaGVhZGVy&#34;&gt; wiki&lt;/span&gt; 和&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL2NwcC9idWlsZC9jcmVhdGluZy1wcmVjb21waWxlZC1oZWFkZXItZmlsZXM/dmlldz1tc3ZjLTE3MA==&#34;&gt; msdn&lt;/span&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;#pragma once 和预编译是有区别的，#pragma once 只是一个 include guards (包含保护)，防止多次包含，但编译时还是要编译到每个编译单元的（conpilation unit）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;vs使用预编译&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#vs使用预编译&#34;&gt;#&lt;/a&gt; VS 使用预编译&lt;/h2&gt;
+&lt;p&gt;VS 使用预编译的步骤很简单，可查看&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9iYWlqaWFoYW8uYmFpZHUuY29tL3M/aWQ9MTY2NjI3MTE2MTE3MjEzNTY0NiZhbXA7d2ZyPXNwaWRlciZhbXA7Zm9yPXBj&#34;&gt;善用预编译 PCH 文件提升编译速度&lt;/span&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;使用预编译后，每个源文件 (.c 或.cpp) 都需要包含 pch.h（这个头文件名可随意设置），这个比较繁琐，可以使用 VS 的 / FI 选项，该选项可以默认给所有源文件添加 pch.h。&lt;/li&gt;
+&lt;li&gt;不过在 stackoverflow 中，有很多人不同意使用 / FI 选项，原因如下
+&lt;ul&gt;
+&lt;li&gt;使用 / FI 后，新的阅读者更难理解文件之间的依赖关系&lt;/li&gt;
+&lt;li&gt;使用 / FI 后，不好跨平台兼容，比如在 linux 上的 gcc 编译（不过 gcc 也有对应的设置）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;vs预编译初体验&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#vs预编译初体验&#34;&gt;#&lt;/a&gt; VS 预编译初体验&lt;/h2&gt;
+&lt;p&gt;因为工程中有一个 common 目录，这个目录的头文件包含了一些通用的宏和类定义，所以很多地方都使用了，于是我的第一个目标就是把这个目录的头文件放到 pch.h 文件，然后设置 VS 关于预编译的配置，最后编译，结果是减少了大概 2 到 3 秒。&lt;/p&gt;
+&lt;p&gt;对于这个结果，我不是很满意，预编译的效果不是很明显。&lt;/p&gt;
+&lt;h2 id=&#34;微软的开源工具vcperf&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#微软的开源工具vcperf&#34;&gt;#&lt;/a&gt; 微软的开源工具 vcperf&lt;/h2&gt;
+&lt;p&gt;该工具配合 WPA (Windows Performance Analyzer)，可以查看编译的整个过程细节，方便我们：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;确认是否有并行编译&lt;/li&gt;
+&lt;li&gt;确认哪些文件需要放到预编译文件里 (pch.h)&lt;/li&gt;
+&lt;li&gt;确认编译时间中哪些文件耗时较长，方便分析定位不合理的头文件包含&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;相关介绍可查看&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL2NwcC9idWlsZC1pbnNpZ2h0cy9nZXQtc3RhcnRlZC13aXRoLWNwcC1idWlsZC1pbnNpZ2h0cz92aWV3PW1zdmMtMTcw&#34;&gt; Get started with C++ Build Insights&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;WPA 和 vcperf 相关安装可查看&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL2NwcC9idWlsZC1pbnNpZ2h0cy90dXRvcmlhbHMvdmNwZXJmLWFuZC13cGE/dmlldz1tc3ZjLTE3MA==&#34;&gt;这个&lt;/span&gt;和&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9iYWlqaWFoYW8uYmFpZHUuY29tL3M/aWQ9MTY2NjI3MTE2MTE3MjEzNTY0NiZhbXA7d2ZyPXNwaWRlciZhbXA7Zm9yPXBj&#34;&gt;这个&lt;/span&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;使用vcperf&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#使用vcperf&#34;&gt;#&lt;/a&gt; 使用 vcperf&lt;/h2&gt;
+&lt;p&gt;使用 vcperf 后，我立刻发现有一个头文件占用了 35 秒之久，原因是这个头文件包含了很多其他头文件，且被很多源文件包含。因为没有使用预编译，这个头文件被包含多次，导致编译时间变得很长。&lt;/p&gt;
+&lt;p&gt;针对 vcperf 给出的每个文件的编译时间细节，我把刚刚的头文件加到了 pch.h 中，并优化了其他一些细节，最后成功将编译时间缩短到了 17 秒。&lt;/p&gt;
+&lt;p&gt;其中这个是使用预编译之前的图：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://image-hosts.oss-cn-chengdu.aliyuncs.com/technology/no_pch_header.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;这是使用预编译之后的图：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://image-hosts.oss-cn-chengdu.aliyuncs.com/technology/pch_header.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;结语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#结语&#34;&gt;#&lt;/a&gt; 结语&lt;/h2&gt;
+&lt;p&gt;对于大工程，预编译是明显有必要的，目前很多编译器都支持，比如 VC++，gcc，clang 等。在多平台编译的讨论中，有些人采取的是 windows 使用预编译，在 gcc 上使用直接编译，因为 gcc 上好像提升不是很明显，这似乎也得益于 gcc 在多层包含、多次包含上可能会更快一点，不过 gcc 是否需要预编译还需看实践中的差异。&lt;/p&gt;
+&lt;h2 id=&#34;参考链接&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#参考链接&#34;&gt;#&lt;/a&gt; 参考链接&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9iYWlqaWFoYW8uYmFpZHUuY29tL3M/aWQ9MTY2NjI3MTE2MTE3MjEzNTY0NiZhbXA7d2ZyPXNwaWRlciZhbXA7Zm9yPXBj&#34;&gt;善用预编译 PCH 文件提升编译速度&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMTE0MDMyMTEvcHJlY29tcGlsZWQtaGVhZGVycy1pbi1oZWFkZXItZmlsZXM=&#34;&gt;Precompiled Headers in Header Files&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMTE5MTI0OC9oYW5kbGluZy1zdGRhZngtaC1pbi1jcm9zcy1wbGF0Zm9ybS1jb2Rl&#34;&gt;Handling stdafx.h in cross-platform code&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMzIwNzIzL3Zpc3VhbC1jLWZvcmNlLWluY2x1ZGVzLW9wdGlvbg==&#34;&gt;Visual C++ &#39;Force Includes&#39; option&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvUHJlY29tcGlsZWRfaGVhZGVy&#34;&gt;Precompiled header&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL2NwcC9idWlsZC1pbnNpZ2h0cy9nZXQtc3RhcnRlZC13aXRoLWNwcC1idWlsZC1pbnNpZ2h0cz92aWV3PW1zdmMtMTcw&#34;&gt;Get started with C++ Build Insights&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        <category term="Technology" scheme="https://conecoy.cn/categories/Technology/" />
+        <category term="compilation" scheme="https://conecoy.cn/tags/compilation/" />
+        <category term="c++" scheme="https://conecoy.cn/tags/c/" />
+        <category term="windows" scheme="https://conecoy.cn/tags/windows/" />
+        <category term="vs" scheme="https://conecoy.cn/tags/vs/" />
+        <updated>2023-06-29T13:04:06.000Z</updated>
+    </entry>
     <entry>
         <id>https://conecoy.cn/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/</id>
         <title>linux的信号同步与异步笔记</title>
