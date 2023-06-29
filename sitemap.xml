@@ -2,7 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://conecoy.cn/Technology/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://conecoy.cn/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/</loc>
+    
+    <lastmod>2023-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://conecoy.cn/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2023-06-29</lastmod>
     
@@ -376,6 +383,20 @@
   
   <url>
     <loc>https://conecoy.cn/tags/vs/</loc>
+    <lastmod>2023-06-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://conecoy.cn/tags/design-pattern/</loc>
+    <lastmod>2023-06-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://conecoy.cn/tags/singleton/</loc>
     <lastmod>2023-06-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
