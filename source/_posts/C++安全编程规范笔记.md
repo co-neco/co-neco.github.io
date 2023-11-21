@@ -2,7 +2,7 @@
 title: C++安全编程规范笔记
 categories:
   - Technology
-
+  - Development
 date: 2023-11-21 14:07:26
 tags:
   - C++
