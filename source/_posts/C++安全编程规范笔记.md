@@ -9,9 +9,15 @@ tags:
   - secure coding
 ---
 
-在学习`SEI CERT C++ Coding Standard 2016 edition`时，对于不能理解的点做了一些探索，本文是相关的记录。
+# 总结
 
-> 该书的下载链接：[SEI CERT C++ Coding Standard](https://resources.sei.cmu.edu/downloads/secure-coding/assets/sei-cert-cpp-coding-standard-2016-v01.pdf)。
+最近需要整理C++的安全编程规范，在线上的资料中，发现`SEI CERT C++ Coding Standard 2016 edition`是相对最全面、非常规范的资料。在本书的学习中，声明（第二章）和表达式（第三章）个人觉得是最重要的两章，其次是面向对象编程（第十章）。
+
+本书不仅讨论了C++规范和对应规范的安全编程实践，还阐述了很多编程实践。通过编程实践的学习，我发现了另外两本很有价值的书，作者都是`Scott Meyers`，书名分别是[Effective Modern C++ 11 and 14](https://github.com/GunterMueller/Books-3/blob/master/Effective%20Modern%20C%2B%2B%2011%20and%2014.pdf)和[Effective C++ 3rd edition](https://github.com/GunterMueller/Books-3/blob/master/Effective%20C%2B%2B%203rd%20ed.pdf)。这三本书可以帮助读者了解C++设计的思想和初衷，以及C++各种特性的高效使用方法。
+
+
+
+本文是在学习[SEI CERT C++ Coding Standard 2016 edition](https://resources.sei.cmu.edu/downloads/secure-coding/assets/sei-cert-cpp-coding-standard-2016-v01.pdf)时，对于一些问题的探索。
 
 ## 在构造或析构函数中不要调用虚函数
 
@@ -59,7 +65,7 @@ The C++ Standard, [class.cdtor], paragraph 4 [ISO/IEC 14882-2014], states the fo
 > **refers to the complete object of x or one of that object’s base class subobjects but not x**
 > **or one of its base class subobjects, the behavior is undefined.**
 
-最后加粗的一句话读了很多遍都没理解，不过从`13 revs AndreyT`的回答中，理解的背后的原因。
+最后加粗的一句话读了很多遍都没理解，不过从`13 revs AndreyT`的回答中，理解了背后的原因。
 
 > 详情可参考: [C++ constructors: why is this virtual function call not safe?](https://stackoverflow.com/a/11378023/8717240)。
 
