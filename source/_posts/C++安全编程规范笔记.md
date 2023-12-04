@@ -13,7 +13,7 @@ tags:
 
 最近需要整理C++的安全编程规范，在线上的资料中，发现`SEI CERT C++ Coding Standard 2016 edition`是相对最全面、非常规范的资料。在本书的学习中，声明（第二章）和表达式（第三章）个人觉得是最重要的两章，其次是面向对象编程（第十章）。
 
-本书不仅讨论了C++规范和对应规范的安全编程实践，还阐述了很多编程实践。通过编程实践的学习，我发现了另外两本很有价值的书，作者都是`Scott Meyers`，书名分别是[Effective Modern C++ 11 and 14](https://github.com/GunterMueller/Books-3/blob/master/Effective%20Modern%20C%2B%2B%2011%20and%2014.pdf)和[Effective C++ 3rd edition](https://github.com/GunterMueller/Books-3/blob/master/Effective%20C%2B%2B%203rd%20ed.pdf)。这三本书可以帮助读者了解C++设计的思想和初衷，以及C++各种特性的高效使用方法。
+本书不仅讨论了`C++`规范和对应规范的安全编程实践，还阐述了很多编程实践。通过编程实践的学习，我发现了另外两本很有价值的书，作者都是`Scott Meyers`，书名分别是[Effective Modern C++ 11 and 14](https://github.com/GunterMueller/Books-3/blob/master/Effective%20Modern%20C%2B%2B%2011%20and%2014.pdf)和[Effective C++ 3rd edition](https://github.com/GunterMueller/Books-3/blob/master/Effective%20C%2B%2B%203rd%20ed.pdf)。这三本书可以帮助读者了解C++设计的思想和初衷，以及`C++`各种特性的高效使用方法。
 
 
 
