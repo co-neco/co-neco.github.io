@@ -18,7 +18,7 @@ tags:
 
 - 同一个线程中，对不同变量的修改是有确定顺序的
 
-  ```C++
+  ```cpp
   int x,y;
   x = 0;
   y = 1;
@@ -42,7 +42,7 @@ C++中有6个内存顺序选项(memory order options)，分别是memory_order_re
 
 std::memory_order_seq_cst，所有对原子变量的操作都是有确定的顺序的。
 
-```c++
+```cpp
 #include <atomic>
 #include <thread>
 #include <assert.h>
@@ -93,7 +93,7 @@ int main()
 
 memory_order_relaxed，原子变量之间的操作没有同步关系。对同一个原子变量的操作之间是有确定顺序的，但对其他的线程就没有确定的顺序了。对于memory_order_relaxed，只有一个是保证的，即同一个线程中，对同一个原子变量的访问顺序是不变的。
 
-```c++
+```cpp
 #include <atomic>
 #include <thread>
 #include <assert.h>
@@ -132,7 +132,7 @@ int main()
 
 Acquire_release比relaxed要好一点，因为它多了一点，对一个原子变量的修改和访问是有同步关系的。
 
-```c++
+```cpp
 #include <atomic>
 #include <thread>
 #include <assert.h>
@@ -167,7 +167,7 @@ int main()
 
 ### 关于Relaxed ordering的疑问
 
-```c++
+```cpp
 #include <thread>
 #include <atomic>
 #include <iostream>
@@ -242,7 +242,7 @@ int main()
 
 书中描述这个程序的可能输出是这样的：
 
-```c++
+```cpp
 (0,0,0),(1,0,0),(2,0,0),(3,0,0),(4,0,0),(5,7,0),(6,7,8),(7,9,8),(8,9,8),(9,9,10)
 (0,0,0),(0,1,0),(0,2,0),(1,3,5),(8,4,5),(8,5,5),(8,6,6),(8,7,9),(10,8,9),(10,9,10)
 (0,0,0),(0,0,1),(0,0,2),(0,0,3),(0,0,4),(0,0,5),(0,0,6),(0,0,7),(0,0,8),(0,0,9)
