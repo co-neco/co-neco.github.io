@@ -213,7 +213,7 @@ if ( (*((_DWORD *)this + 6) & 8) == 0 )
 
 - .loadby sos <some_module_path>
 
-  > 这里的some_module_path值的是和sos模块在同一个目录，且已经加载进进程里的模块。
+  > 这里的some_module_path是和sos在同一个目录的模块，且已经被加载到进程里了。
 
 > 关于sos模块的基本使用方法可参考微软的[这篇官方文档](https://learn.microsoft.com/en-us/dotnet/framework/tools/sos-dll-sos-debugging-extension)。
 
@@ -369,7 +369,7 @@ MethodDesc Table
 
 紧接正文，找到模块后，用dnSpy打开，查看如下代码：
 
-```c#
+```csharp
 // Microsoft.CodeAnalysis.Options.GlobalOptionService
 // Token: 0x06001E97 RID: 7831 RVA: 0x00065854 File Offset: 0x00063A54
 [NullableContext(2)]
@@ -394,7 +394,7 @@ public bool RefreshOption(OptionKey2 optionKey, object newValue)
 }
 ```
 
-根据我们在非托管代码的分析，当时的等待事件句柄应该就是这个this.\_gate对象里的事件句柄了。从代码中可了解到，应该是其他线程锁住了\_gate这个对象，导致主线程一直等待，然后锁住\_gate的线程有因为什么原因，一直在等待，所以导致了死锁。那么锁住\_gate的线程是谁呢？这时就需要打印所有线程的栈了。
+根据我们在非托管代码的分析，当时的等待事件句柄应该就是这个this.\_gate对象里的事件句柄了。从代码中可了解到，应该是其他线程锁住了\_gate这个对象，导致主线程一直等待，然后锁住\_gate的线程又因为什么原因，一直在等待，所以导致了死锁。那么锁住\_gate的线程是谁呢？这时就需要打印所有线程的栈了。
 
 ### 观察所有线程的栈
 
@@ -439,69 +439,57 @@ Child SP       IP Call Site
 
 该线程也在等待，其中GlobalOptionService的最后一个调用是GlobalOptionService.g__GetOptionPersistersSlow|16_0，观察源代码:
 
-```c#
-internal static ImmutableArray<IOptionPersister> <GetOptionPersisters>g__GetOptionPersistersSlow|16_0(IWorkspaceThreadingService workspaceThreadingService, [Nullable(new byte[]
+```csharp
+internal static ImmutableArray<IOptionPersister> <GetOptionPersisters>g__GetOptionPersistersSlow|16_0(IWorkspaceThreadingService workspaceThreadingService, [Nullable(new byte[]{0,1,1})] ImmutableArray<Lazy<IOptionPersisterProvider>> optionSerializerProviders, CancellationToken cancellationToken) {
+		if (workspaceThreadingService != null)
 		{
-			0,
-			1,
-			1
-		})] ImmutableArray<Lazy<IOptionPersisterProvider>> optionSerializerProviders, CancellationToken cancellationToken)
-		{
-			if (workspaceThreadingService != null)
-			{
-				return workspaceThreadingService.Run<ImmutableArray<IOptionPersister>>(() => GlobalOptionService.<GetOptionPersisters>g__GetOptionPersistersAsync|16_1(optionSerializerProviders, cancellationToken));
-			}
-			return GlobalOptionService.<GetOptionPersisters>g__GetOptionPersistersAsync|16_1(optionSerializerProviders, cancellationToken).WaitAndGetResult_CanCallOnBackground(cancellationToken);
+			return workspaceThreadingService.Run<ImmutableArray<IOptionPersister>>(() => GlobalOptionService.<GetOptionPersisters>g__GetOptionPersistersAsync|16_1(optionSerializerProviders, cancellationToken));
+		}
+		return GlobalOptionService.<GetOptionPersisters>g__GetOptionPersistersAsync|16_1(optionSerializerProviders, cancellationToken).WaitAndGetResult_CanCallOnBackground(cancellationToken);
 ```
 
 因为该函数是最后一个函数，即workspaceThreadingService不为null。从栈来看，调用workspaceThreadingService.Run方法后，就调用Microsoft.VisualStudio.Threading.JoinableTask.CompleteOnCurrentThread()，做同步等待，即等待异步的g__GetOptionPersistersAsync|16_1函数执行完成。
 
 g__GetOptionPersistersAsync|16_1方法如下：
 
-```c#
-internal static Task<ImmutableArray<IOptionPersister>> <GetOptionPersisters>g__GetOptionPersistersAsync|16_1([Nullable(new byte[]
-		{
-			0,
-			1,
-			1
-		})] ImmutableArray<Lazy<IOptionPersisterProvider>> optionSerializerProviders, CancellationToken cancellationToken)
-		{
-			GlobalOptionService.<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d;
-			<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>t__builder = AsyncTaskMethodBuilder<ImmutableArray<IOptionPersister>>.Create();
-			<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.optionSerializerProviders = optionSerializerProviders;
-			<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.cancellationToken = cancellationToken;
-			<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>1__state = -1;
-			<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>t__builder.Start<GlobalOptionService.<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d>(ref <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d);
-			return <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>t__builder.Task;
-		}
+```csharp
+internal static Task<ImmutableArray<IOptionPersister>> <GetOptionPersisters>g__GetOptionPersistersAsync|16_1([Nullable(new byte[]{0,1,1})] ImmutableArray<Lazy<IOptionPersisterProvider>> optionSerializerProviders, CancellationToken cancellationToken)
+{
+    GlobalOptionService.<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d;
+    <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>t__builder = AsyncTaskMethodBuilder<ImmutableArray<IOptionPersister>>.Create();
+    <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.optionSerializerProviders = optionSerializerProviders;
+    <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.cancellationToken = cancellationToken;
+    <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>1__state = -1;
+    <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>t__builder.Start<GlobalOptionService.<<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d>(ref <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d);
+    return <<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d.<>t__builder.Task;
+}
 ```
 
 \<\<GetOptionPersisters>g__GetOptionPersistersAsync|16_1>d 是编译器生成的类，应该属于lambda、闭包那一类。该类实现了IAsyncStateMachine接口，该接口有一个MoveNext方法，在该类的实现如下：
 
-```c#
-void IAsyncStateMachine.MoveNext()
-			{
-				int num = this.<>1__state;
-				ImmutableArray<IOptionPersister> result;
-				try
-				{
-					ConfiguredValueTaskAwaitable<ImmutableArray<IOptionPersister>>.ConfiguredValueTaskAwaiter awaiter;
-					if (num != 0)
-					{
-						awaiter = this.optionSerializerProviders.SelectAsArrayAsync(new Func<Lazy<IOptionPersisterProvider>, CancellationToken, ValueTask<IOptionPersister>>(GlobalOptionService.<>c.<>9.<GetOptionPersisters>b__16_3), this.cancellationToken).ConfigureAwait(false).GetAwaiter();
+```csharp
+void IAsyncStateMachine.MoveNext() {
+    int num = this.<>1__state;
+    ImmutableArray<IOptionPersister> result;
+    try
+    {
+        ConfiguredValueTaskAwaitable<ImmutableArray<IOptionPersister>>.ConfiguredValueTaskAwaiter awaiter;
+        if (num != 0)
+        {
+            awaiter = this.optionSerializerProviders.SelectAsArrayAsync(new Func<Lazy<IOptionPersisterProvider>, CancellationToken, ValueTask<IOptionPersister>>(GlobalOptionService.<>c.<>9.<GetOptionPersisters>b__16_3), this.cancellationToken).ConfigureAwait(false).GetAwaiter();
 //以下省略...
 ```
 
-在一个新线程中，调用SelectAsArrayAsync函数，该函数接收一个参数\<GetOptionPersisters\>b__16_3，这个参数是一个函数，该函数实现如下：
+调用SelectAsArrayAsync函数，该函数接收一个参数\<GetOptionPersisters\>b__16_3，这个参数是一个函数，该函数实现如下：
 
-```c#
+```csharp
 internal ValueTask<IOptionPersister> <GetOptionPersisters>b__16_3(Lazy<IOptionPersisterProvider> lazyProvider, CancellationToken cancellationToken)
 			{
 				return lazyProvider.Value.GetOrCreatePersisterAsync(cancellationToken);
 			}
 ```
 
-GetOrCreatePersisterAsync函数是IOptionPersisterProvider接口的一个函数。再往回看主线程的栈
+GetOrCreatePersisterAsync函数是IOptionPersisterProvider接口的一个函数，该函数会在另一个线程执行。再往回看主线程的栈
 
 ```cpp
 010ff074 1e8a110d Microsoft.VisualStudio.LanguageServices.Implementation.Options.LanguageSettingsPersisterProvider+d__5.MoveNext() [/_/src/VisualStudio/Core/Def/Implementation/Options/LanguageSettingsPersisterProvider.cs @ 50]
@@ -514,11 +502,11 @@ Microsoft.VisualStudio.LanguageServices.dll，用dnSpy打开，定位到该类�
 
 ![image-20240131095542869](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131095542869.png)
 
-也就是说IOptionPersisterProvider接口的实现类是LanguageSettingsPersisterProvider，该函数负责执行状态机类\<GetOrCreatePersisterAsync\>d\_\_5，也就是主线程栈上的LanguageSettingsPersisterProvider+d__5类的MoveNext函数。MoveNext函数然后新建一个LanguageSettingsPersister实例：
+也就是说IOptionPersisterProvider接口的实现类是LanguageSettingsPersisterProvider，该函数负责执行状态机类\<GetOrCreatePersisterAsync\>d\_\_5，也就是主线程栈上的LanguageSettingsPersisterProvider+d__5类的MoveNext函数。MoveNext函数会新建一个LanguageSettingsPersister实例：
 
 ![image-20240131101620825](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131101620825.png)
 
-该构造函数会初始化一个map，描述当前语言配置的，比如C#、F#，如果\_textManager.GetUserPreferences4能获取到对应语言的配置，那么就调用RefreshLanguageSettings，进一步调用RefreshOption：
+该构造函数会初始化一个map，描述语言配置，比如C#、F#，如果\_textManager.GetUserPreferences4能获取到对应语言的配置，那么就调用RefreshLanguageSettings，进一步调用RefreshOption更新选项配置：
 
 ![image-20240131101914130](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131101914130.png)
 
@@ -530,13 +518,13 @@ Microsoft.VisualStudio.LanguageServices.dll，用dnSpy打开，定位到该类�
 
 ## VS卡死的原因
 
-根据调试分析，发现如果有对应的语言配置，就会去更新选项配置。回想起不久前，我安装了C#的开发环境，可能是因为这样，导致VS发现了C#的语言配置，所以走入了新流程，即更新选项配置，但这时由于另一个线程锁住了_gate，所以这就导致主线程的等待。
+根据调试分析，发现如果有对应的语言配置，就会去更新选项配置。回想起不久前，我安装了C#的开发环境，可能是因为这样，导致VS能找到C#的语言配置，所以走入了新流程，即更新选项配置，但这时由于另一个线程锁住了_gate，所以这就导致主线程的等待。
 
 ## 解决问题
 
-既然大概有眉目了，那第一种方法就是卸载C#的开发环境。不过这不是长久之计，还是需要更优雅的方法。google之后，我发现roslyn开源库里正好提到了这个问题，有一个open的[issue](https://github.com/dotnet/roslyn/issues/34283)，并且开发者在高版本还修复了这个问题，对应的merge是[这个](https://github.com/dotnet/roslyn/pull/54845)，关键代码如下：
+既然大概有眉目了，那第一种方法就是卸载C#的开发环境。不过这不是长久之计，还是需要更优雅的方法。google之后，我发现roslyn开源库里正好提到了这个问题，有一个open的[issue](https://github.com/dotnet/roslyn/issues/34283)，并且开发者在高版本还修复了这个问题，merge是[这个](https://github.com/dotnet/roslyn/pull/54845)，关键代码如下：
 
-```c#
+```csharp
 //之前：
 public object GetOption(OptionKey optionKey)
 {
