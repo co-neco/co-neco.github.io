@@ -2477,7 +2477,7 @@ defined on the object.
 <p>该构造函数会初始化一个 map，描述语言配置，比如 C#、F#，如果_textManager.GetUserPreferences4 能获取到对应语言的配置，那么就调用 RefreshLanguageSettings，进一步调用 RefreshOption 更新选项配置：</p>
 <p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131101914130.png" alt="image-20240131101914130" /></p>
 <p>这与主线程的栈是一致的。到这里梳理一下流程：</p>
-<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131113710274.png" alt="image-20240131113710274" /></p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131132733546.png" alt="image-20240131132733546" /></p>
 <p>红圈中两个线程相互等待，导致死锁。</p>
 <h2 id="vs卡死的原因"><a class="anchor" href="#vs卡死的原因">#</a> VS 卡死的原因</h2>
 <p>根据调试分析，发现如果有对应的语言配置，就会去更新选项配置。回想起不久前，我安装了 C# 的开发环境，可能是因为这样，导致 VS 能找到 C# 的语言配置，所以走入了新流程，即更新选项配置，但这时由于另一个线程锁住了_gate，所以这就导致主线程的等待。</p>
