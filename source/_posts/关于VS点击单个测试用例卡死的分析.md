@@ -86,41 +86,7 @@ WARNING: Frame IP not in any known module. Following frames may be wrong.
 14 006fed28 55abcc3a 006fed94 55a53674 03612f48 0x14529755
 15 006fed30 55a53674 03612f48 0363c814 00000000 mscorlib_ni!System.Runtime.CompilerServices.AsyncMethodBuilderCore+MoveNextRunner.InvokeMoveNext(System.Object)$##600711C+0x1a
 16 006fed94 55a535a7 00000001 17a018ec 00000000 mscorlib_ni!System.Threading.ExecutionContext.RunInternal(System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object, Boolean)$##6003C30+0xc4
-17 006feda8 55abcb8e 00000001 17a018ec 00000000 mscorlib_ni!System.Threading.ExecutionContext.Run(System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object, Boolean)$##6003C2F+0x17
-18 006fede0 51b0e8fd 2d944b74 17a00540 179ff20c mscorlib_ni!System.Runtime.CompilerServices.AsyncMethodBuilderCore+MoveNextRunner.Run()$##600711B+0x5e
-19 006fee24 51ac0c4a 5449efae 00000001 036415f0 Microsoft_VisualStudio_Threading_ni+0xce8fd
-1a 006fee40 5449ee95 00000001 17a01930 00000000 Microsoft_VisualStudio_Threading_ni+0x80c4a
-1b 006fee7c 544a11cd 00000000 00000001 17a01930 WindowsBase_ni+0xdee95
-1c 006feec4 5449f67f 17a0194c 544a0f9b 00000000 WindowsBase_ni+0xe11cd
-1d 006fef00 5449d456 ffffffff 0361fd98 00000000 WindowsBase_ni+0xdf67f
-1e 006fef40 5449c57c 00000000 00000000 0361fd14 WindowsBase_ni+0xdd456
-1f 006fef7c 5449e771 03620b04 00000000 00000000 WindowsBase_ni+0xdc57c
-20 006fefb8 5449ea5c 03620b04 00000000 00000000 WindowsBase_ni+0xde771
-21 006fefd8 5449ef52 00000001 03612f48 0361fcc4 WindowsBase_ni+0xdea5c
-22 006feff0 5449ee95 00000001 03620aec 00000000 WindowsBase_ni+0xdef52
-23 006ff02c 5449d072 00000000 00000001 03620aec WindowsBase_ni+0xdee95
-24 006ff084 5449e5c4 00000001 03620aec 03620acc WindowsBase_ni+0xdd072
-25 006ff0cc 0339d922 00000000 00000000 0000c314 WindowsBase_ni+0xde5c4
-26 006ff100 75be0eab 00042904 0000c314 00000000 0x339d922
-27 006ff12c 75bd7e5a 058c3d4e 00042904 0000c314 USER32!_InternalCallWinProc+0x2b
-28 006ff210 75bd5bca 058c3d4e 00000000 0000c314 USER32!UserCallWinProcCheckWow+0x33a (FPO: [SEH])
-29 006ff284 75bd5990 0000c214 006ff2c8 596125e0 USER32!DispatchMessageWorker+0x22a (FPO: [Non-Fpo])
-2a 006ff290 596125e0 006ff2e0 f14ad7b9 05a75e5c USER32!DispatchMessageW+0x10 (FPO: [Non-Fpo])
-2b 006ff2c8 59612310 006ff2e0 ffffffff 05a75e48 msenv!VStudioMain+0x202f4
-2c 006ff300 59656eee f14ad65d 05a71a80 00000000 msenv!VStudioMain+0x20024
-2d 006ff32c 596570bf 00000001 ffffffff f14ad61d msenv!VStudioMain+0x64c02
-2e 006ff36c 59656fef 00000001 10831080 00001a24 msenv!VStudioMain+0x64dd3
-2f 006ff38c 59656e86 05a71a84 00000001 ffffffff msenv!VStudioMain+0x64d03
-30 006ff3b8 5965cc25 ffffffff f14ad139 006ff588 msenv!VStudioMain+0x64b9a
-31 006ff448 595f2379 f14ad101 006ff588 59400000 msenv!VStudioMain+0x6a939
-32 006ff470 0075112c 009ca78c 00000000 00000000 msenv!VStudioMain+0x8d
-33 006ff48c 00752ae5 ddfd7951 75a42010 00764218 devenv!WriteAssertEtwEventW+0x59b1
-34 006ff7d0 00754001 00000000 00754001 00000000 devenv!WriteAssertEtwEventW+0x736a
-35 006ff804 00753d94 00740000 00000000 009a3cd7 devenv!WriteAssertEtwEventW+0x8886
-36 006ff850 75a3fcc9 0046a000 75a3fcb0 006ff8bc devenv!WriteAssertEtwEventW+0x8619
-37 006ff860 77167c6e 0046a000 c7db6fed 00000000 KERNEL32!BaseThreadInitThunk+0x19 (FPO: [Non-Fpo])
-38 006ff8bc 77167c3e ffffffff 77188c0c 00000000 ntdll!__RtlUserThreadStart+0x2f (FPO: [SEH])
-39 006ff8cc 00000000 00763ef2 0046a000 00000000 ntdll!_RtlUserThreadStart+0x1b (FPO: [Non-Fpo])
+...
 
 ```
 
