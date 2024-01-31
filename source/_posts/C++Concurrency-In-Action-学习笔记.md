@@ -2,7 +2,7 @@
 title: C++ Concurrency In Action 学习笔记
 categories:
   - Technology
-  - Reverse
+  - Development
 date: 2024-01-26 11:24:43
 tags:
   - C++
