@@ -478,7 +478,7 @@ Microsoft.VisualStudio.LanguageServices.dll，用dnSpy打开，定位到该类�
 
 这与主线程的栈是一致的。到这里梳理一下流程：
 
-![image-20240131113710274](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131113710274.png)
+![image-20240131132733546](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131132733546.png)
 
 红圈中两个线程相互等待，导致死锁。
 
