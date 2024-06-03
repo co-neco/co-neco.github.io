@@ -2344,6 +2344,9 @@ constructor’s or destructor’s class and not one overriding it in a more-deri
 <p>由于线程 1，2，3 都是单独自增同一个变量，内存顺序选项是 std::memory_order_relaxed，因此 t1 能看到 x 变量从 0 递增到 10。</p>
 <p>观察 values1 的 (5,7,0)，可理解为 x 自增为 5 的时候，y 的变量已经自增到 7 了；观察 values2 的 (8,5,5)，可理解为 y 自增为 5 的时候，x 的变量已经自增到 8 了。也就是说 y 变量自增的比 x 变量慢，但 values1 的 (5,7,0) 却不是，这样似乎就矛盾了。如果 x 为 5 的时候，y 为 7，那 y 为 5 的时候，x 怎么可能为 8 呢？看似矛盾的点其实有一个问题，因为以上结论是从两个角度观察而得出的，既有线程 1 的视角，又有线程 2 的视角。而 memory_order_relaxed 代表每个线程看到的顺序可以是不同的，所以线程 1 看 y 变量的修改和线程 2 看 x 变量的修改是独立的，分开的，没有关系的，只需要遵循线程 1 看到的 y 值是大于等于之前的 y 值即可。</p>
 <p>至于以上的矛盾，要怎么用一种可能执行来解释，其实这是没有必要的，因为这个输出可能并不代表它的真实运行结果，因为编译器只需要保证程序的输出符合 C++ 标准规定的限制条件。就比如 const 变量是无法修改的，但可以通过异常的语句来修改对应的变量，使得变量的地址处保存了更新的值，但如果程序之后再使用这个 const 变量，编译器仍会使用 const 变量原来的值，因为编译器知道它是常量，在给寄存器赋值的时候，直接使用了常量的值，而不是 const 变量地址处的值。</p>
+<h3 id="20240603-更新"><a class="anchor" href="#20240603-更新">#</a> 2024/06/03 更新</h3>
+<p>在学习完 7.2.5 小节之后，终于明白了原因。假设 y 的更新比 x 快，即 values1 的 (5,7,0) 成立，在 values2 的 (8,5,5) 也可以成立。因为虽然 y 的值此时是 5，但 x 的值的修改在另外的线程，且是 relaxed 的内存顺序，所以读取 x 的值时，可以在 x 更新到 8,9,10 都行，就因为没有 happens-before 关系。</p>
+<p>参考 7.2.5 小节的代码，else 分支的 <code>delete ptr</code>  语句需要保证在 if 分支的 <code>res.swap(ptr-&gt;data)</code>  之后执行，即需要保证对 ptr 指针的引用是 happens-before 关系，因此 <code>ptr-&gt;internal_count.fetch_add</code>  的内存顺序是 std::memory_order_acquire。至于在原代码中不是 acquire，而是 std::memory_order_relaxed 的原因是 <code>else if</code>  内部的 internal_count 会使用 acquire。</p>
 ]]></content>
       <categories>
         <category>Technology</category>
