@@ -684,7 +684,7 @@ def ql_path_hook(self, ql, addr, size):
 
 单步调试后，伪代码如下：
 
-```c++
+```cpp
 i = 0;
 while (program_table_element[i].p_type!=PT_PHDR) {
 	i++;
@@ -1077,14 +1077,14 @@ libxx.so有3个重要的接口：
 
     - 一种是a1数组自增到下一个元素
 
-      ```c++
+      ```cpp
       a1 = (unsigned int *)(*(_QWORD *)beg + 4LL);
       *(_QWORD *)beg = a1;
       ```
 
     - 一种是直接跳转到a1数组的某个元素
 
-      ```c++
+      ```cpp
       //func_data - 0x18地址处保存的是上一个switch-case写入的值
       a1 = *(unsigned int **)(func_data - 0x18);
       *(_QWORD *)(func_data - 0x20) = 0LL;
@@ -1093,7 +1093,7 @@ libxx.so有3个重要的接口：
 
   - 调用回调函数
 
-    ```c++
+    ```cpp
     real_data = ((__int64 (__fastcall *)(_QWORD, _QWORD))func)(*v13, *v14);
     ```
 
@@ -1245,7 +1245,7 @@ def custom_run_to_here(self, ql: Qiling) -> List[HookRet]:
 >       self.qlemu.run(end=curr_addr+self.qlemu.baseaddr-get_imagebase())
 >       # qlemu.run返回后保存当前模拟执行环境。
 >       self.qlemu.status = self.qlemu.ql.save()
->           
+>               
 >   # custom_script.py
 >   def custom_run_to_here(self, ql: Qiling) -> List[HookRet]:
 >   	def next_pc(ql: Qiling, index = ""):
@@ -1398,7 +1398,7 @@ def custom_run_to_here(self, ql: Qiling) -> List[HookRet]:
 
 以上逻辑用C++实现如下：
 
-```c++
+```cpp
 #define SHUFFLE_TABLE_LEN 256
 
 unsigned char shuffle_table[SHUFFLE_TABLE_LEN] = { 0 };
@@ -1477,7 +1477,7 @@ for (int i = 0; i < SHUFFLE_TABLE_LEN; ++i)
 
 以上逻辑用C++实现如下：
 
-```c++
+```cpp
 void Fisher_Yates(unsigned char shuffle_table[SHUFFLE_TABLE_LEN], unsigned int serino) {
 
     unsigned char shuffle_factor_table[SHUFFLE_FACTOR_TABLE_LEN] = { 
@@ -1564,7 +1564,7 @@ void Fisher_Yates(unsigned char shuffle_table[SHUFFLE_TABLE_LEN], unsigned int s
 
 以上逻辑用C++实现如下：
 
-```c++
+```cpp
 void encrypt_and_decrypt_data(unsigned char shuffle_table[SHUFFLE_TABLE_LEN], unsigned char* x, int len) {
 
     unsigned char last_result = 0;
