@@ -844,7 +844,7 @@ def ql_run_to_here(self):
                 hide_wait_box()
 ```
 
-qiling在run方法中提供了end，代表模拟执行在哪里结束。我们可以把end设置为start地址就相当于断在start上了，通过在IDA将光标移到对应的代码处即可设置end。不过这里也有一个指令集回调（第4行），观察ql_until_hook的实现：
+qiling在run方法中提供了end，代表模拟执行在哪里结束。我们可以把end设置为start地址就相当于断在start上了，通过在IDA将光标移到对应的代码处即可设置end。不过这里也有一个指令级回调（第5行），观察ql_until_hook的实现：
 
 ```python
 def ql_untill_hook(self, ql, addr, size):
@@ -852,7 +852,7 @@ def ql_untill_hook(self, ql, addr, size):
     set_color(addr, CIC_ITEM, 0x00B3CBFF)
 ```
 
-该函数只是将模拟执行过的代码设置高亮，因此我们可以直接注视掉这个回调的注册（在ql_run_to_here去掉对ql_until_hook的hook_code和hook_del调用）。另外，之前在custom_continue设置的回调都要copy一份到custom_run_to_here，custom_script.py没有该函数就创建一个：
+该函数只是将模拟执行过的代码设置高亮，因此我们可以直接注视掉这个回调的注册（在ql_run_to_here去掉对ql_until_hook的hook_code和hook_del调用）。另外，之前在custom_continue设置的回调都要copy一份到custom_run_to_here，由于custom_script.py没有custom_run_to_here函数，那么就创建一个：
 
 qilingida.py:
 
@@ -900,10 +900,10 @@ def custom_run_to_here(self, ql: Qiling) -> List[HookRet]:
     linker_baseaddr = 0x007ffff7dd5000
 
     def addr_27DA8_hook(ql: Qiling) -> None:
-		# content from ql_continue
+		# content from custom_continue
 
     def addr_27FB4_hook(ql: Qiling) -> None:
-        # content from ql_continue
+        # content from custom_continue
 
     return [ql.hook_address(addr_27DA8_hook, 0x27DA8+linker_baseaddr),
             ql.hook_address(addr_27FB4_hook, 0x27FB4+linker_baseaddr)]
@@ -931,7 +931,7 @@ qiling.exception.QlErrorExecutionStop: Dynamic library .init() failed!
 这里显示单步执行的命令地址是0x7ffff7e0373c，而不是0x5555555f9370。要定位这个问题需要了解qiling源码，分析流程如下：
 
 ```python
-# qilingida,py
+# qilingida.py
 # 单步执行的入口是qlemu.run
 def ql_step(self):
     self.qlemu.run(begin=self.qlemu.ql.arch.regs.arch_pc, end=self.qlemu.exit_addr)
@@ -939,9 +939,9 @@ def ql_step(self):
 # qiling/os/linux/linux.py
 class QlOsLinux(QlOsPosix):
     def run(self):
-        # 多线程环境下调用thread_management.run()
         if self.ql.multithread:
             # start multithreading
+            # 多线程环境下调用thread_management.run()
             thread_management = thread.QlLinuxThreadManagement(self.ql)
             self.ql.os.thread_management = thread_management
             thread_management.run()
@@ -971,9 +971,7 @@ class QlLinuxThreadManagement:
         previous_thread = self._prepare_lib_patch()
         
     def _prepare_lib_patch(self):
-        # 如果动态加载器的入口点不等于目标libxx.so的入口点，就初始化libxx.so
-        # 这个判断的逻辑就是目标libxx.so如果是第一次加载，就用动态链接器加载，做重定位之类的，
-        # 如果不是第一次加载，就直接返回None，继续执行，即不做重定位等。
+		# 如果有动态链接器，就用动态链接器初始化目标libxx.so
 		if self.ql.loader.elf_entry != self.ql.loader.entry_point:
             entry_address = self.ql.loader.elf_entry
 
@@ -995,7 +993,7 @@ class QlLinuxThreadManagement:
         return None
 ```
 
-观察代码流程，我们发现单线程环境下，如果指定了ql.entry_point（调用ql.run的begin参数），就不会重定位，直接开始模拟执行。这是正常的，因为第一次模拟执行时我们一般不会指定ql.run的begin参数，而是让动态链接器去初始化so，不过我们会注册一些回调，使得之后可以保存快照和恢复模拟执行，而恢复模拟执行就会设置ql.run的begin参数。在看多线程的环境，qiling官方显然没有考虑到这个，每次调用ql.run都会执行\_prepare\_lib\_path，用动态链接器初始化so。在我们的场景下，我们已经初始化过libxx.so，且想要开始单步调试so，而由于qiling又一次初始化libxx.so，所以单步调试后的下一条指令是动态加载器的入口地址+4，而不是libxx.so的入口地址+4。
+观察代码流程，我们发现单线程环境下，如果指定了ql.entry_point（调用ql.run的begin参数），就不会用动态加载器去重定位，而是直接开始模拟执行。这是正常的，因为第一次模拟执行时我们一般不会指定ql.run的begin参数，而是让动态链接器去初始化so，不过我们会注册一些回调，使得之后可以保存快照和恢复模拟执行，而恢复模拟执行就会设置ql.run的begin参数。再看多线程的环境，qiling官方显然没有考虑到这个，每次调用ql.run都会执行\_prepare\_lib\_path，都用动态链接器初始化so。在我们的场景下，我们已经初始化过libxx.so，想要开始单步调试so，而由于qiling又一次初始化libxx.so，所以单步调试后的下一条指令是动态加载器的入口地址+4，而不是libxx.so的入口地址+4。
 
 这里直接模仿单线程环境，修改如下：
 
@@ -1016,7 +1014,7 @@ def _prepare_lib_patch(self):
 
 ![image-20240725103246929](https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725103246929.png)
 
-可以看到，这次单步调试成功了，顺利在断在了libxx.so的下一条指令。
+可以看到，这次单步调试成功了，顺利断在了libxx.so的下一条指令。
 
 继续单步执行，进入".\_\_cxa\_finalize"函数，该函数是从内存读取__cxa_finalize真正的函数地址并执行，该函数地址是需要重定位的，因为该函数属于其他模块，我们观察其内存：
 
