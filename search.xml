@@ -2495,4 +2495,924 @@ defined on the object.
         <category>Reverse</category>
       </categories>
   </entry>
+  <entry>
+    <title>aarch64架构的某so模拟执行分析</title>
+    <url>/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="本文目的"><a class="anchor" href="#本文目的">#</a> 本文目的</h2>
+<p>在用 Windows 平台使用 qiling 模拟执行框架中遇到了诸多困难，有些问题并没有查询到解决办法，于是记录此篇文章，希望能给到大家一些参考。</p>
+<p>以下列举了本文想阐述的内容点：</p>
+<ul>
+<li>aarch64 so 基于 qiling 如何做模拟执行</li>
+<li>Windows 上使用 qiling 的一些问题解决</li>
+<li>算法中虚拟机的模拟执行</li>
+</ul>
+<blockquote>
+<p>本文尽可能从初学者的视角来阐述，初学者可以自行实践。</p>
+</blockquote>
+<h2 id="分析目标"><a class="anchor" href="#分析目标">#</a> 分析目标</h2>
+<p>最近需要分析一个 libxx.so 的加密算法，发现是 aarch64 的 so，于是有以下三个思路</p>
+<ul>
+<li>用 IDA 静态分析</li>
+<li>用调试器调试，跟踪算法流程</li>
+<li>用 unidbg、unicorn 做模拟执行</li>
+</ul>
+<h2 id="选择模拟执行的原因"><a class="anchor" href="#选择模拟执行的原因">#</a> 选择模拟执行的原因</h2>
+<h3 id="静态分析成本过高"><a class="anchor" href="#静态分析成本过高">#</a> 静态分析成本过高</h3>
+<p>用 IDA 看了一下加密函数，有点像嵌套的控制流平坦化，但实际上是一个虚拟机，这样静态分析的难度就提升了不少。<br />
+<img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image.png" alt="alt text" /></p>
+<h3 id="用调试器调试"><a class="anchor" href="#用调试器调试">#</a> 用调试器调试</h3>
+<p>最初的想法是编译一个 ARM64 的可执行文件，<span class="exturl" data-url="aHR0cDovL3huLS1saWJ4eC1lODZobDlmYjY3Z2c3MmMuc28=">然后加载 libxx.so</span>，调用加密函数来调试。通过 IDA 查看字符串信息，发现是 ndk+llvm 编译的 so，给安卓平台使用的。于是想安装一个 ARM64 的 ubuntu 虚拟机来调试，但 ubuntu 似乎没提供 ARM64 的客户机，只有服务端版本。可能准备其他发行版本的 linux（比如 centos）可以调试，但想到模拟执行在 trace 等功能相较于调试器会更好用点，所以最后选择了用模拟器的方式。</p>
+<blockquote>
+<p>现在想来，可能用 Android Studio 写个 app，然后用 lldb 来调试可能是最稳定的调试方式。大家有什么其他好的意见呢？</p>
+</blockquote>
+<h3 id="模拟执行"><a class="anchor" href="#模拟执行">#</a> 模拟执行</h3>
+<p>unidbg 基于 unicorn，可以模拟执行安卓的 so，能很好的满足需求。但从 Bet4 的<span class="exturl" data-url="aHR0cHM6Ly9iYnMua2FueHVlLmNvbS90aHJlYWQtMjcyNjA1Lmh0bQ==">这篇文章</span>中，unidbg 也存在模拟缺陷，于是我选择了 qiling 作为模拟执行框架，详细理由可参考上文提及的 Bet4 的文章。<br />
+从官方文档了解 qiling 的大致使用方法后，发现 qiling 有自带的 qdb 调试器，不过不支持多线程，而 Bet4 开源的 udbserver 支持多线程，配合 pwndbg 效果图如下（图来自 Bet4 的帖子）：<br />
+<img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/pwndbg.png" alt="alt text" /><br />
+ 之后又发现 qiling 提供了 IDA 插件，方便直接在 IDA 中模拟执行 so。因为分析算法会经常参考 IDA 的一些视图，如果用 udbserver 的话，会在 gdb 调试器和 IDA 之间频繁切换，最后我选择使用 qiling 的 IDA 插件来 “可视化地调试 so”。</p>
+<h2 id="arm64-demo运行"><a class="anchor" href="#arm64-demo运行">#</a> ARM64 demo 运行</h2>
+<p>在 qiling 源码的 examples\rootfs\arm64_linux\bin 目录下，有很多 arm64 程序可供模拟执行，lib 目录下包含了程序对应的动态链接器，ARM64 对应的动态链接器一般是 ld-linux-aarch64.so.1。这个动态链接器非常关键，它负责程序依赖的库的加载和程序自身的重定位等功能。</p>
+<p>接下来拿 bin 目录下的 arm64_hello 举例，演示如何用 IDA 插件来模拟执行一个 aarch64 的 so，arm64_hello 的功能是输出 “Hello, World!” 字符串，然后退出。官网的完整 demo 可查看<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLnFpbGluZy5pby9lbi9sYXRlc3QvaWRhLw==">这个链接</span>。</p>
+<h3 id="初始化qiling环境"><a class="anchor" href="#初始化qiling环境">#</a> 初始化 qiling 环境</h3>
+<p>用 IDA 加载 arm64_hello，选择 &quot;File-&gt;Script file...&quot; 加载 qiling\extensions\idaplugin\<span class="exturl" data-url="aHR0cDovL3FpbGluZ2lkYS5weQ==">qilingida.py</span>。</p>
+<blockquote>
+<p>在我的电脑上软连接无法生效，可能 qiling 只测试了 Linux，<span class="exturl" data-url="aHR0cDovL3huLS1JREFxaWxpbmdpZGEtaDg2czMxM2JhMTQwMmN4bGx3N2Y2bmw4cGhqOGFpejNyM3NndXdjNXQ2aDZmd2VoYTQ3d3F3eC5weQ==">所以这里直接用 IDA 加载脚本的方式来加载 qilingida.py</span>。</p>
+</blockquote>
+<p>然后在 IDA 汇编视图右键 -&gt;Qiling Emulator-&gt;Setup（后续简称 <code>Qiling-&gt;</code> ），加载 IDA 插件，这里使用 qiling 默认的辅助脚本（custom_script.py）。在 IDA 中的一些自动化逻辑都可以放到该脚本中，比如添加一些 syscall 或者针对某地址的 hook 到该辅助脚本，之后会举例脚本的用法。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240716201551107.png" alt="image-20240716201551107" /></p>
+<p>俗话说万事开头难，运行 demo 就出现加载失败了，如下：</p>
+<pre><code>  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\linux.py&quot;, line 30, in __init__
+    super(QlOsLinux, self).__init__(ql)
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\posix\posix.py&quot;, line 190, in __init__
+    super().__init__(ql)
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\os.py&quot;, line 63, in __init__
+    sys.stdin.fileno()
+AttributeError: 'NoneType' object has no attribute 'fileno'
+</code></pre>
+<p>观察 os.py 的源码：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>            <span class="token comment"># Qiling may be used on interactive shells (ex: IDLE) or embedded python</span></pre></td></tr><tr><td data-num="3"></td><td><pre>            <span class="token comment"># interpreters (ex: IDA Python). such environments use their own version</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            <span class="token comment"># for the standard streams which usually do not support certain operations,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            <span class="token comment"># such as fileno(). here we use this to determine how we are going to use</span></pre></td></tr><tr><td data-num="6"></td><td><pre>            <span class="token comment"># the environment standard streams</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            sys<span class="token punctuation">.</span>stdin<span class="token punctuation">.</span>fileno<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">except</span> UnsupportedOperation<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            <span class="token comment"># Qiling is used on an interactive shell or embedded python interpreter.</span></pre></td></tr><tr><td data-num="10"></td><td><pre>            <span class="token comment"># if the internal stream buffer is accessible, we should use it</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            self<span class="token punctuation">.</span>_stdin  <span class="token operator">=</span> <span class="token builtin">getattr</span><span class="token punctuation">(</span>sys<span class="token punctuation">.</span>stdin<span class="token punctuation">,</span>  <span class="token string">'buffer'</span><span class="token punctuation">,</span> sys<span class="token punctuation">.</span>stdin<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            self<span class="token punctuation">.</span>_stdout <span class="token operator">=</span> <span class="token builtin">getattr</span><span class="token punctuation">(</span>sys<span class="token punctuation">.</span>stdout<span class="token punctuation">,</span> <span class="token string">'buffer'</span><span class="token punctuation">,</span> sys<span class="token punctuation">.</span>stdout<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            self<span class="token punctuation">.</span>_stderr <span class="token operator">=</span> <span class="token builtin">getattr</span><span class="token punctuation">(</span>sys<span class="token punctuation">.</span>stderr<span class="token punctuation">,</span> <span class="token string">'buffer'</span><span class="token punctuation">,</span> sys<span class="token punctuation">.</span>stderr<span class="token punctuation">)</span></pre></td></tr></table></figure><p>报错提示 sys.stdin 为 None，这是因为 IDA 修改了 sys.stdin，使用了自己的输入输出流。这个问题在 qiling 的 github issues，pull request 都有提到，我这里直接捕获 AttributeError 异常，如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">except</span> <span class="token punctuation">(</span>UnsupportedOperation<span class="token punctuation">,</span> AttributeError<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr></table></figure><p>修复之后，重启 IDA 加载 qiling 环境（python 安装的 qiling 环境），Qiling-&gt;Setup，报错如下：</p>
+<blockquote>
+<p>这里修复的 os.py 文件是 python 库下的 qiling，也就是 C:\Program Files\Python39\lib\site-packages\qiling\os\<span class="exturl" data-url="aHR0cDovL29zLnB5">os.py</span>。</p>
+</blockquote>
+<pre><code>  File &quot;E:\gitRepo\qiling\examples\extensions\idaplugin\custom_script.py&quot;, line 1, in &lt;module&gt;
+    from future import __annotations__
+ImportError: cannot import name '__annotations__' from 'future' (C:\Program Files\Python39\lib\site-packages\future\__init__.py)
+[INFO][(unknown file):0] Custom user script not found.
+</code></pre>
+<p>这里我使用的 python 版本是 3.9.13，大致查了一下，python 库有__future__，没有 future，不知道与 python 版本是否有关，改成如下形式，再次加载就成功了。</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">from</span> __future__ <span class="token keyword">import</span> annotations</pre></td></tr></table></figure><h3 id="开始模拟执行"><a class="anchor" href="#开始模拟执行">#</a> 开始模拟执行</h3>
+<p>现在，arm64_hello 已加载进内存，动态链接器需要修复重定位表、设置程序入口点等，然后开始运行。</p>
+<blockquote>
+<blockquote>
+<p>阅读 qiling\os\linux.py 的 QlOsLinux::run 方法，由于当前是单线程环境，且没有显式指定运行的起始地址，因此程序的起始地址是动态链接器的入口点，待动态链接器初始化后，将跳转到程序的真正入口点：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>     	<span class="token comment"># 如果是一段二进制代码</span></pre></td></tr><tr><td data-num="3"></td><td><pre>         <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>code<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>             self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>emu_start<span class="token punctuation">(</span>self<span class="token punctuation">.</span>entry_point<span class="token punctuation">,</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>entry_point <span class="token operator">+</span> <span class="token builtin">len</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>code<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>timeout<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>count<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>         <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="6"></td><td><pre>             <span class="token comment"># 如果是多线程环境</span></pre></td></tr><tr><td data-num="7"></td><td><pre>             <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>multithread<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>                 <span class="token comment"># start multithreading</span></pre></td></tr><tr><td data-num="9"></td><td><pre>                 thread_management <span class="token operator">=</span> thread<span class="token punctuation">.</span>QlLinuxThreadManagement<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>                 self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>thread_management <span class="token operator">=</span> thread_management</pre></td></tr><tr><td data-num="11"></td><td><pre>                 thread_management<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre>             <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="14"></td><td><pre>                 <span class="token comment"># 不是多线程环境</span></pre></td></tr><tr><td data-num="15"></td><td><pre>                 <span class="token comment"># 程序入口点是否有显式指定</span></pre></td></tr><tr><td data-num="16"></td><td><pre>                 <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>entry_point <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="17"></td><td><pre>                     self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>entry_point</pre></td></tr><tr><td data-num="18"></td><td><pre></pre></td></tr><tr><td data-num="19"></td><td><pre>                 <span class="token comment"># do we have an interp?</span></pre></td></tr><tr><td data-num="20"></td><td><pre>                 <span class="token keyword">elif</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry <span class="token operator">!=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>entry_point<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="21"></td><td><pre>                     entry_address <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry</pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre>                     <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span><span class="token builtin">type</span> <span class="token operator">==</span> QL_ARCH<span class="token punctuation">.</span>ARM<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="24"></td><td><pre>                         entry_address <span class="token operator">&amp;</span><span class="token operator">=</span> <span class="token operator">~</span><span class="token number">1</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>                     <span class="token comment"># start running interp, but stop when elf entry point is reached</span></pre></td></tr><tr><td data-num="27"></td><td><pre>                     self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>emu_start<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>entry_point<span class="token punctuation">,</span> entry_address<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>timeout<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="28"></td><td><pre>                     self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>do_lib_patch<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="29"></td><td><pre>                     self<span class="token punctuation">.</span>run_function_after_load<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="30"></td><td><pre>                     self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>skip_exit_check <span class="token operator">=</span> <span class="token boolean">False</span></pre></td></tr><tr><td data-num="31"></td><td><pre>                     self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>write_exit_trap<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="32"></td><td><pre></pre></td></tr><tr><td data-num="33"></td><td><pre>                 self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>emu_start<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry<span class="token punctuation">,</span> self<span class="token punctuation">.</span>exit_point<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>timeout<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>count<span class="token punctuation">)</span></pre></td></tr></table></figure></blockquote>
+</blockquote>
+<p>IDA 汇编视图右键 -&gt;Qiling Emulator-&gt;Continue 开始模拟执行，报错：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span><span class="token operator">+</span><span class="token punctuation">]</span> 	brk<span class="token punctuation">:</span> increasing program <span class="token keyword">break</span> <span class="token keyword">from</span> <span class="token number">0x555555568000</span> to <span class="token number">0x555555589000</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span><span class="token operator">+</span><span class="token punctuation">]</span> 	<span class="token number">0x00007fffb7e9e93c</span><span class="token punctuation">:</span> brk<span class="token punctuation">(</span>inp <span class="token operator">=</span> <span class="token number">0x555555589000</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0x555555589000</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span><span class="token operator">+</span><span class="token punctuation">]</span> 	Received interrupt<span class="token punctuation">:</span> <span class="token number">0x2</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">[</span><span class="token operator">+</span><span class="token punctuation">]</span> 	write<span class="token punctuation">(</span><span class="token punctuation">)</span> CONTENT<span class="token punctuation">:</span> <span class="token string">b'Hello, World!\n'</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">[</span>x<span class="token punctuation">]</span> 	Syscall ERROR<span class="token punctuation">:</span> ql_syscall_write DEBUG<span class="token punctuation">:</span> A string expected</pre></td></tr><tr><td data-num="6"></td><td><pre>Traceback <span class="token punctuation">(</span>most recent call last<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></pre></td></tr><tr><td data-num="8"></td><td><pre>File <span class="token string">"C:\Program Files\Python39\lib\site-packages\qiling\os\posix\syscall\unistd.py"</span><span class="token punctuation">,</span> line <span class="token number">410</span><span class="token punctuation">,</span> <span class="token keyword">in</span> ql_syscall_write</pre></td></tr><tr><td data-num="9"></td><td><pre>    f<span class="token punctuation">.</span>write<span class="token punctuation">(</span>data<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>  File <span class="token string">"D:\Tools\IDA 7.5\python\3\init.py"</span><span class="token punctuation">,</span> line <span class="token number">63</span><span class="token punctuation">,</span> <span class="token keyword">in</span> write</pre></td></tr><tr><td data-num="11"></td><td><pre>    ida_kernwin<span class="token punctuation">.</span>msg<span class="token punctuation">(</span>text<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>  File <span class="token string">"D:\Tools\IDA 7.5\python\3\ida_kernwin.py"</span><span class="token punctuation">,</span> line <span class="token number">236</span><span class="token punctuation">,</span> <span class="token keyword">in</span> msg</pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token keyword">return</span> _ida_kernwin<span class="token punctuation">.</span>msg<span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre>TypeError<span class="token punctuation">:</span> A string expected</pre></td></tr></table></figure><p>这里看到已经成功执行 puts 函数，打印了 “Hello, World”，当把这个字符串传给 python 打印时，出现异常，原因是 qiling 传给 ida_kernwin.msg 方法的类型是字节字符串，不是字符串。</p>
+<p>解决办法有两个：</p>
+<ul>
+<li>直接改 D:\Tools\IDA 7.5\python\3\ida_kernwin.py 的源码，兼容字节字符串</li>
+<li>hook write 函数，替换掉 qiling 自己的 ql_syscall_write</li>
+</ul>
+<p>第一种方法由于是全局的，会影响到其他二进制文件的分析，且 hook 系统函数是 qiling 自身的功能，所以使用第二种方法。</p>
+<p>修改 custom_script.py，如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">my_syscall_write</span><span class="token punctuation">(</span>ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">,</span> fd<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">,</span> buf<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">,</span> count<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">'my_syscall_write called'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token comment"># read data from emulated memory</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        data <span class="token operator">=</span> ql<span class="token punctuation">.</span>mem<span class="token punctuation">.</span>read<span class="token punctuation">(</span>buf<span class="token punctuation">,</span> count<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token comment"># select the emulated file object that corresponds to the requested</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment"># file descriptor</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        fobj <span class="token operator">=</span> ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>fd<span class="token punctuation">[</span>fd<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">if</span> fobj <span class="token operator">==</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>ingo<span class="token punctuation">(</span><span class="token string">'none file descriptor'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token comment"># write the data into the file object, if it supports write operations</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">elif</span> <span class="token builtin">hasattr</span><span class="token punctuation">(</span>fobj<span class="token punctuation">,</span> <span class="token string">'write'</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            fobj<span class="token punctuation">.</span>write<span class="token punctuation">(</span>data<span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token keyword">except</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        ret <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        ret <span class="token operator">=</span> count</pre></td></tr><tr><td data-num="19"></td><td><pre></pre></td></tr><tr><td data-num="20"></td><td><pre>    ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'my_syscall_write(</span><span class="token interpolation"><span class="token punctuation">&#123;</span>fd<span class="token punctuation">&#125;</span></span><span class="token string">, </span><span class="token interpolation"><span class="token punctuation">&#123;</span>buf<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">, </span><span class="token interpolation"><span class="token punctuation">&#123;</span>count<span class="token punctuation">&#125;</span></span><span class="token string">) = </span><span class="token interpolation"><span class="token punctuation">&#123;</span>ret<span class="token punctuation">&#125;</span></span><span class="token string">'</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">return</span> ret</pre></td></tr><tr><td data-num="23"></td><td><pre>    </pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QILING_IDA</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">_show_context</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        registers <span class="token operator">=</span> <span class="token builtin">tuple</span><span class="token punctuation">(</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>register_mapping<span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        grouping <span class="token operator">=</span> <span class="token number">4</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre>        <span class="token keyword">for</span> idx <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">(</span>registers<span class="token punctuation">)</span><span class="token punctuation">,</span> grouping<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="31"></td><td><pre>            ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">'\t'</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'</span><span class="token interpolation"><span class="token punctuation">&#123;</span>r<span class="token punctuation">:</span><span class="token format-spec">5s</span><span class="token punctuation">&#125;</span></span><span class="token string">: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>read<span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token format-spec">016x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span> <span class="token keyword">for</span> r <span class="token keyword">in</span> registers<span class="token punctuation">[</span>idx<span class="token punctuation">:</span>idx <span class="token operator">+</span> grouping<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="32"></td><td><pre></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">custom_prepare</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="34"></td><td><pre>        ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">'Context before starting emulation:'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>set_syscall<span class="token punctuation">(</span><span class="token string">'write'</span><span class="token punctuation">,</span> my_syscall_write<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">'my_syscall_write registered'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        self<span class="token punctuation">.</span>_show_context<span class="token punctuation">(</span>ql<span class="token punctuation">)</span></pre></td></tr></table></figure><p>这里实现了一个 my_syscall_write 函数，然后在 QILING_IDA 类的 custom_prepare 方法中调用 ql.os.set_syscall 来注册 write 的 syscall。</p>
+<p>修改 custom_script 后右键 -&gt;Qiling Emulator-&gt;Reload User Scripts（后续简称 Qiling 菜单）就会重新加载脚本，最后在 Qiling 菜单点击 <code>Restart</code> ，重新开始运行，结果正常，打印出了 “Hello, World!”。</p>
+<pre><code>[+] 	Received interrupt: 0x2
+[=] 	my_syscall_write called
+Hello, World!
+[=] 	my_syscall_write(1, 0x555555568260, 14) = 14
+[+] 	0x00007fffb7e98afc: my_syscall_write(fd = 0x1, buf = 0x555555568260, count = 0xe) = 0xe
+[+] 	Received interrupt: 0x2
+[+] 	0x00007fffb7e78a2c: exit_group(code = 0x0) = ?
+</code></pre>
+<h3 id="通过显式设置pc寄存器指定程序执行入口"><a class="anchor" href="#通过显式设置pc寄存器指定程序执行入口">#</a> 通过显式设置 PC 寄存器指定程序执行入口</h3>
+<p>上节跑通了 Qiling-&gt;Continue，现在尝试 Qiling 菜单的 “设置运行地址”。</p>
+<p>首先 Qiling-&gt;Restart，在 IDA 里对__libc_start_main 函数下断点，Qiling-&gt;Continue。此时会看到成功地断在了这里：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717103851651.png" alt="image-20240717103851651" /></p>
+<p>Qiling-&gt;View Register，查看 PC 寄存器，确认地址是否一致。这里发现 PC 的值是 0x5E0 + 程序基址。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717103902110.png" alt="image-20240717103902110" /></p>
+<p>可以 Qiling-&gt;Step，单步几次，会看到 IDA 中的不同颜色，这些颜色代表不同的执行操作。蓝色是单步，绿色的直接运行覆盖的路径。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717103807022.png" alt="image-20240717103807022" /></p>
+<p>sub_724 函数是真正的打印函数，将光标移到 sub_724 的第一条指令，Qiling-&gt;Set PC，此时打印：</p>
+<pre><code>[INFO][(unknown file):0] QIling PC set to 0x724
+</code></pre>
+<p>看到设置好了 PC 后，继续 Qiling-&gt;Continue，结果报错：</p>
+<pre><code>[x] 	CPU Context:
+[x] 	x0	: 0x555555554724
+[x] 	x1	: 0x1
+[x] 	x2	: 0x80000000de18
+...
+[x] 	PC = 0x0000000000000724 (unreachable)
+...
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\core.py&quot;, line 771, in emu_start
+    self.uc.emu_start(begin, end, timeout, count)
+  File &quot;C:\Program Files\Python39\lib\site-packages\unicorn\unicorn.py&quot;, line 547, in emu_start
+    raise UcError(status)
+unicorn.unicorn.UcError: Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)
+</code></pre>
+<p>错误提示 PC 为 0x724 的代码是无法访问的，看寄存器：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717104752266.png" alt="image-20240717104752266" /></p>
+<p>这里的 PC 是 0x724，回想之前看 Qiling 寄存器是 IDA 地址 + 基址的形式，于是知道原因是 Qiling-&gt;Set PC 设置的是 IDA 地址，没有加上模块基址。</p>
+<p>修改 qiling 的 IDA 插件，qilingida.py 如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_set_pc</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>        <span class="token keyword">if</span> self<span class="token punctuation">.</span>qlinit<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>            <span class="token comment"># ea = IDA.get_current_address()</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            ea <span class="token operator">=</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql_addr_from_ida<span class="token punctuation">(</span>IDA<span class="token punctuation">.</span>get_current_address<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc <span class="token operator">=</span> ea</pre></td></tr><tr><td data-num="6"></td><td><pre>            logging<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"QIling PC set to </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token builtin">hex</span><span class="token punctuation">(</span>ea<span class="token punctuation">)</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status <span class="token operator">=</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            self<span class="token punctuation">.</span>ql_update_views<span class="token punctuation">(</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc<span class="token punctuation">,</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="10"></td><td><pre>            logging<span class="token punctuation">.</span>error<span class="token punctuation">(</span><span class="token string">'Qiling should be setup firstly.'</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>IDA 插件更新后，先 &quot;Qiling-&gt;Unload Plugin&quot; 卸载插件，再 IDA-&gt;File-&gt;Script file 加载插件，然后重新操作一遍，这次设置 PC 就添上基址了：</p>
+<pre><code>[INFO][(unknown file):0] QIling PC set to 0x555555554724
+</code></pre>
+<p>最后，移动光标，点击 sub_724 的最后一条指令，然后 Qiling-&gt;Execute Till，会看到这次成功执行，橙色代表 Execute Till 执行过的指令：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717110923042.png" alt="image-20240717110923042" /></p>
+<p>可以看到下一条指令就是 0x748：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717111000909.png" alt="image-20240717111000909" /></p>
+<h3 id="小节"><a class="anchor" href="#小节">#</a> 小节</h3>
+<p>从这里可以看到，qiling 的 IDA 插件其实还不完善，即使是官方的 dev 分支（官方推荐使用 dev 分支），模拟执行 demo 还是有很多问题，所以对初学者不算非常友好。因此这里记录下相关问题的解决建议，供大家参考，后文还会有稍麻烦的 bug 需要解决。</p>
+<h2 id="libxxso的模拟执行排错"><a class="anchor" href="#libxxso的模拟执行排错">#</a> libxx.so 的模拟执行（排错）</h2>
+<p>OK，demo 已经跑通了，<span class="exturl" data-url="aHR0cDovL3huLS1saWJ4eC04dzJpeDU4ZG8xYTAxMWE5emc4bzNhYzE4Yy5zbw==">现在来模拟执行 libxx.so</span>。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717111824127.png" alt="image-20240717111824127" /></p>
+<p>可以看到算法的核心几个步骤是 init，encrypt，decrypt。那么首先分析 tps_init 函数。</p>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cDovL3huLS1saWJ4eC1lODZocjk0N2Euc28=">加载 libxx.so</span>、初始化 qiling 后，不能直接将 PC 寄存器指向 tps_init 函数，因为这时运行环境还没有准备好，比如 tpidr_el0 寄存器，这个寄存器类似与 windows 的 fs 段寄存器（TEB），指向当前线程的运行环境。另外，此时还没有做 so 的重定位，很多 so 里的全局引用是需要重定位的，比如调用一个 memset 函数。</p>
+</blockquote>
+<p><span class="exturl" data-url="aHR0cDovL3huLS1JREFsaWJ4eC16NjVtNzRpNXk2dWVsemEuc28=">首先 IDA 加载 libxx.so</span>，初始化 qiling（Qiling-&gt;Setup），对 libxx.so 的入口地址（start 函数）下断点，然后开始模拟执行（Qiling-&gt;Continue），报错：</p>
+<pre><code>[x] 	Syscall ERROR: ql_syscall_futex DEBUG: 'NoneType' object has no attribute 'cur_thread'
+Traceback (most recent call last):
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\posix\posix.py&quot;, line 374, in load_syscall
+    retval = syscall_hook(self.ql, *params)
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\posix\syscall\futex.py&quot;, line 43, in ql_syscall_futex
+    regreturn = ql.os.futexm.futex_wake(ql, uaddr,ql.os.thread_management.cur_thread, val)
+AttributeError: 'NoneType' object has no attribute 'cur_thread'
+</code></pre>
+<p>查看源码：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">elif</span> op <span class="token operator">&amp;</span> <span class="token punctuation">(</span>FUTEX_PRIVATE_FLAG <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">==</span> FUTEX_WAKE<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>        regreturn <span class="token operator">=</span> ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>futexm<span class="token punctuation">.</span>futex_wake<span class="token punctuation">(</span>ql<span class="token punctuation">,</span> uaddr<span class="token punctuation">,</span>ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>thread_management<span class="token punctuation">.</span>cur_thread<span class="token punctuation">,</span> val<span class="token punctuation">)</span></pre></td></tr></table></figure><p>futex 是 linux 中的锁，这里的 thread_management 是需要 qiling 启动多线程模式才会初始化的，于是在 qilingida.py 创建 Qiling 实例的时候添加多线程参数：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QlEmuQiling</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        self<span class="token punctuation">.</span>path <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>rootfs <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        self<span class="token punctuation">.</span>ql<span class="token punctuation">:</span> Qiling <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        self<span class="token punctuation">.</span>status <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        self<span class="token punctuation">.</span>exit_addr <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        self<span class="token punctuation">.</span>baseaddr <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        self<span class="token punctuation">.</span>env <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">start</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        self<span class="token punctuation">.</span>ql <span class="token operator">=</span> Qiling<span class="token punctuation">(</span>argv<span class="token operator">=</span>self<span class="token punctuation">.</span>path<span class="token punctuation">,</span> rootfs<span class="token operator">=</span>self<span class="token punctuation">.</span>rootfs<span class="token punctuation">,</span> verbose<span class="token operator">=</span>QL_VERBOSE<span class="token punctuation">.</span>DEFAULT<span class="token punctuation">,</span> multithread<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> env<span class="token operator">=</span>self<span class="token punctuation">.</span>env<span class="token punctuation">,</span> log_plain<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token comment"># ...</span></pre></td></tr></table></figure><p>这里日志打印从 QL_VERBOSE.DEBUG 改为 QL_VERBOSE.DEFAULT，减少一些调试内容的输出，然后 multithread 显式打开。再卸载、<span class="exturl" data-url="aHR0cDovL3huLS1xaWxpbmdpZGEtdTc1bjUwMmIxdTVlaDE4ZS5weQ==">加载一次 qilingida.py</span>，重新运行，以下报错：</p>
+<pre><code>[x] [Thread 2000]	Syscall ERROR: ql_syscall_writev DEBUG: A string expected
+Traceback (most recent call last):
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\posix\posix.py&quot;, line 374, in load_syscall
+    retval = syscall_hook(self.ql, *params)
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\posix\syscall\uio.py&quot;, line 23, in ql_syscall_writev
+    ql.os.fd[fd].write(buf)
+  File &quot;D:\Tools\IDA 7.5\python\3\init.py&quot;, line 63, in write
+    ida_kernwin.msg(text)
+  File &quot;D:\Tools\IDA 7.5\python\3\ida_kernwin.py&quot;, line 236, in msg
+    return _ida_kernwin.msg(*args)
+TypeError: A string expected
+</code></pre>
+<p>这个和之前 demo 的问题一样，只是这次的 syscall 是 writev，不是 write。在 custom_script.py 添加 writev 的 syscall hook，定义 my_syscall_writev 函数，Qiling-&gt;Reload User Script 重新加载自定义脚本，重启 qiling 环境运行，这次成功运行到 start 函数：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717140048966.png" alt="image-20240717140048966" /></p>
+<p>但注意 tpidr_el0 为 0，代表线程运行环境没有准备好。如果这时直接 Qiling-&gt;continue，还会出现另一个报错：</p>
+<pre><code>[x] [Thread 2000]	PC = 0x000000000009aec0 (unreachable)
+[x] [Thread 2000]	Memory map:
+[x] [Thread 2000]	Start            End              Perm    Label        Image
+[x] [Thread 2000]	00555555554000 - 00555555847000   r-x     libxx.so     E:\gitRepo\qiling\examples\rootfs\arm64_linux\bin\libxx.so
+[x] [Thread 2000]	00555555856000 - 0055555588f000   rw-     libxx.so     E:\gitRepo\qiling\examples\rootfs\arm64_linux\bin\libxx.so
+[x] [Thread 2000]	0055555588f000 - 00555555891000   rwx     [hook_mem]   
+[x] [Thread 2000]	007ffffffde000 - 0080000000e000   rwx     [stack]      
+Traceback (most recent call last):
+...
+  File &quot;C:\Program Files\Python39\lib\site-packages\unicorn\unicorn.py&quot;, line 547, in emu_start
+    raise UcError(status)
+unicorn.unicorn.UcError: Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)
+</code></pre>
+<p>这里可以看到，PC 准备执行 0x9aec0 处的指令，但从打印的内存映射来看，0x9aec0 是没有映射的，所以导致指令读取失败。</p>
+<p>再更仔细地看内存映射信息，发现没有动态链接器加载到内存空间，用 readelf 看一下：</p>
+<pre><code>$ readelf -S libxx.so | grep interp
+---
+$ readelf -S arm64_hello | grep interp
+  [ 1] .interp           PROGBITS         0000000000000200  00000200
+</code></pre>
+<p>libxx.so 没有 interp 节，而 arm64_hello 有，所以 qiling 在加载 libxx.so 的时候没有加载动态链接器。</p>
+<p>那现在需要给 libxx.so 显示指定动态链接器，为确定在哪指定，先打开 debug 级别的日志输出：</p>
+<pre><code>    def start(self, *args, **kwargs):
+        self.ql = Qiling(argv=self.path, rootfs=self.rootfs, verbose=QL_VERBOSE.DEBUG, multithread=True, env=self.env, log_plain=True, *args, **kwargs)
+</code></pre>
+<p><span class="exturl" data-url="aHR0cDovL3huLS1xaWxpbmdpZGEtNHY1b3AxOW43MjBnMmpnLnB5">重新加载 qilingida.py</span>，初始化 qiling 环境，结果没有相关输出。再用 IDA 打开 arm64_hello，相关输出如下：</p>
+<pre><code>[INFO][qilingida:1034] Custom env: &#123;&#125;
+[+] 	Profile: default
+[+] 	Mapped 0x555555554000-0x555555555000
+[+] 	Mapped 0x555555564000-0x555555566000
+[+] 	mem_start : 0x555555554000
+[+] 	mem_end   : 0x555555566000
+[+] 	Interpreter path: /lib/ld-linux-aarch64.so.1
+[+] 	Interpreter addr: 0x7ffff7dd5000
+[+] 	Mapped 0x7ffff7dd5000-0x7ffff7df2000
+[+] 	Mapped 0x7ffff7e01000-0x7ffff7e04000
+[+] 	mmap_address is : 0x7fffb7dd6000
+</code></pre>
+<p>看到 arm64_hello 的动态链接器是 /lib/ld-linux-aarch64.so.1，根据这个打印日志，去 qiling 源码查找：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">load_with_ld</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre>	<span class="token keyword">def</span> <span class="token function">load_elf_segments</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    	<span class="token comment"># ...</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token comment"># determine interpreter path</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        interp_seg <span class="token operator">=</span> <span class="token builtin">next</span><span class="token punctuation">(</span>elffile<span class="token punctuation">.</span>iter_segments<span class="token punctuation">(</span><span class="token builtin">type</span><span class="token operator">=</span><span class="token string">'PT_INTERP'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        interp_path <span class="token operator">=</span> <span class="token builtin">str</span><span class="token punctuation">(</span>interp_seg<span class="token punctuation">.</span>get_interp_name<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">if</span> interp_seg <span class="token keyword">else</span> <span class="token string">''</span></pre></td></tr></table></figure><p>这里的 interp_path 为动态链接器的路径，所以显示指定如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>interp_path<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>            interp_path <span class="token operator">=</span> <span class="token string">"/lib/ld-linux-aarch64.so.1"</span></pre></td></tr></table></figure><p>重启 qiling 环境，可看到动态链接器的加载：</p>
+<pre><code>[INFO][qilingida:1034] Custom env: &#123;&#125;
+[+] 	Profile: default
+[+] 	Mapped 0x555555554000-0x555555847000
+[+] 	Mapped 0x555555856000-0x55555588f000
+[+] 	mem_start : 0x555555554000
+[+] 	mem_end   : 0x55555588f000
+[+] 	Interpreter path: /lib/ld-linux-aarch64.so.1
+[+] 	Interpreter addr: 0x7ffff7dd5000
+[+] 	Mapped 0x7ffff7dd5000-0x7ffff7df2000
+[+] 	Mapped 0x7ffff7e01000-0x7ffff7e04000
+</code></pre>
+<p>然后开始 qiling 的模拟执行（Qiling-&gt;Continue），如下报错：</p>
+<pre><code>[+] [Thread 2000]	b'Inconsistency detected by ld.so: '
+Inconsistency detected by ld.so: [+] [Thread 2000]	b'rtld.c'
+rtld.c[+] [Thread 2000]	b': '
+: [+] [Thread 2000]	b'1266'
+1266[+] [Thread 2000]	b': '
+: [+] [Thread 2000]	b'dl_main'
+dl_main[+] [Thread 2000]	b': '
+: [+] [Thread 2000]	b'Assertion `'
+Assertion `[+] [Thread 2000]	b'GL(dl_rtld_map).l_libname'
+GL(dl_rtld_map).l_libname[+] [Thread 2000]	b&quot;' failed!\n&quot;
+' failed!
+...
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\linux.py&quot;, line 167, in run
+    thread_management.run()
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\thread.py&quot;, line 613, in run
+    previous_thread = self._prepare_lib_patch()
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\thread.py&quot;, line 593, in _prepare_lib_patch
+    raise QlErrorExecutionStop('Dynamic library .init() failed!')
+qiling.exception.QlErrorExecutionStop: Dynamic library .init() failed!
+</code></pre>
+<p>第一句话直接提示了该动态链接器不兼容当前 so。想起这个 so 是通过 ndk 编译给安卓用的，那动态链接器应该是安卓下的 linker64。</p>
+<p>Bet4 从 qiling 的 github fork 了仓库，里面有 linker64 和安卓下所需的其他 so，比如 libz、libm、liblog。</p>
+<p>用 readelf 看到 libxx.so 引用了这些库，所以这里一并准备好，路径如下：</p>
+<pre><code>$ readelf -d libxx.so
+
+Dynamic section at offset 0x311f88 contains 29 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [liblog.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libz.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libdl.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so]
+ 0x000000000000000e (SONAME)             Library soname: [libtps.so]
+ 0x0000000000000019 (INIT_ARRAY)         0x302dc0
+ 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x302dc8
+ ...
+</code></pre>
+<pre><code>E:\gitRepo\qiling\examples\rootfs\arm64_linux\system\lib64：保存libm.so等库
+E:\gitRepo\qiling\examples\rootfs\arm64_linux\lib：保存linker64
+</code></pre>
+<p>该动态链接器更换为 linker64 后，重启 IDA，初始化 qiling 环境，Qiling-&gt;Continue，出现以下报错：</p>
+<pre><code>[x] [Thread 2000]	Disassembly:
+[=] [Thread 2000]	00007ffff7ddfbd0 [linker64             + 0x00abd0]  9c 20 40 79          ldrh                 w28, [x4, #0x10]
+[=] [Thread 2000]	00007ffff7ddfbd4 [linker64             + 0x00abd4]  9f 0f 00 71          cmp                  w28, #3
+[=] [Thread 2000]	00007ffff7ddfbd8 [linker64             + 0x00abd8]  81 34 00 54          b.ne                 #0x7ffff7de0268
+...
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\core.py&quot;, line 771, in emu_start
+    self.uc.emu_start(begin, end, timeout, count)
+  File &quot;C:\Program Files\Python39\lib\site-packages\unicorn\unicorn.py&quot;, line 547, in emu_start
+    raise UcError(status)
+unicorn.unicorn.UcError: Invalid memory read (UC_ERR_READ_UNMAPPED)
+</code></pre>
+<p>此时 X4 为 0，导致了内存访问异常。用 IDA 打开 linker64，崩溃点如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717150000658.png" alt="image-20240717150000658" /></p>
+<p>大致看了上下文，该函数是_dl___linker_init，用来初始化动态库 so，要知道 X4 为什么是 0 还得往上回溯，需要一点时间。且这个 linker64 是安卓低版本 6.0，可能有不兼容的地方，于是我想尝试另外的 linker64，正好手上有一台 PIXEL，于是把里面的 linker64 复制出来，再测试一次，结果如下：</p>
+<pre><code>[+] [Thread 2001]	b'libc'
+libc[+] [Thread 2001]	b': '
+: [+] [Thread 2001]	b'unable to stat &quot;/proc/self/exe&quot;: Operation not permitted'
+unable to stat &quot;/proc/self/exe&quot;: Operation not permitted[+] [Thread 2001]	b'\n'
+</code></pre>
+<p>报错无法读取 /proc/self/exe，这是一个符号链接，linker64 用它来获取自身的绝对路径，linker 伪代码如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717210638992.png" alt="image-20240717210638992" /></p>
+<p>这里用 qiling hook 0x27DA8 地址，然后返回绝对路径和长度，更新 custom_script.py:</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">custom_continue</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span>HookRet<span class="token punctuation">]</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token comment"># ...</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">addr_27DA8_hook</span><span class="token punctuation">(</span>ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>W0 <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>PC <span class="token operator">+=</span> <span class="token number">4</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment"># ...</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">[</span>ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_27DA8_hook<span class="token punctuation">,</span> <span class="token number">0x27DA8</span><span class="token operator">+</span>linker_baseaddr<span class="token punctuation">)</span><span class="token punctuation">]</span></pre></td></tr></table></figure><p>重新来一遍，又来一个报错：</p>
+<pre><code>[+] [Thread 2000]	b'libc'
+libc[+] [Thread 2000]	b': '
+: [+] [Thread 2000]	b'Could not find a PHDR: broken executable?'
+Could not find a PHDR: broken executable?[+] [Thread 2000]	b'\n'
+</code></pre>
+<p>这里找不到 PHDR 程序头表，用 readelf 看一下：</p>
+<pre><code>$ readelf -l libxx.so
+
+Elf file type is DYN (Shared object file)
+Entry point 0xa5370
+There are 8 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  LOAD           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x00000000002f25b4 0x00000000002f25b4  R E    0x10000
+  LOAD           0x00000000002f2dc0 0x0000000000302dc0 0x0000000000302dc0
+                 0x0000000000034478 0x0000000000037d58  RW     0x10000
+  DYNAMIC        0x0000000000311f88 0x0000000000321f88 0x0000000000321f88
+                 0x0000000000000210 0x0000000000000210  RW     0x8
+  NOTE           0x0000000000000200 0x0000000000000200 0x0000000000000200
+                 0x0000000000000024 0x0000000000000024  R      0x4
+  NOTE           0x00000000002f251c 0x00000000002f251c 0x00000000002f251c
+                 0x0000000000000098 0x0000000000000098  R      0x4
+  GNU_EH_FRAME   0x00000000002da5dc 0x00000000002da5dc 0x00000000002da5dc
+                 0x000000000000355c 0x000000000000355c  R      0x4
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RW     0x10
+  GNU_RELRO      0x00000000002f2dc0 0x0000000000302dc0 0x0000000000302dc0
+                 0x0000000000025240 0x0000000000025240  R      0x1
+</code></pre>
+<p>一般 PHDR 是程序表 (program table) 的第一个元素，这里确实没有。看一下 IDA：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240717213805454.png" alt="image-20240717213805454" /></p>
+<p>这里也出现了一个变量 + 0x10 的判断，对比 Bet4 的 linker64 上下文和 PIXEL 的 linker64 上下文，可确定是同一个问题，看来必须要往上逆向一下了。</p>
+<blockquote>
+<p>图的注释是分析后的结果。</p>
+</blockquote>
+<p>这里有两种方式，一种是打 trace，即使用 Qiling 的 hook_code，在每一条代码运行前打印现场环境，一种是断在对应的代码，单步做动态调试，这里我选择动态调试的方式。那如何断在对应的代码地址呢，这里要熟悉下 qilingida.py 的这部分代码：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_continue</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    logging<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">"before continue..."</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">if</span> self<span class="token punctuation">.</span>qlinit<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        userhook <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token comment"># 调用 hook_code，每条指令执行前调用 ql_path_hook</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        pathhook <span class="token operator">=</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>hook_code<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql_path_hook<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_path_hook</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">,</span> addr<span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    addr <span class="token operator">=</span> addr <span class="token operator">-</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr <span class="token operator">+</span> get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    set_color<span class="token punctuation">(</span>addr<span class="token punctuation">,</span> CIC_ITEM<span class="token punctuation">,</span> <span class="token number">0x007FFFAA</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token comment"># 获取断点数量</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    bp_count <span class="token operator">=</span> get_bpt_qty<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    bp_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">if</span> bp_count <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token keyword">for</span> num <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> bp_count<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            bp_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>get_bpt_ea<span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token comment"># 如果当前准备执行的指令是断点处的指令，调用 ql.save 和 ql.os.stop () 保存当前模拟执行环境</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">if</span> addr <span class="token keyword">in</span> bp_list <span class="token keyword">and</span> <span class="token punctuation">(</span>addr <span class="token operator">!=</span> self<span class="token punctuation">.</span>lastaddr <span class="token keyword">or</span> self<span class="token punctuation">.</span>is_change_addr<span class="token operator">></span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="20"></td><td><pre>            self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status <span class="token operator">=</span> ql<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>            self<span class="token punctuation">.</span>lastaddr <span class="token operator">=</span> addr</pre></td></tr><tr><td data-num="23"></td><td><pre>            self<span class="token punctuation">.</span>is_change_addr <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span></pre></td></tr><tr><td data-num="24"></td><td><pre>            jumpto<span class="token punctuation">(</span>addr<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>        self<span class="token punctuation">.</span>is_change_addr <span class="token operator">+=</span> <span class="token number">1</span></pre></td></tr></table></figure><p>这部分代码表示让模拟执行跑起来时，如果遇到断点，就保存现场环境并停下来，所以断在想分析的代码地址处可以在 ql_path_hook 手动加一个断点，如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_path_hook</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">,</span> addr<span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    addr <span class="token operator">=</span> addr <span class="token operator">-</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr <span class="token operator">+</span> get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    set_color<span class="token punctuation">(</span>addr<span class="token punctuation">,</span> CIC_ITEM<span class="token punctuation">,</span> <span class="token number">0x007FFFAA</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    bp_count <span class="token operator">=</span> get_bpt_qty<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    bp_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    bp_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token number">0x27f2c</span><span class="token operator">+</span><span class="token number">0x007ffff7dd5000</span><span class="token operator">-</span><span class="token number">0x555555554000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">if</span> bp_count <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">for</span> num <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> bp_count<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            bp_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>get_bpt_ea<span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>这里给 bp_list 加一个元素，0x27f2c 为相对虚拟地址 (RVA)，后面是重定位的基址调整，这样就能断下来，然后单步调试了。</p>
+<blockquote>
+<ul>
+<li>
+<p>因为第二行 addr 变量重定位时减去的 libxx 模块的基址，所以 bp_list 添加的元素要减去 libxx 模块的基址，而不是 0x27f2c+0x007ffff7dd5000-0x007ffff7dd5000=0x27f2c。</p>
+</li>
+<li>
+<p>因为中断后，PC 寄存器指向 linker64 模块，所以会报以下错误，不过该错误不影响继续单步调试：</p>
+<pre><code>[x] [Thread 2000]	[Thread 2000] Expect 0x5555555f9370 but get 0x7ffff7e9e920 when running loader.
+Traceback (most recent call last):
+...
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\linux.py&quot;, line 167, in run
+    thread_management.run()
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\thread.py&quot;, line 613, in run
+    previous_thread = self._prepare_lib_patch()
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\thread.py&quot;, line 593, in _prepare_lib_patch
+    raise QlErrorExecutionStop('Dynamic library .init() failed!')
+qiling.exception.QlErrorExecutionStop: Dynamic library .init() failed!
+</code></pre>
+</li>
+</ul>
+</blockquote>
+<p>单步调试后，伪代码如下：</p>
+<pre><code class="language-c++">i = 0;
+while (program_table_element[i].p_type!=PT_PHDR) &#123;
+	i++;
+    if (i &gt;= elf_header.e_phnum)
+        break;
+&#125;
+
+if (i == elf_header.e_phnum) &#123;
+    print(&quot;no phdr&quot;);
+&#125;
+else &#123;
+    // 获取文件基址在内存的地址
+    a = phdr_addr - program_table_element[i].p_paddr;
+    // 获取内存基址
+    b = phdr_addr - program_table_elemet[i].p_offset;
+&#125;
+</code></pre>
+<p>这里可以模拟程序头表获取变量 a 和变量 b，修改 custom_script.py 如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">custom_continue</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span>HookRet<span class="token punctuation">]</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>	<span class="token comment">#...</span></pre></td></tr><tr><td data-num="3"></td><td><pre>	<span class="token keyword">def</span> <span class="token function">addr_27FB4_hook</span><span class="token punctuation">(</span>ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        	<span class="token comment"># 如果是检测第一个程序表元素，且不是程序头表</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            <span class="token keyword">if</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X11 <span class="token operator">==</span> <span class="token number">0</span> <span class="token keyword">and</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>W12 <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="6"></td><td><pre>                phdr_vir_addr <span class="token operator">=</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X8</pre></td></tr><tr><td data-num="7"></td><td><pre>                poffset_addr <span class="token operator">=</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>x10</pre></td></tr><tr><td data-num="8"></td><td><pre>                write_base <span class="token operator">=</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X19</pre></td></tr><tr><td data-num="9"></td><td><pre>                ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'phdr_vir_addr: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>phdr_vir_addr<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>                ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'poffset_addr: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>poffset_addr<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>                sub1 <span class="token operator">=</span> to_bstring<span class="token punctuation">(</span>phdr_vir_addr<span class="token operator">-</span><span class="token number">0x40</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>                <span class="token comment"># *(QWORD*)((__int64)v50+0x100) = image_vir_addr</span></pre></td></tr><tr><td data-num="13"></td><td><pre>                ql<span class="token punctuation">.</span>mem<span class="token punctuation">.</span>write<span class="token punctuation">(</span>write_base<span class="token operator">+</span><span class="token number">0x100</span><span class="token punctuation">,</span> sub1<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre>                ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">b'sub1: '</span> <span class="token operator">+</span> sub1<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre>                image_vir_addr <span class="token operator">=</span> phdr_vir_addr<span class="token operator">-</span><span class="token number">0x40</span></pre></td></tr><tr><td data-num="17"></td><td><pre>                <span class="token comment"># *(QWORD*)((__int64)v50+0x10) = image_vir_addr</span></pre></td></tr><tr><td data-num="18"></td><td><pre>                ql<span class="token punctuation">.</span>mem<span class="token punctuation">.</span>write<span class="token punctuation">(</span>write_base<span class="token operator">+</span><span class="token number">0x10</span><span class="token punctuation">,</span> to_bstring<span class="token punctuation">(</span><span class="token number">0x40</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>                ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'sub2: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>image_vir_addr<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>                ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X8 <span class="token operator">=</span> image_vir_addr</pre></td></tr><tr><td data-num="22"></td><td><pre>                ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>PC <span class="token operator">=</span> <span class="token number">0x28070</span> <span class="token operator">+</span> <span class="token number">0x7ffff7dd5000</span></pre></td></tr><tr><td data-num="23"></td><td><pre>                </pre></td></tr><tr><td data-num="24"></td><td><pre>	ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_27FB4_hook<span class="token punctuation">,</span> <span class="token number">0x27FB4</span><span class="token operator">+</span>linker_baseaddr<span class="token punctuation">)</span></pre></td></tr></table></figure><blockquote>
+<p>记得把之前在 qilingida.py 添加的断点去掉。</p>
+</blockquote>
+<p>重启 qiling 环境，这样就能够断在 libxx.so 的 start 地址处了。</p>
+<p>遗憾的是，到这里仍然不能顺利模拟执行我们的目标函数，因为 qiling 模拟执行到 start 大约需要 3-4 分钟，如果每次分析调整完 qiling 代码后，都重启一次 qiling，那这个效率就太低了。</p>
+<p>写这篇文章的时候，为了演示，我重新又走了一遍流程，结果这次直接卡死了，IDA 一直消耗 CPU 一整晚，到白天都还没有弄完：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240724102141265.png" alt="image-20240724102141265" /></p>
+<p>经过分析，发现通过 Qiling-&gt;Continue 的方式，每执行一条执行都会调用设置的 callback（qilingida.py-&gt;ql_path_hook），如果取消这个回调注册，qiling 就会大约 2-3 秒来到 start 地址处。</p>
+<p>重启 qiling 环境，这次遇到了这个错误：</p>
+<pre><code>[x] [Thread 2000]	v28	: 0x0
+[x] [Thread 2000]	v29	: 0x0
+[x] [Thread 2000]	v30	: 0x0
+[x] [Thread 2000]	v31	: 0x0
+[x] [Thread 2000]	PC = 0x0000000000000000 (unreachable)
+
+[x] [Thread 2000]	Memory map:
+[x] [Thread 2000]	Start            End              Perm    Label              Image
+[x] [Thread 2000]	00555555554000 - 00555555847000   r-x     libxx.so           E:\gitRepo\qiling\examples\rootfs\arm64_linux\bin\libxx.so
+[x] [Thread 2000]	00555555856000 - 0055555587c000   r--     libxx.so           E:\gitRepo\qiling\examples\rootfs\arm64_linux\bin\libxx.so
+[x] [Thread 2000]	0055555587c000 - 0055555588f000   rw-     libxx.so           E:\gitRepo\qiling\examples\rootfs\arm64_linux\bin\libxx.so
+[x] [Thread 2000]	0055555588f000 - 00555555891000   rwx     [hook_mem]         
+[x] [Thread 2000]	007fffb7dd6000 - 007fffb7dd7000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7dd7000 - 007fffb7dda000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7dda000 - 007fffb7ddb000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7ddb000 - 007fffb7ddc000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7ddc000 - 007fffb7de0000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de0000 - 007fffb7de1000   r--     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de1000 - 007fffb7de2000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de2000 - 007fffb7de3000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de3000 - 007fffb7de4000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de5000 - 007fffb7de6000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de6000 - 007fffb7de7000   r--     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de7000 - 007fffb7de8000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de8000 - 007fffb7de9000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7de9000 - 007fffb7dea000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7dea000 - 007fffb7deb000   r--     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7deb000 - 007fffb7dec000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7dec000 - 007fffb7ded000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7ded000 - 007fffb7dee000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7dee000 - 007fffb7def000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7def000 - 007fffb7df0000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7df0000 - 007fffb7df1000   r--     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7df1000 - 007fffb7df2000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7e31000 - 007fffb7e32000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7e32000 - 007fffb7e33000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7e4b000 - 007fffb7f0e000   r-x     [mmap] libc.so     
+[x] [Thread 2000]	007fffb7f0e000 - 007fffb7f1d000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7f1d000 - 007fffb7f23000   r--     [mmap] libc.so     
+[x] [Thread 2000]	007fffb7f23000 - 007fffb7f26000   rw-     [mmap] libc.so     
+[x] [Thread 2000]	007fffb7f26000 - 007fffb7f34000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7f5d000 - 007fffb7f5e000   r-x     [mmap] libdl.so    
+[x] [Thread 2000]	007fffb7f5e000 - 007fffb7f6d000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb7f6d000 - 007fffb7f6e000   r--     [mmap] libdl.so    
+[x] [Thread 2000]	007fffb7f6e000 - 007fffb7f6f000   rw-     [mmap] libdl.so    
+[x] [Thread 2000]	007fffb7f81000 - 007fffb8058000   r-x     [mmap] libc++.so   
+[x] [Thread 2000]	007fffb8058000 - 007fffb8067000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb8067000 - 007fffb806e000   r--     [mmap] libc++.so   
+[x] [Thread 2000]	007fffb806e000 - 007fffb806f000   rw-     [mmap] libc++.so   
+[x] [Thread 2000]	007fffb806f000 - 007fffb8072000   rw-     [mmap anonymous]   
+[x] [Thread 2000]	007fffb80b5000 - 007fffb80ed000   r-x     [mmap] libm.so     
+[x] [Thread 2000]	007fffb80ed000 - 007fffb80fd000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb80fd000 - 007fffb80fe000   r--     [mmap] libm.so     
+[x] [Thread 2000]	007fffb80fe000 - 007fffb80ff000   rw-     [mmap] libm.so     
+[x] [Thread 2000]	007fffb8106000 - 007fffb8122000   r-x     [mmap] libz.so     
+[x] [Thread 2000]	007fffb8122000 - 007fffb8131000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb8131000 - 007fffb8132000   r--     [mmap] libz.so     
+[x] [Thread 2000]	007fffb8132000 - 007fffb8133000   rw-     [mmap] libz.so     
+[x] [Thread 2000]	007fffb8160000 - 007fffb8165000   r-x     [mmap] liblog.so   
+[x] [Thread 2000]	007fffb8165000 - 007fffb8174000   ---     [mmap anonymous]   
+[x] [Thread 2000]	007fffb8174000 - 007fffb8175000   r--     [mmap] liblog.so   
+[x] [Thread 2000]	007fffb8175000 - 007fffb8176000   rw-     [mmap] liblog.so   
+...
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\core.py&quot;, line 771, in emu_start
+    self.uc.emu_start(begin, end, timeout, count)
+  File &quot;C:\Program Files\Python39\lib\site-packages\unicorn\unicorn.py&quot;, line 547, in emu_start
+    raise UcError(status)
+unicorn.unicorn.UcError: Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)
+</code></pre>
+<p>这里 PC 跳到了 0x0，不过我们可以看到 libxx.so 需要的依赖库都被完美地加载到内存了，说明动态链接器加载 libxx.so 应该是完成了。</p>
+<p>因为取消了 ql_path_hook 的回调，所以不能断到断点处，所以得另外用一种方法断到 start 地址处。</p>
+<p>qiling 有一个 “运行到” 的函数，右键是 Qiling-&gt;Execute Till，观察 qiling 的 IDA 插件：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_run_to_here</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">if</span> self<span class="token punctuation">.</span>qlinit<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        curr_addr <span class="token operator">=</span> get_screen_ea<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token comment"># 每执行一条命令前，调用 ql_until_hook</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        untillhook <span class="token operator">=</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>hook_code<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql_untill_hook<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">if</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>restore<span class="token punctuation">(</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            show_wait_box<span class="token punctuation">(</span><span class="token string">"Qiling is processing ..."</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="10"></td><td><pre>                self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>run<span class="token punctuation">(</span>begin<span class="token operator">=</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc<span class="token punctuation">,</span> end<span class="token operator">=</span>curr_addr<span class="token operator">+</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr<span class="token operator">-</span>get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            <span class="token keyword">finally</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>                hide_wait_box<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            show_wait_box<span class="token punctuation">(</span><span class="token string">"Qiling is processing ..."</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>            <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>                self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>run<span class="token punctuation">(</span>end<span class="token operator">=</span>curr_addr<span class="token operator">+</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr<span class="token operator">-</span>get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            <span class="token keyword">finally</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="18"></td><td><pre>                hide_wait_box<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>qiling 在 run 方法中提供了 end，代表模拟执行在哪里结束。我们可以把 end 设置为 start 地址就相当于断在 start 上了，通过在 IDA 将光标移到对应的代码处即可设置 end。不过这里也有一个指令集回调（第 4 行），观察 ql_until_hook 的实现：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_untill_hook</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">,</span> addr<span class="token punctuation">,</span> size<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    addr <span class="token operator">=</span> addr <span class="token operator">-</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr <span class="token operator">+</span> get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    set_color<span class="token punctuation">(</span>addr<span class="token punctuation">,</span> CIC_ITEM<span class="token punctuation">,</span> <span class="token number">0x00B3CBFF</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>该函数只是将模拟执行过的代码设置高亮，因此我们可以直接注视掉这个回调的注册（在 ql_run_to_here 去掉对 ql_until_hook 的 hook_code 和 hook_del 调用）。另外，之前在 custom_continue 设置的回调都要 copy 一份到 custom_run_to_here，custom_script.py 没有该函数就创建一个：</p>
+<p><span class="exturl" data-url="aHR0cDovL3FpbGluZ2lkYS5weQ==">qilingida.py</span>:</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_run_to_here</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">if</span> self<span class="token punctuation">.</span>qlinit<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        curr_addr <span class="token operator">=</span> get_screen_ea<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        userhook <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token comment"># 注册新创建的 custom_run_to_here 方法</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">if</span> self<span class="token punctuation">.</span>userobj <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            userhook <span class="token operator">=</span> self<span class="token punctuation">.</span>userobj<span class="token punctuation">.</span>custom_run_to_here<span class="token punctuation">(</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment"># 去掉 ql_until_hook 的回调</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token comment"># untillhook = self.qlemu.ql.hook_code(self.ql_untill_hook)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">if</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>restore<span class="token punctuation">(</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            show_wait_box<span class="token punctuation">(</span><span class="token string">"Qiling is processing ..."</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="14"></td><td><pre>                self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>run<span class="token punctuation">(</span>begin<span class="token operator">=</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc<span class="token punctuation">,</span> end<span class="token operator">=</span>curr_addr<span class="token operator">+</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr<span class="token operator">-</span>get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>            <span class="token keyword">finally</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>                hide_wait_box<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            show_wait_box<span class="token punctuation">(</span><span class="token string">"Qiling is processing ..."</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>            <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="20"></td><td><pre>                self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>run<span class="token punctuation">(</span>end<span class="token operator">=</span>curr_addr<span class="token operator">+</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr<span class="token operator">-</span>get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            <span class="token keyword">finally</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="22"></td><td><pre>                hide_wait_box<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre></pre></td></tr><tr><td data-num="24"></td><td><pre>        set_color<span class="token punctuation">(</span>curr_addr<span class="token punctuation">,</span> CIC_ITEM<span class="token punctuation">,</span> <span class="token number">0x00B3CBFF</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        <span class="token comment"># 回调删除部分也注视掉</span></pre></td></tr><tr><td data-num="26"></td><td><pre>        <span class="token comment"># self.qlemu.ql.hook_del(untillhook)</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        <span class="token keyword">if</span> userhook <span class="token keyword">and</span> userhook <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="28"></td><td><pre>            <span class="token keyword">for</span> hook <span class="token keyword">in</span> userhook<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="29"></td><td><pre>                self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>hook_del<span class="token punctuation">(</span>hook<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="30"></td><td><pre>        self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status <span class="token operator">=</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        self<span class="token punctuation">.</span>ql_update_views<span class="token punctuation">(</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc<span class="token punctuation">,</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        logging<span class="token punctuation">.</span>error<span class="token punctuation">(</span><span class="token string">'Qiling should be setup firstly.'</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>custom_script.py:</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">custom_run_to_here</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span>HookRet<span class="token punctuation">]</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>    linker_baseaddr <span class="token operator">=</span> <span class="token number">0x007ffff7dd5000</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">addr_27DA8_hook</span><span class="token punctuation">(</span>ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="6"></td><td><pre>		<span class="token comment"># content from ql_continue</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">addr_27FB4_hook</span><span class="token punctuation">(</span>ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token comment"># content from ql_continue</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">[</span>ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_27DA8_hook<span class="token punctuation">,</span> <span class="token number">0x27DA8</span><span class="token operator">+</span>linker_baseaddr<span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_27FB4_hook<span class="token punctuation">,</span> <span class="token number">0x27FB4</span><span class="token operator">+</span>linker_baseaddr<span class="token punctuation">)</span><span class="token punctuation">]</span></pre></td></tr></table></figure><p>OK，输出终于没有报错了，观察寄存器，也顺利执行到了 start 地址处：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240724163047823.png" alt="image-20240724163047823" /></p>
+<p>修改之后，重启 qiling 环境，将光标移到 start 代码处，右键 Qiling-&gt;Execute Till。</p>
+<p>接下来就是单步执行了，结果遇到如下问题：</p>
+<pre><code>[=] [Thread 2000]	custom_step hook
+[=] [Thread 2001]	Executing: 0x7ffff7e0373c
+[x] [Thread 2001]	[Thread 2001] Expect 0x5555555f9370 but get 0x7ffff7e03740 when running loader.
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\thread.py&quot;, line 611, in run
+    previous_thread = self._prepare_lib_patch()
+  File &quot;C:\Program Files\Python39\lib\site-packages\qiling\os\linux\thread.py&quot;, line 590, in _prepare_lib_patch
+    raise QlErrorExecutionStop('Dynamic library .init() failed!')
+qiling.exception.QlErrorExecutionStop: Dynamic library .init() failed!
+</code></pre>
+<p>这里显示单步执行的命令地址是 0x7ffff7e0373c，而不是 0x5555555f9370。要定位这个问题需要了解 qiling 源码，分析流程如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># qilingida,py</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 单步执行的入口是 qlemu.run</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_step</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>run<span class="token punctuation">(</span>begin<span class="token operator">=</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc<span class="token punctuation">,</span> end<span class="token operator">=</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>exit_addr<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    </pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># qiling/os/linux/linux.py</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QlOsLinux</span><span class="token punctuation">(</span>QlOsPosix<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">run</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token comment"># 多线程环境下调用 thread_management.run ()</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>multithread<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            <span class="token comment"># start multithreading</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            thread_management <span class="token operator">=</span> thread<span class="token punctuation">.</span>QlLinuxThreadManagement<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>thread_management <span class="token operator">=</span> thread_management</pre></td></tr><tr><td data-num="14"></td><td><pre>            thread_management<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            <span class="token comment"># 单线程环境</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>entry_point <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="18"></td><td><pre>                self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>entry_point</pre></td></tr><tr><td data-num="19"></td><td><pre></pre></td></tr><tr><td data-num="20"></td><td><pre>            <span class="token comment"># do we have an interp?</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            <span class="token comment"># 如果有动态链接器，就用动态链接器初始化目标 so</span></pre></td></tr><tr><td data-num="22"></td><td><pre>            <span class="token keyword">elif</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry <span class="token operator">!=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>entry_point<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="23"></td><td><pre>                entry_address <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry</pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>                <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span><span class="token builtin">type</span> <span class="token operator">==</span> QL_ARCH<span class="token punctuation">.</span>ARM<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="26"></td><td><pre>                    entry_address <span class="token operator">&amp;</span><span class="token operator">=</span> <span class="token operator">~</span><span class="token number">1</span></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre>                <span class="token comment"># start running interp, but stop when elf entry point is reached</span></pre></td></tr><tr><td data-num="29"></td><td><pre>                self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>emu_start<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>entry_point<span class="token punctuation">,</span> entry_address<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>timeout<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="30"></td><td><pre>            </pre></td></tr><tr><td data-num="31"></td><td><pre>            <span class="token comment"># 开始模拟执行目标 so</span></pre></td></tr><tr><td data-num="32"></td><td><pre>            self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>emu_start<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry<span class="token punctuation">,</span> self<span class="token punctuation">.</span>exit_point<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>timeout<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>count<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        </pre></td></tr><tr><td data-num="34"></td><td><pre><span class="token comment"># qiling/os/linux/thread.py</span></pre></td></tr><tr><td data-num="35"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QlLinuxThreadManagement</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="36"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">run</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        <span class="token comment"># 调用_prepare_lib_patch，让动态链接器加载目标 libxx.so</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        previous_thread <span class="token operator">=</span> self<span class="token punctuation">.</span>_prepare_lib_patch<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="39"></td><td><pre>        </pre></td></tr><tr><td data-num="40"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">_prepare_lib_patch</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="41"></td><td><pre>        <span class="token comment"># 如果动态加载器的入口点不等于目标 libxx.so 的入口点，就初始化 libxx.so</span></pre></td></tr><tr><td data-num="42"></td><td><pre>        <span class="token comment"># 这个判断的逻辑就是目标 libxx.so 如果是第一次加载，就用动态链接器加载，做重定位之类的，</span></pre></td></tr><tr><td data-num="43"></td><td><pre>        <span class="token comment"># 如果不是第一次加载，就直接返回 None，继续执行，即不做重定位等。</span></pre></td></tr><tr><td data-num="44"></td><td><pre>		<span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry <span class="token operator">!=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>entry_point<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="45"></td><td><pre>            entry_address <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry</pre></td></tr><tr><td data-num="46"></td><td><pre></pre></td></tr><tr><td data-num="47"></td><td><pre>            <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span><span class="token builtin">type</span> <span class="token operator">==</span> QL_ARCH<span class="token punctuation">.</span>ARM<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="48"></td><td><pre>                entry_address <span class="token operator">&amp;</span><span class="token operator">=</span> <span class="token operator">~</span><span class="token number">1</span></pre></td></tr><tr><td data-num="49"></td><td><pre></pre></td></tr><tr><td data-num="50"></td><td><pre>            self<span class="token punctuation">.</span>main_thread <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>thread_class<span class="token punctuation">.</span>spawn<span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">,</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>entry_point<span class="token punctuation">,</span> entry_address<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="51"></td><td><pre>            self<span class="token punctuation">.</span>cur_thread <span class="token operator">=</span> self<span class="token punctuation">.</span>main_thread</pre></td></tr><tr><td data-num="52"></td><td><pre>            self<span class="token punctuation">.</span>_clear_queued_msg<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="53"></td><td><pre>            gevent<span class="token punctuation">.</span>joinall<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>main_thread<span class="token punctuation">]</span><span class="token punctuation">,</span> raise_error<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="54"></td><td><pre>            <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc <span class="token operator">!=</span> entry_address<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="55"></td><td><pre>                self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>error<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">&#123;</span>self<span class="token punctuation">.</span>cur_thread<span class="token punctuation">&#125;</span></span><span class="token string"> Expect </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token builtin">hex</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry<span class="token punctuation">)</span><span class="token punctuation">&#125;</span></span><span class="token string"> but get </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token builtin">hex</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>arch_pc<span class="token punctuation">)</span><span class="token punctuation">&#125;</span></span><span class="token string"> when running loader."</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="56"></td><td><pre>                <span class="token keyword">raise</span> QlErrorExecutionStop<span class="token punctuation">(</span><span class="token string">'Dynamic library .init() failed!'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="57"></td><td><pre>            self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>do_lib_patch<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="58"></td><td><pre>            self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>run_function_after_load<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="59"></td><td><pre>            self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>skip_exit_check <span class="token operator">=</span> <span class="token boolean">False</span></pre></td></tr><tr><td data-num="60"></td><td><pre>            self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>write_exit_trap<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="61"></td><td><pre>            <span class="token keyword">return</span> self<span class="token punctuation">.</span>main_thread</pre></td></tr><tr><td data-num="62"></td><td><pre>        <span class="token keyword">return</span> <span class="token boolean">None</span></pre></td></tr></table></figure><p>观察代码流程，我们发现单线程环境下，如果指定了 ql.entry_point（调用 ql.run 的 begin 参数），就不会重定位，直接开始模拟执行。这是正常的，因为第一次模拟执行时我们一般不会指定 ql.run 的 begin 参数，而是让动态链接器去初始化 so，不过我们会注册一些回调，使得之后可以保存快照和恢复模拟执行，而恢复模拟执行就会设置 ql.run 的 begin 参数。在看多线程的环境，qiling 官方显然没有考虑到这个，每次调用 ql.run 都会执行_prepare_lib_path，用动态链接器初始化 so。在我们的场景下，<span class="exturl" data-url="aHR0cDovL3huLS1saWJ4eC12bDJodDRxNjVicnowYXh5anNtbDIyMGd1ZDJiLnNv">我们已经初始化过 libxx.so</span>，且想要开始单步调试 so，<span class="exturl" data-url="aHR0cDovL3huLS1xaWxpbmdsaWJ4eC1xbThxcDFkdjh3enFka3NkdXoyYm1rNWVlN3diOG03Yi5zbw==">而由于 qiling 又一次初始化 libxx.so</span>，所以单步调试后的下一条指令是动态加载器的入口地址 + 4，而不是 libxx.so 的入口地址 + 4。</p>
+<p>这里直接模仿单线程环境，修改如下：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># qiling/os/linux/thread.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">def</span> <span class="token function">_prepare_lib_patch</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>entry_point <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>entry_point</pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">return</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">elif</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry <span class="token operator">!=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>entry_point<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        entry_address <span class="token operator">=</span> self<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>loader<span class="token punctuation">.</span>elf_entry</pre></td></tr></table></figure><p>这里添加一个 ql.entry_point 的判断，如果 ql.run 设置了 begin，就不重定位，直接从 begin 地址处开始模拟执行。</p>
+<p>重启 qiling 环境，再次执行 Qiling-&gt;Execute Till：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725103246929.png" alt="image-20240725103246929" /></p>
+<p>可以看到，这次单步调试成功了，顺利在断在了 libxx.so 的下一条指令。</p>
+<p>继续单步执行，进入 &quot;.__cxa_finalize&quot; 函数，该函数是从内存读取__cxa_finalize 真正的函数地址并执行，该函数地址是需要重定位的，因为该函数属于其他模块，我们观察其内存：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725103947132.png" alt="image-20240725103947132" /></p>
+<p>__cxa_finalize_ptr 是保存函数地址的指针，通过 IDA View-B 可看到其相对虚拟地址是 0x3266D0，X16 寄存器保存了__cxa_finalize_ptr 所在的内存页，我们查看内存，发现 0x6D0 偏移处是 0x7FFFB80F942C，该地址位于 libc.so 中，所以由此得知动态链接器正确地完成了 libxx.so 的重定位。</p>
+<pre><code>[x] [Thread 2000]	007fffb8085000 - 007fffb8148000   r-x     [mmap] libc.so
+</code></pre>
+<h2 id="虚拟机框架解析"><a class="anchor" href="#虚拟机框架解析">#</a> 虚拟机框架解析</h2>
+<p>libxx.so 有 3 个重要的接口：</p>
+<ul>
+<li>tps_init：tps_init 初始化和收集环境信息，发送给服务器</li>
+<li>tps_encrypt、tps_decrypt：负责数据的加解密</li>
+</ul>
+<p>因为 tps_init 与算法无关，这里就直接忽略了。</p>
+<p>先看下加解密函数的伪代码：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725105318159.png" alt="image-20240725105318159" /></p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725105333731.png" alt="image-20240725105333731" /></p>
+<p>两个函数结构一致，sub_F736C 是真正的加解密函数，加密与解密的不同在于 sub_F736C 的第 1、3、4 参数。</p>
+<h3 id="虚拟机的简要流程"><a class="anchor" href="#虚拟机的简要流程">#</a> 虚拟机的简要流程</h3>
+<p>回顾 sub_F736C 的整体结构：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725105747850.png" alt="image-20240725105747850" /></p>
+<p>感觉像是几层嵌套的控制流平坦化，通过单步模拟执行，其实际上是一个虚拟机的简化版，这里简要说明其流程：</p>
+<ul>
+<li>
+<p>初始化一些计算因子，然后进入 while (1) 无限循环，v66 从 a1 参数读取一个四字节大小的无符号整形，然后与 0x3F 做 &amp; 算法，最后传给 switch</p>
+<blockquote>
+<p>这里 IDA 反编译出现了一点问题，传给 switch 的不是 v39</p>
+</blockquote>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725134708083.png" alt="image-20240725134708083" /></p>
+</li>
+<li>
+<p>一个大 switch</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725110152019.png" alt="image-20240725110152019" /></p>
+</li>
+<li>
+<p>假如 v39 是 0x9，跳到对应的 case，执行 [vmstack-off1] = [vmstack-off2] + number，之后跳到 LABEL_331</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725110448988.png" alt="image-20240725110448988" /></p>
+</li>
+<li>
+<p>LABEL_331 是所有 case 的最后一段代码，类似 switch 的所有 case 都没有 break，然后都跳转到了 default 分支下</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725135938807.png" alt="image-20240725135938807" /></p>
+<p>LABEL_331 有两个功能：</p>
+<ul>
+<li>
+<p>改变控制流，做指令跳转</p>
+<ul>
+<li>
+<p>一种是 a1 数组自增到下一个元素</p>
+<pre><code class="language-c++">a1 = (unsigned int *)(*(_QWORD *)beg + 4LL);
+*(_QWORD *)beg = a1;
+</code></pre>
+</li>
+<li>
+<p>一种是直接跳转到 a1 数组的某个元素</p>
+<pre><code class="language-c++">//func_data - 0x18地址处保存的是上一个switch-case写入的值
+a1 = *(unsigned int **)(func_data - 0x18);
+*(_QWORD *)(func_data - 0x20) = 0LL;
+*(_QWORD *)beg = a1;
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>调用回调函数</p>
+<pre><code class="language-c++">real_data = ((__int64 (__fastcall *)(_QWORD, _QWORD))func)(*v13, *v14);
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>最后，回到 while (1)，继续走 switch。</p>
+</li>
+</ul>
+<h3 id="虚拟机结构剖析"><a class="anchor" href="#虚拟机结构剖析">#</a> 虚拟机结构剖析</h3>
+<ul>
+<li>
+<p>switch-case 的参数来源：sub_F736C 的第一个参数是一个 4 字节数组，每个 4 字节的一部分都是 switch-case 的参数，用来执行一个操作。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725113411862.png" alt="image-20240725113411862" /></p>
+<p>因此每一个 4 字节就是一个 handler，其 handler 的内部解析如下，handler index 和 subhandler index 为 switch-case 的参数。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725135546287.png" alt="image-20240725135546287" /></p>
+</li>
+<li>
+<p>handler 的执行示例：</p>
+<pre><code>handler index:0x2B
+subhandler index:0xC2B
+handler：[vm_stack-off3] = [vm_stack-off1] + [vm_stack-off2]
+example:
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x110] = [func_data-0x80] + [func_data-0x128]; 0xffffffffff971488, 0x555555cd9eb0, rs: 0x55555564b338
+------------------------------------------------
+handler index:0x2B
+subhandler index:0xA6B
+handler:[vm_stack-off3] = [vm_stack-off1] &gt;&gt; operand2
+example:
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0x128] = d[func_data-0x88] &gt;&gt; 0x18; 0x555f9370, rs: 0x55
+------------------------------------------------
+handler index:0x9
+no subhandler index
+handler:[vm_stack-off1] = [vm_stack-off2] + operand1
+example:
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x120] = [func_data-0x130] + 0x4; 0x0, rs: 0x4
+</code></pre>
+<p>看第一个例子，index 为 0x2B，则进一步判断 subindex，执行 subindex 为 0xC2B 的操作，这里有 3 个变量，off1、off2、off3，分别从 handler 中做位运算提取。</p>
+</li>
+<li>
+<p>控制流的变化</p>
+<p>加解密的执行就是遍历 handler 数组实现的，一个 handler 一个 handler 的执行。对于 for 循环，虚拟机需要改变控制流来实现，以下给出控制流改变的一个例子：</p>
+<pre><code>[=] [Thread 2008]	index: 0x34 -&gt; [func_data-0x130]; 0x0
+        [func_data-0x128]; 0x1
+        [func_data-0x18] = index_table_pointer+4+((int)(0xfffc &lt;&lt; 0x10) &gt;&gt; 0xE); 0x5555557e5bd0
+        [func_data-0x20] = 2
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x120] = [func_data-0x120] + 0x1; func_data-0x234, rs: func_data-0x233
+        index_table_pointer = [func_data-0x18]; 0x5555557e5bc4
+        [func_data-0x20] = 0
+        [beg] = index_table_pointer
+</code></pre>
+<p>执行 0x34 handler，如果 *(DWORD*)(func_data-0x130）!= *(DWORD*)(func_data-0x128），handler 数组指针就减 0xC，并且 func_data-0x20 地址处写入 2，表示下一个 handler 执行后即将跳转：</p>
+<pre><code>index_table_pointer+4+((int)(0xfffc &lt;&lt; 0x10) &gt;&gt; 0xE) = index_table_pointer-0xC = 0x5555557e5bd0-0xC= 0x5555557e5bc4
+</code></pre>
+<p>执行下一条 0x9 handler 时，因为 func_data-0x20 地址处的值为 2，所以让 handler 跳转到 0x5555557e5bc4。</p>
+<p>如果 0x34 handler 执行时 *(DWORD*)(func_data-0x130）== *(DWORD*)(func_data-0x128），那么下一个 handler 执行后仍顺序执行。</p>
+</li>
+</ul>
+<h3 id="虚拟机执行流程解析"><a class="anchor" href="#虚拟机执行流程解析">#</a> 虚拟机执行流程解析</h3>
+<p>每次执行一个 handler，相当于进入 switch 走一遍，因为我们已经解析了 handler4 字节的内部组成，所以我们可以记录每一条 handler 具体代表的语义。每当进入 switch 时，我们把当前 handler 的语义打出来，就可以看到完整的加解密流程了。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/libxx_algorithm_analysis/image-20240725141947203.png" alt="image-20240725141947203" /></p>
+<p>于是，我们调用 ql.hook_code 方法，每当执行到 0xF7E20 这，就打印 handler 语义：</p>
+<p>更新 custom_script.py:</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">custom_run_to_here</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span>HookRet<span class="token punctuation">]</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>	<span class="token keyword">def</span> <span class="token function">addr_tps_F7E20_hook</span><span class="token punctuation">(</span>ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token comment"># ql.log.info(f'index_base: &#123;ql.arch.regs.X19:#x&#125;')</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        index <span class="token operator">=</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X12 <span class="token operator">&amp;</span> <span class="token number">0x3F</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token comment"># ql.log.info(f'index_value: &#123;index:#x&#125;')</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token comment"># ql.log.info(f'off1: &#123;ql.arch.regs.W8:#x&#125;')</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token comment"># ql.log.info(f'off2: &#123;ql.arch.regs.W9:#x&#125;')</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>        indent <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'\n\t\t\t\t\t\t'</span></span></pre></td></tr><tr><td data-num="10"></td><td><pre>        off <span class="token operator">=</span> calc_off<span class="token punctuation">(</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        W11 <span class="token operator">=</span> calc_W11<span class="token punctuation">(</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        rs <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'index: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>index<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string"> -> '</span></span></pre></td></tr><tr><td data-num="13"></td><td><pre>        base_W8 <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'[func_data-</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token number">0x130</span><span class="token operator">-</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>W8<span class="token operator">*</span><span class="token number">8</span><span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">]'</span></span></pre></td></tr><tr><td data-num="14"></td><td><pre>        base_W9 <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'[func_data-</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token number">0x130</span><span class="token operator">-</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>W9<span class="token operator">*</span><span class="token number">8</span><span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">]'</span></span></pre></td></tr><tr><td data-num="15"></td><td><pre>        base_W10 <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'[func_data-</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token number">0x130</span><span class="token operator">-</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>W10<span class="token operator">*</span><span class="token number">8</span><span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">]'</span></span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token keyword">global</span> update_index_table_flag</pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token keyword">if</span> update_index_table_flag <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="19"></td><td><pre>            update_index_table_flag <span class="token operator">+=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token keyword">if</span> index <span class="token operator">==</span> <span class="token number">0x9</span> <span class="token keyword">or</span> index <span class="token operator">==</span> <span class="token number">0x1C</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="22"></td><td><pre>            base_W9_value <span class="token operator">=</span> get_base_W9<span class="token punctuation">(</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre>            rs <span class="token operator">+=</span> <span class="token string-interpolation"><span class="token string">f'</span><span class="token interpolation"><span class="token punctuation">&#123;</span>base_W8<span class="token punctuation">&#125;</span></span><span class="token string"> = </span><span class="token interpolation"><span class="token punctuation">&#123;</span>base_W9<span class="token punctuation">&#125;</span></span><span class="token string"> + </span><span class="token interpolation"><span class="token punctuation">&#123;</span>off<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">; </span><span class="token interpolation"><span class="token punctuation">&#123;</span>get_base<span class="token punctuation">(</span>ql<span class="token punctuation">,</span> base_W9_value<span class="token punctuation">)</span><span class="token punctuation">&#125;</span></span><span class="token string">, rs: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>get_base<span class="token punctuation">(</span>ql<span class="token punctuation">,</span> base_W9_value<span class="token operator">+</span>off<span class="token punctuation">)</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">elif</span> index <span class="token keyword">in</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0x34</span><span class="token punctuation">]</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="25"></td><td><pre>            flag_20 <span class="token operator">=</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X0</pre></td></tr><tr><td data-num="26"></td><td><pre>            <span class="token keyword">if</span> flag_20 <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="27"></td><td><pre>                rs <span class="token operator">+=</span> <span class="token string">"ignore!!"</span></pre></td></tr><tr><td data-num="28"></td><td><pre>            v78 <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'(int)(</span><span class="token interpolation"><span class="token punctuation">&#123;</span>off<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string"> &lt;&lt; 0x10) >> 0xE'</span></span></pre></td></tr><tr><td data-num="29"></td><td><pre>            v77 <span class="token operator">=</span> get_base_W8<span class="token punctuation">(</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="30"></td><td><pre>            rs <span class="token operator">+=</span> <span class="token string-interpolation"><span class="token string">f'</span><span class="token interpolation"><span class="token punctuation">&#123;</span>base_W8<span class="token punctuation">&#125;</span></span><span class="token string">; </span><span class="token interpolation"><span class="token punctuation">&#123;</span>v77<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span></pre></td></tr><tr><td data-num="31"></td><td><pre>            v79 <span class="token operator">=</span> get_base_W9<span class="token punctuation">(</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="32"></td><td><pre>            rs <span class="token operator">+=</span> <span class="token string-interpolation"><span class="token string">f'</span><span class="token interpolation"><span class="token punctuation">&#123;</span>indent<span class="token punctuation">&#125;</span></span><span class="token interpolation"><span class="token punctuation">&#123;</span>base_W9<span class="token punctuation">&#125;</span></span><span class="token string">; </span><span class="token interpolation"><span class="token punctuation">&#123;</span>v79<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span></pre></td></tr><tr><td data-num="33"></td><td><pre></pre></td></tr><tr><td data-num="34"></td><td><pre>            str1 <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'</span><span class="token interpolation"><span class="token punctuation">&#123;</span>indent<span class="token punctuation">&#125;</span></span><span class="token string">[func_data-0x18] = index_table_pointer+8(2 elements); </span><span class="token interpolation"><span class="token punctuation">&#123;</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X19<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">, rs: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X19<span class="token operator">+</span><span class="token number">8</span><span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span></pre></td></tr><tr><td data-num="35"></td><td><pre>            str2 <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'</span><span class="token interpolation"><span class="token punctuation">&#123;</span>indent<span class="token punctuation">&#125;</span></span><span class="token string">[func_data-0x18] = index_table_pointer+4+(</span><span class="token interpolation"><span class="token punctuation">&#123;</span>v78<span class="token punctuation">&#125;</span></span><span class="token string">); </span><span class="token interpolation"><span class="token punctuation">&#123;</span>ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X19<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span></pre></td></tr><tr><td data-num="36"></td><td><pre>            <span class="token keyword">if</span> index <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="37"></td><td><pre>                <span class="token keyword">if</span> v77 <span class="token operator">!=</span> v79<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="38"></td><td><pre>                    rs <span class="token operator">+=</span> str1</pre></td></tr><tr><td data-num="39"></td><td><pre>                <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="40"></td><td><pre>                    rs <span class="token operator">+=</span> str2</pre></td></tr><tr><td data-num="41"></td><td><pre></pre></td></tr><tr><td data-num="42"></td><td><pre>            <span class="token keyword">if</span> index <span class="token operator">==</span> <span class="token number">0x34</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="43"></td><td><pre>                <span class="token keyword">if</span> v77 <span class="token operator">==</span> v79<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="44"></td><td><pre>                    rs <span class="token operator">+=</span> str1</pre></td></tr><tr><td data-num="45"></td><td><pre>                <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="46"></td><td><pre>                    rs <span class="token operator">+=</span> str2</pre></td></tr><tr><td data-num="47"></td><td><pre>		<span class="token comment"># elif...</span></pre></td></tr><tr><td data-num="48"></td><td><pre></pre></td></tr><tr><td data-num="49"></td><td><pre>        <span class="token keyword">if</span> log_flag<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="50"></td><td><pre>            ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span>rs<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="51"></td><td><pre></pre></td></tr><tr><td data-num="52"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">[</span>ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_27DA8_hook<span class="token punctuation">,</span> <span class="token number">0x7ffff7dfcda8</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="53"></td><td><pre>            ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_27FB4_hook<span class="token punctuation">,</span> <span class="token number">0x7ffff7dfcfb4</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="54"></td><td><pre>            ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_tps_ADAB8_hook<span class="token punctuation">,</span> <span class="token number">0x555555601ab8</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="55"></td><td><pre>            ql<span class="token punctuation">.</span>hook_address<span class="token punctuation">(</span>addr_tps_F7E20_hook<span class="token punctuation">,</span> <span class="token number">0x55555564be20</span><span class="token punctuation">)</span><span class="token punctuation">]</span></pre></td></tr></table></figure><blockquote>
+<ul>
+<li>
+<p>完整的 custom_script.py 已上传至附件。</p>
+</li>
+<li>
+<p>因为 switch-case 有些路径是没有走到的，也就是说加解密的 handler 不是全集，所以我们在写 handler 的时候，只需要一个一个写，遇到一个新的待执行的 handler，就增加一个 elif，不需要把 switch-case 的所有路径都挨着写完。</p>
+</li>
+<li>
+<p>当我们新增 handler 时，就需要重启 qiling 环境，这样会很耗时。因此在遇到没有记录的 handler 时，我们可以手动调用 ql.os.stop ()，这样 ql_run_to_here 可以为我们保存当前执行环境，之后我们仍然可以单步模拟执行：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># qilingida.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">def</span> <span class="token function">ql_run_to_here</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token comment"># ...</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    userhook <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">if</span> self<span class="token punctuation">.</span>userobj <span class="token keyword">is</span> <span class="token keyword">not</span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        userhook <span class="token operator">=</span> self<span class="token punctuation">.</span>userobj<span class="token punctuation">.</span>custom_run_to_here<span class="token punctuation">(</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token comment"># 当 qlemu.run 方法在模拟执行时，如果 custom_run_to_here 调用了 ql.os.stop (),</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token comment"># 那么 qlemu.run 就会返回。</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>run<span class="token punctuation">(</span>end<span class="token operator">=</span>curr_addr<span class="token operator">+</span>self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>baseaddr<span class="token operator">-</span>get_imagebase<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment"># qlemu.run 返回后保存当前模拟执行环境。</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>status <span class="token operator">=</span> self<span class="token punctuation">.</span>qlemu<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        </pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment"># custom_script.py</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token keyword">def</span> <span class="token function">custom_run_to_here</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> List<span class="token punctuation">[</span>HookRet<span class="token punctuation">]</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="15"></td><td><pre>	<span class="token keyword">def</span> <span class="token function">next_pc</span><span class="token punctuation">(</span>ql<span class="token punctuation">:</span> Qiling<span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        next_pc <span class="token operator">=</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X1 <span class="token operator">-</span> <span class="token number">0x555555554000</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        index <span class="token operator">=</span> ql<span class="token punctuation">.</span>arch<span class="token punctuation">.</span>regs<span class="token punctuation">.</span>X12 <span class="token operator">&amp;</span> <span class="token number">0x3F</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        rs <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f'next unknown index: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>index<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string"> -> '</span></span></pre></td></tr><tr><td data-num="19"></td><td><pre>        ql<span class="token punctuation">.</span>log<span class="token punctuation">.</span>info<span class="token punctuation">(</span>rs <span class="token operator">+</span> <span class="token string-interpolation"><span class="token string">f'next pc: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>next_pc<span class="token punctuation">:</span><span class="token format-spec">#x</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        ql<span class="token punctuation">.</span>os<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token keyword">global</span> log_flag</pre></td></tr><tr><td data-num="22"></td><td><pre>        log_flag <span class="token operator">=</span> <span class="token boolean">False</span></pre></td></tr></table></figure></li>
+</ul>
+</blockquote>
+<p>模拟执行的输出结果示例如下：</p>
+<pre><code>[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x48] = [func_data-0x48] + 0xfea0; func_data-0x150, rs: func_data--0xfd50
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x158] = [func_data-0x38]; func_data-0x158, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x150] = [func_data-0x80]; func_data-0x160, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x148] = [func_data-0x88]; func_data-0x168, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x140] = [func_data-0x90]; func_data-0x170, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x138] = [func_data-0x98]; func_data-0x178, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x130] = [func_data-0xa0]; func_data-0x180, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x128] = [func_data-0xa8]; func_data-0x188, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x120] = [func_data-0xb0]; func_data-0x190, 0x0
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0xb0] = [[func_data-0x110] + 0x10]; func_data-0x450 -&gt; func_data-0x440, 0x20
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0xa8] = [[func_data-0x110] + 0x8]; func_data-0x450 -&gt; func_data-0x448, 0x100000
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0x90] = [[func_data-0x108] + 0x0]; 0x555555857110 -&gt; 0x555555857110, 0x555555f0abb0
+[=] [Thread 2008]	index: 0x35 -&gt; [func_data-0x88] = (signed )d[[func_data-0x110] + 0x0]; func_data-0x450, 0x555f9370
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0x128] = [[func_data-0x100] + 0x0]; 0x555555857118 -&gt; 0x555555857118, 0x555555cd9eb0
+[=] [Thread 2008]	index: 0x2d -&gt; [func_data-0x98] = d[func_data-0x130] + (int64)(int)0x0; 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x48] + 0x110] = b[func_data-0x130]; func_data-0x1a0, 0x0
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0xa0] = [func_data-0x48] + 0x4; func_data-0x2b0, rs: func_data-0x2ac
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x108] = [func_data-0xa0]; func_data-0x1a8, func_data-0x2ac
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x120] = [func_data-0x130] + 0x4; 0x0, rs: 0x4
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x118] = [func_data-0x120]; func_data-0x198, 0x4
+[=] [Thread 2008]	index: 0x1f -&gt; [func_data-0x120] = int(0xff97 &lt;&lt; 0x10)
+[=] [Thread 2008]	index: 0x1d -&gt; [func_data-0x80] = [func_data-0x120] | 0x1488; 0xffffffffff970000, rs:0xffffffffff971488
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x110] = [func_data-0x80] + [func_data-0x128]; 0xffffffffff971488, 0x555555cd9eb0, rs: 0x55555564b338
+[=] [Thread 2008]	index: 0x92b -&gt; [func_data-0x68] = [func_data-0x130] | [func_data-0xf8]; 0x0, 0x55555564b34c, rs: 0x55555564b34c
+[=] [Thread 2008]	index: 0xdeb -&gt; [func_data-0x18] = [func_data-0x68]; 0x55555564b34c
+						[func_data-0x20] = 2
+						[func_data-0x38] = index_table_pointer+8; 0x5555557e5b90, rs: 0x5555557e5b98
+						[func_data-0x10] = index_table_pointer+8; 0x5555557e5b90, rs: 0x5555557e5b98
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x108] = [func_data-0x48] + 0x108; func_data-0x2b0, rs: func_data-0x1a8
+						index_table_pointer = [func_data-0x18]; 0x55555564b34c
+						[func_data-0x20] = 0
+						[beg] = index_table_pointer
+						call func:(0x55555564b34c)([func_data-0x110], [func_data-0x108]); memset
+						index_table_pointer = [func_data-0x10]; 0x5555557e5b98
+						[beg] = index_table_pointer
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0x128] = d[func_data-0x88] &gt;&gt; 0x18; 0x555f9370, rs: 0x55
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0x120] = d[func_data-0x88] &gt;&gt; 0x10; 0x555f9370, rs: 0x555f
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0x118] = d[func_data-0x88] &gt;&gt; 0x8; 0x555f9370, rs: 0x555f93
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x48] + 0x5] = b[func_data-0x118]; func_data-0x2ab, 0x93
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x48] + 0x4] = b[func_data-0x88]; func_data-0x2ac, 0x70
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x48] + 0x6] = b[func_data-0x120]; func_data-0x2aa, 0x5f
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x48] + 0x7] = b[func_data-0x128]; func_data-0x2a9, 0x55
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x118] = [func_data-0x80] + [func_data-0x90]; 0xffffffffff971488, 0x555555f0abb0, rs: 0x55555587c038
+[=] [Thread 2008]	index: 0x38 -&gt; [func_data-0x128] = [func_data-0x98] &lt; 0x100; 0x0, rs: 0x1
+</code></pre>
+<h2 id="加解密算法分析"><a class="anchor" href="#加解密算法分析">#</a> 加解密算法分析</h2>
+<p>观察 sub_F736C 返回前，所有 handler 的执行记录，主要分为四部分：</p>
+<blockquote>
+<p>handler 执行过程.txt 已上传至附件，里面记录了整个执行流程。</p>
+</blockquote>
+<h3 id="环境初始化"><a class="anchor" href="#环境初始化">#</a> 环境初始化</h3>
+<p>虚拟栈的初始化已经 sub_F736C 的参数保存到虚拟栈：</p>
+<pre><code>[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x48] = [func_data-0x48] + 0xfea0; func_data-0x150, rs: func_data--0xfd50
+//这里分号后面为自动生成的注释，表示从左到右，其内存的值。比如下面这一行，[func_data-0x48]的值是func_data-0x158；[func_data-0x38]的值是0。因为这是个写操作，就没有打印[[func_data-0x48]+0x158]的值了。
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x158] = [func_data-0x38]; func_data-0x158, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x150] = [func_data-0x80]; func_data-0x160, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x148] = [func_data-0x88]; func_data-0x168, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x140] = [func_data-0x90]; func_data-0x170, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x138] = [func_data-0x98]; func_data-0x178, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x130] = [func_data-0xa0]; func_data-0x180, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x128] = [func_data-0xa8]; func_data-0x188, 0x0
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x120] = [func_data-0xb0]; func_data-0x190, 0x0
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0xb0] = [[func_data-0x110] + 0x10]; func_data-0x450 -&gt; func_data-0x440, 0x20
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0xa8] = [[func_data-0x110] + 0x8]; func_data-0x450 -&gt; func_data-0x448, 0x100000
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0x90] = [[func_data-0x108] + 0x0]; 0x555555857110 -&gt; 0x555555857110, 0x555555f0abb0
+[=] [Thread 2008]	index: 0x35 -&gt; [func_data-0x88] = (signed )d[[func_data-0x110] + 0x0]; func_data-0x450, 0x555f9370
+[=] [Thread 2008]	index: 0x3c -&gt; [func_data-0x128] = [[func_data-0x100] + 0x0]; 0x555555857118 -&gt; 0x555555857118, 0x555555cd9eb0
+[=] [Thread 2008]	index: 0x2d -&gt; [func_data-0x98] = d[func_data-0x130] + (int64)(int)0x0; 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x48] + 0x110] = b[func_data-0x130]; func_data-0x1a0, 0x0
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0xa0] = [func_data-0x48] + 0x4; func_data-0x2b0, rs: func_data-0x2ac
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x108] = [func_data-0xa0]; func_data-0x1a8, func_data-0x2ac
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x120] = [func_data-0x130] + 0x4; 0x0, rs: 0x4
+[=] [Thread 2008]	index: 0x29 -&gt; [[func_data-0x48]+0x118] = [func_data-0x120]; func_data-0x198, 0x4
+[=] [Thread 2008]	index: 0x1f -&gt; [func_data-0x120] = int(0xff97 &lt;&lt; 0x10)
+[=] [Thread 2008]	index: 0x1d -&gt; [func_data-0x80] = [func_data-0x120] | 0x1488; 0xffffffffff970000, rs:0xffffffffff971488
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x110] = [func_data-0x80] + [func_data-0x128]; 0xffffffffff971488, 0x555555cd9eb0, rs: 0x55555564b338
+[=] [Thread 2008]	index: 0x92b -&gt; [func_data-0x68] = [func_data-0x130] | [func_data-0xf8]; 0x0, 0x55555564b34c, rs: 0x55555564b34c
+[=] [Thread 2008]	index: 0xdeb -&gt; [func_data-0x18] = [func_data-0x68]; 0x55555564b34c
+						[func_data-0x20] = 2
+						[func_data-0x38] = index_table_pointer+8; 0x5555557e5b90, rs: 0x5555557e5b98
+						[func_data-0x10] = index_table_pointer+8; 0x5555557e5b90, rs: 0x5555557e5b98
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x108] = [func_data-0x48] + 0x108; func_data-0x2b0, rs: func_data-0x1a8
+						index_table_pointer = [func_data-0x18]; 0x55555564b34c
+						[func_data-0x20] = 0
+						[beg] = index_table_pointer
+						call func:(0x55555564b34c)([func_data-0x110], [func_data-0x108]); memset
+						index_table_pointer = [func_data-0x10]; 0x5555557e5b98
+						[beg] = index_table_pointer
+</code></pre>
+<h3 id="准备一个256字节大小的s-box表"><a class="anchor" href="#准备一个256字节大小的s-box表">#</a> 准备一个 256 字节大小的 S-box 表</h3>
+<p>读取 [func_data-0x98] 的一个字节，赋值给 func_data-0x2a8 地址处，同时 [func_data-0x98] 和 [func_data-0x120] 都自增 1，直到 [func_data-0x98]==0x100。</p>
+<pre><code>[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x120] + 0x0] = b[func_data-0x98]; func_data-0x2a8, 0x0
+[=] [Thread 2008]	index: 0x2d -&gt; [func_data-0x98] = d[func_data-0x98] + (int64)(int)0x1; 0x0, rs: 0x1
+[=] [Thread 2008]	index: 0x38 -&gt; [func_data-0x128] = [func_data-0x98] &lt; 0x100; 0x1, rs: 0x1
+[=] [Thread 2008]	index: 0x34 -&gt; [func_data-0x130]; 0x0
+						[func_data-0x128]; 0x1
+						[func_data-0x18] = index_table_pointer+4+((int)(0xfffc &lt;&lt; 0x10) &gt;&gt; 0xE); 0x5555557e5bd0
+						[func_data-0x20] = 2
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x120] = [func_data-0x120] + 0x1; func_data-0x2a8, rs: func_data-0x2a7
+						index_table_pointer = [func_data-0x18]; 0x5555557e5bc4
+						[func_data-0x20] = 0
+						[beg] = index_table_pointer
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x120] + 0x0] = b[func_data-0x98]; func_data-0x2a7, 0x1
+[=] [Thread 2008]	index: 0x2d -&gt; [func_data-0x98] = d[func_data-0x98] + (int64)(int)0x1; 0x1, rs: 0x2
+[=] [Thread 2008]	index: 0x38 -&gt; [func_data-0x128] = [func_data-0x98] &lt; 0x100; 0x2, rs: 0x1
+[=] [Thread 2008]	index: 0x34 -&gt; [func_data-0x130]; 0x0
+						[func_data-0x128]; 0x1
+						[func_data-0x18] = index_table_pointer+4+((int)(0xfffc &lt;&lt; 0x10) &gt;&gt; 0xE); 0x5555557e5bd0
+						[func_data-0x20] = 2
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x120] = [func_data-0x120] + 0x1; func_data-0x2a7, rs: func_data-0x2a6
+						index_table_pointer = [func_data-0x18]; 0x5555557e5bc4
+						[func_data-0x20] = 0
+						[beg] = index_table_pointer
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x120] + 0x0] = b[func_data-0x98]; func_data-0x2a6, 0x2
+[=] [Thread 2008]	index: 0x2d -&gt; [func_data-0x98] = d[func_data-0x98] + (int64)(int)0x1; 0x2, rs: 0x3
+[=] [Thread 2008]	index: 0x38 -&gt; [func_data-0x128] = [func_data-0x98] &lt; 0x100; 0x3, rs: 0x1
+[=] [Thread 2008]	index: 0x34 -&gt; [func_data-0x130]; 0x0
+						[func_data-0x128]; 0x1
+						[func_data-0x18] = index_table_pointer+4+((int)(0xfffc &lt;&lt; 0x10) &gt;&gt; 0xE); 0x5555557e5bd0
+						[func_data-0x20] = 2
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0x120] = [func_data-0x120] + 0x1; func_data-0x2a6, rs: func_data-0x2a5
+						index_table_pointer = [func_data-0x18]; 0x5555557e5bc4
+						[func_data-0x20] = 0
+						[beg] = index_table_pointer
+</code></pre>
+<p>以上逻辑用 C++ 实现如下：</p>
+<pre><code class="language-c++">#define SHUFFLE_TABLE_LEN 256
+
+unsigned char shuffle_table[SHUFFLE_TABLE_LEN] = &#123; 0 &#125;;
+for (int i = 0; i &lt; SHUFFLE_TABLE_LEN; ++i)
+    shuffle_table[i] = i;
+</code></pre>
+<h3 id="s-box表置换"><a class="anchor" href="#s-box表置换">#</a> S-box 表置换</h3>
+<p>遍历 S-box 表，i 从 0 自增到 255：</p>
+<pre><code>//读取S-box表的第i个元素 a
+[=] [Thread 2008]	index: 0x72b -&gt; [func_data-0x128] = (int)d[func_data-0x120] &gt;&gt; 0x1f; 0x0
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0xe0] = d[func_data-0x128] &gt;&gt; 0x1b; 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0xe0] = d[func_data-0xe0] + d[func_data-0x120]; 0x0, 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0x9eb -&gt; [func_data-0xe0] = [func_data-0x108] &amp; [func_data-0xe0]; 0xffffffffffffffe0, 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0xb2b -&gt; [func_data-0xe0] = d[func_data-0x120] - d[func_data-0xe0]; 0x0, 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0x4ab -&gt; [func_data-0xe0] = d[func_data-0xe0] &lt;&lt; 0x0; 0x0
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0xd8] = [func_data-0xf0] + 0x1; func_data-0x2a8, rs: func_data-0x2a7
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0xd0] = b[[func_data-0xf0] + 0x0]; func_data-0x2a8, 0x0
+
+// S-box表的第i个元素和上一轮结果相加：a+last_result
+// last_result初始化为0
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0xe8] = d[func_data-0xd0] + d[func_data-0xe8]; 0x0, 0x0, rs: 0x0
+
+// [func_data-0x118]是sub_F736C函数的第3个参数，是一个0x20字节的数组，元素长度为1，这里命名为shuffle_factor_table。
+// 从shuffle_factor_table取(i%0x20)，然后与上一步相加：
+// 得 a+last_result+shuffle_factor_table[i%0x20]
+[=] [Thread 2008]	index: 0x2d -&gt; [func_data-0xc8] = d[func_data-0x120] + (int64)(int)0x1; 0x0, rs: 0x1
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0x128] = d[func_data-0x128] &gt;&gt; 0x1e; 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0xe0] = [func_data-0xe0] + [func_data-0x118]; 0x0, 0x55555587c038, rs: 0x55555587c038
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0xe0] = b[[func_data-0xe0] + 0x0]; 0x55555587c038, 0x48
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0xe8] = d[func_data-0xe0] + d[func_data-0xe8]; 0x48, 0x0, rs: 0x48
+
+// tps_encrypt和tps_decrypt的第一个参数serino，小端序保存在内存中，然后取出一字节与上一步相加：
+// 地 a+last_result+shuffle_factor_table[i%0x20]+serino[i%4]
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0x128] = d[func_data-0x128] + d[func_data-0x120]; 0x0, 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0x9eb -&gt; [func_data-0x128] = [func_data-0xf8] &amp; [func_data-0x128]; 0xfffffffffffffffc, 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0xb2b -&gt; [func_data-0x128] = d[func_data-0x120] - d[func_data-0x128]; 0x0, 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0x4ab -&gt; [func_data-0x128] = d[func_data-0x128] &lt;&lt; 0x0; 0x0
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x128] = [func_data-0x128] + [func_data-0xa0]; 0x0, func_data-0x2ac, rs: func_data-0x2ac
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0x128] = b[[func_data-0x128] + 0x0]; func_data-0x2ac, 0x70
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0x128] = d[func_data-0x128] + d[func_data-0xe8]; 0x70, 0x48, rs: 0xb8
+
+// 上一步结果与0xFF求余
+// 得 last_result = (a+last_result+shuffle_factor_table[i%0x20]+serino[i%4]) &amp; 0xFF
+[=] [Thread 2008]	index: 0x72b -&gt; [func_data-0x120] = (int)d[func_data-0x128] &gt;&gt; 0x1f; 0xb8
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0x120] = d[func_data-0x120] &gt;&gt; 0x18; 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0x120] = d[func_data-0x120] + d[func_data-0x128]; 0x0, 0xb8, rs: 0xb8
+[=] [Thread 2008]	index: 0x9eb -&gt; [func_data-0x120] = [func_data-0x100] &amp; [func_data-0x120]; 0xffffffffffffff00, 0xb8, rs: 0x0
+[=] [Thread 2008]	index: 0xb2b -&gt; [func_data-0xe8] = d[func_data-0x128] - d[func_data-0x120]; 0xb8, 0x0, rs: 0xb8
+[=] [Thread 2008]	index: 0x4ab -&gt; [func_data-0x128] = d[func_data-0xe8] &lt;&lt; 0x0; 0xb8
+
+// S-box表置换
+// tmp = S-box[i]
+// S-box[i] = S-box[last_result]
+// S-box[last_result] = tmp
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x128] = [func_data-0x128] + [func_data-0x110]; 0xb8, func_data-0x2a8, rs: func_data-0x1f0
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0x120] = b[[func_data-0x128] + 0x0]; func_data-0x1f0, 0xb8
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0xf0] + 0x0] = b[func_data-0x120]; func_data-0x2a8, 0xb8
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x128] + 0x0] = b[func_data-0xd0]; func_data-0x1f0, 0x0
+[=] [Thread 2008]	index: 0x92b -&gt; [func_data-0x120] = [func_data-0x130] | [func_data-0xc8]; 0x0, 0x1, rs: 0x1
+
+// 没有遍历到0x256，回调到S-box置换的第一条指令，继续置换
+[=] [Thread 2008]	index: 0x38 -&gt; [func_data-0x128] = [func_data-0x120] &lt; 0x100; 0x1, rs: 0x1
+[=] [Thread 2008]	index: 0x34 -&gt; [func_data-0x130]; 0x0
+						[func_data-0x128]; 0x1
+						[func_data-0x18] = index_table_pointer+4+((int)(0xffde &lt;&lt; 0x10) &gt;&gt; 0xE); 0x5555557e5c80
+						[func_data-0x20] = 2
+[=] [Thread 2008]	index: 0x92b -&gt; [func_data-0xf0] = [func_data-0x130] | [func_data-0xd8]; 0x0, 0x80000000db39, rs: func_data-0x2a7
+						index_table_pointer = [func_data-0x18]; 0x5555557e5bfc
+						[func_data-0x20] = 0
+						[beg] = index_table_pointer
+</code></pre>
+<p>以上逻辑用 C++ 实现如下：</p>
+<pre><code class="language-c++">void Fisher_Yates(unsigned char shuffle_table[SHUFFLE_TABLE_LEN], unsigned int serino) &#123;
+
+    unsigned char shuffle_factor_table[SHUFFLE_FACTOR_TABLE_LEN] = &#123; 
+        0x48, 0xA9, 0xC8, 0x12, 0xCA, 0xFC, 0xD3, 0x5E, 0xB7, 0x61, 0x50, 0x17, 0x68, 0xBA, 0x7E, 0x2E, 
+        0xB9, 0xA2, 0x38, 0x85, 0x35, 0x48, 0x55, 0x6C, 0x2C, 0x38, 0x43, 0x1F, 0x51, 0xD6, 0x30, 0x30 &#125;;
+
+    unsigned char last_result = 0;
+    unsigned char serino_table[] = &#123; serino &amp; 0xFF, (serino &gt;&gt; 8) &amp; 0xFF, (serino &gt;&gt; 16) &amp; 0xFF, (serino &gt;&gt; 24) &amp; 0xFF &#125;;
+
+    for (int i = 0; i &lt; SHUFFLE_TABLE_LEN; ++i) &#123;
+        last_result = (shuffle_factor_table[i % SHUFFLE_FACTOR_TABLE_LEN] + shuffle_table[i] + last_result + serino_table[i % 4]) &amp; 0xFF;
+        unsigned char tmp = shuffle_table[i];
+        shuffle_table[i] = shuffle_table[last_result];
+        shuffle_table[last_result] = tmp;
+        //printf(&quot;exchange: %x -&gt; %x, factor: %x\n&quot;, i, last_result, shuffle_factor_table[i%SHUFFLE_FACTOR_TABLE_LEN]);
+    &#125;
+&#125;
+</code></pre>
+<h3 id="数据加解密"><a class="anchor" href="#数据加解密">#</a> 数据加解密</h3>
+<p>遍历待加解密的数据，i 从 0 到 len (data)-1</p>
+<pre><code>// a = (i+1) &amp; 0xFF
+[=] [Thread 2008]	index: 0x2d -&gt; [func_data-0x128] = d[func_data-0x120] + (int64)(int)0x1; 0x100, rs: 0x101
+[=] [Thread 2008]	index: 0x72b -&gt; [func_data-0x120] = (int)d[func_data-0x128] &gt;&gt; 0x1f; 0x101
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0x120] = d[func_data-0x120] &gt;&gt; 0x18; 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0x120] = d[func_data-0x120] + d[func_data-0x128]; 0x0, 0x101, rs: 0x101
+[=] [Thread 2008]	index: 0x9eb -&gt; [func_data-0x120] = [func_data-0x118] &amp; [func_data-0x120]; 0xffffffffffffff00, 0x101, rs: 0x100
+[=] [Thread 2008]	index: 0xb2b -&gt; [func_data-0x120] = d[func_data-0x128] - d[func_data-0x120]; 0x101, 0x100, rs: 0x1
+[=] [Thread 2008]	index: 0x4ab -&gt; [func_data-0x128] = d[func_data-0x120] &lt;&lt; 0x0; 0x1
+
+// func_data-0xa8为待加解密的数据，这里命名为x
+// 保存当前的字节x[i]到[func_data-0x100]
+[=] [Thread 2008]	index: 0x9 -&gt; [func_data-0xf8] = [func_data-0x100] + 0x1; 0x0, rs: 0x1
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x100] = [func_data-0x100] + [func_data-0xa8]; 0x0, 0x100000, rs: 0x100000
+
+// func_data-0x110保存着S-box的地址
+// 从置换后的S-box取出一字节，index为a，并与上一轮结果相加
+// 得b = S-box[a]+last_result
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x128] = [func_data-0x128] + [func_data-0x110]; 0x1, func_data-0x2a8, rs: func_data-0x2a7
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0xf0] = b[[func_data-0x128] + 0x0]; func_data-0x2a7, 0xa9
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0x108] = d[func_data-0xf0] + d[func_data-0x108]; 0xa9, 0x0, rs: 0xa9
+[=] [Thread 2008]	index: 0x72b -&gt; [func_data-0xe8] = (int)d[func_data-0x108] &gt;&gt; 0x1f; 0xa9
+[=] [Thread 2008]	index: 0xa6b -&gt; [func_data-0xe8] = d[func_data-0xe8] &gt;&gt; 0x18; 0x0, rs: 0x0
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0xe8] = d[func_data-0xe8] + d[func_data-0x108]; 0x0, 0xa9, rs: 0xa9
+[=] [Thread 2008]	index: 0x9eb -&gt; [func_data-0xe8] = [func_data-0x118] &amp; [func_data-0xe8]; 0xffffffffffffff00, 0xa9, rs: 0x0
+[=] [Thread 2008]	index: 0xb2b -&gt; [func_data-0x108] = d[func_data-0x108] - d[func_data-0xe8]; 0xa9, 0x0, rs: 0xa9
+[=] [Thread 2008]	index: 0x4ab -&gt; [func_data-0xe8] = d[func_data-0x108] &lt;&lt; 0x0; 0xa9
+
+// S-box表置换
+// tmp = S-box[a]
+// S-box[a] = S-box[b]
+// S-box[b] = S-box[a]
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0xe8] = [func_data-0xe8] + [func_data-0x110]; 0xa9, func_data-0x2a8, rs: func_data-0x1ff
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0xe0] = b[[func_data-0xe8] + 0x0]; func_data-0x1ff, 0xc1
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x128] + 0x0] = b[func_data-0xe0]; func_data-0x2a7, 0xc1
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0xe8] + 0x0] = b[func_data-0xf0]; func_data-0x1ff, 0xa9
+
+// x[i] = x[i] ^ ((S-box[a] + tmp) &amp; 0xFF)
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0x128] = b[[func_data-0x128] + 0x0]; func_data-0x2a7, 0xc1
+[=] [Thread 2008]	index: 0xcab -&gt; [func_data-0x128] = d[func_data-0xf0] + d[func_data-0x128]; 0xa9, 0xc1, rs: 0x16a
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0xf0] = b[[func_data-0x100] + 0x0]; 0x100000, 0x12
+[=] [Thread 2008]	index: 0x37 -&gt; [func_data-0x128] = [func_data-0x128] &amp; 0xff; 0x16a, rs:0x6a
+[=] [Thread 2008]	index: 0x7 -&gt; [func_data-0x128] = ((1(LL) &lt;&lt; (W10+1)) - 1) &amp; ([func_data-0x128] &gt;&gt; W11); 0x1f, 0x6a, 0x0, rs: 0x6a
+[=] [Thread 2008]	index: 0xc2b -&gt; [func_data-0x128] = [func_data-0x128] + [func_data-0x110]; 0x6a, func_data-0x2a8, rs: func_data-0x23e
+[=] [Thread 2008]	index: 0x30 -&gt; [func_data-0x128] = b[[func_data-0x128] + 0x0]; func_data-0x23e, 0xef
+[=] [Thread 2008]	index: 0x36b -&gt; [func_data-0x128] = [func_data-0x128] ^ [func_data-0xf0]; 0xef, 0x12, rs: 0xfd
+[=] [Thread 2008]	index: 0x2a -&gt; b[[func_data-0x100] + 0x0] = b[func_data-0x128]; 0x100000, 0xfd
+
+// 没有遍历到x的长度，继续遍历
+[=] [Thread 2008]	index: 0x92b -&gt; [func_data-0x100] = [func_data-0x130] | [func_data-0xf8]; 0x0, 0x1, rs: 0x1
+[=] [Thread 2008]	index: 0x1eb -&gt; base_W9_value &lt; base_W8_value: [func_data-0x128] = 1; w8=[func_data-0xb0]=32, w9=[func_data-0x100]=1
+[=] [Thread 2008]	index: 0x34 -&gt; [func_data-0x130]; 0x0
+						[func_data-0x128]; 0x1
+						[func_data-0x18] = index_table_pointer+4+((int)(0xffde &lt;&lt; 0x10) &gt;&gt; 0xE); 0x5555557e5d24
+						[func_data-0x20] = 2
+[=] [Thread 2008]	index: 0x4ab -&gt; [func_data-0x130] = d[func_data-0x130] &lt;&lt; 0x0; 0x0
+						index_table_pointer = [func_data-0x18]; 0x5555557e5ca0
+						[func_data-0x20] = 0
+						[beg] = index_table_pointer
+</code></pre>
+<p>以上逻辑用 C++ 实现如下：</p>
+<pre><code class="language-c++">void encrypt_and_decrypt_data(unsigned char shuffle_table[SHUFFLE_TABLE_LEN], unsigned char* x, int len) &#123;
+
+    unsigned char last_result = 0;
+
+    for (int i = 0; i &lt; len; ++i) &#123;
+
+        int s_i = (i + 1) &amp; 0xFF;
+        unsigned char cur = shuffle_table[s_i];
+
+        // last_result = (last_result + cur) &amp; 0xFF;
+        last_result += cur; // no need to 'and 0xFF', because the type of last_result is unsigned char
+
+        shuffle_table[s_i] = shuffle_table[last_result];
+        shuffle_table[last_result] = cur;
+
+        unsigned char tmp = (cur + shuffle_table[s_i]) &amp; 0xFF;
+        x[i] = x[i] ^ shuffle_table[tmp];
+    &#125;
+&#125;
+</code></pre>
+<h2 id="总结"><a class="anchor" href="#总结">#</a> 总结</h2>
+<p>第一次使用 qiling 来做模拟执行，踩了不少坑。不过这些坑填完了，之后模拟执行就会方便很多。</p>
+<p>libxx.so 的加解密算法很简单，相信大家已经能看出来这个是 RC4，不过稍微有一点魔改，把密钥分成了两部分。</p>
+<p>加解密算法的保护主要还是通过虚拟机来实现的，其中也有一点花指令和动态字符串解密，不过这些在 libxx.so 里都很简单，所以没有细说。</p>
+<p>希望本文可以给想用 qiling 做模拟执行的朋友一些提示，快速过掉 qiling 的一些坑。</p>
+]]></content>
+      <categories>
+        <category>Technology</category>
+        <category>Reverse</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>qiling</tag>
+      </tags>
+  </entry>
 </search>
