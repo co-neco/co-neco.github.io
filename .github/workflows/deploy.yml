@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '20'
 
       - name: Cache NPM dependencies
         uses: actions/cache@v4
@@ -32,9 +32,9 @@ jobs:
           npm install
 
       - name: Generate static files
+        run: hexo generate
+
+      - name: Deploy to github pages
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          git config --global user.name 'coneco'
-          git config --global user.email '1073352334@qq.com'
-          hexo g -d
+        run: hexo d
