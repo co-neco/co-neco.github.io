@@ -37,4 +37,7 @@ jobs:
       - name: Deploy to github pages
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
-        run: hexo d
+        run: |
+          git config --global user.name 'co-neco'
+          git config --global user.email '1073352334@qq.com'
+          hexo d
