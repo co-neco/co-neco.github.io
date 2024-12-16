@@ -9,6 +9,7 @@ on:
 
 env:
   GH_PAT: ${{ secrets.GH_PAT }}
+  GH_PAT_VAR: ${{ GH_PAT_VAR }}
 
 jobs:
   build:
@@ -43,4 +44,5 @@ jobs:
           git config --global user.email '1073352334@qq.com'
           git remote set-url origin https://${{ env.GH_PAT }}@github.com/${{ github.repository }}.git
           git remote -v
+          echo ${{ env.GH_PAT }}
           hexo deploy
