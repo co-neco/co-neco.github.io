@@ -9,7 +9,7 @@ on:
 
 env:
   GH_PAT: ${{ secrets.GH_PAT }}
-  GH_PAT_VAR: ${{ GH_PAT_VAR }}
+  GH_PAT_VAR: ${{ variables.GH_PAT_VAR }}
 
 jobs:
   build:
