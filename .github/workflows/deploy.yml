@@ -32,6 +32,8 @@ jobs:
           npm install
 
       - name: Generate static files
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name 'coneco'
           git config --global user.email '1073352334@qq.com'
