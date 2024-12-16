@@ -31,8 +31,8 @@ jobs:
           npm install hexo-cli -g
           npm install
 
-      - name: Generate static files
-        run: hexo generate
+      # - name: Generate static files
+      #   run: hexo generate
 
       - name: Deploy to github pages
         env:
@@ -40,6 +40,6 @@ jobs:
         run: |
           git config --global user.name 'co-neco'
           git config --global user.email '1073352334@qq.com'
+          echo ${{ secrets.GH_PAT }}
           git remote set-url origin https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
           hexo deploy
-          
