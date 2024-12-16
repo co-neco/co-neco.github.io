@@ -32,4 +32,7 @@ jobs:
           npm install
 
       - name: Generate static files
-        run: hexo g -d
+        run: |
+          git config --global user.name 'coneco'
+          git config --global user.email '1073352334@qq.com'
+          hexo g -d
