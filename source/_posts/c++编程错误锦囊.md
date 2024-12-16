@@ -386,3 +386,55 @@ private:
 // B class implementation
 B::~B(){ }
 ```
+
+## 12 C++ nlohmann::json 获取引用类型
+
+```cpp
+	json a = "aa";
+	const char* c = nullptr;
+	{
+        std::string& b = a.get<std::string>();
+		c = b.c_str();
+	}
+	std::cout << c << "\n";
+```
+
+观察上面这段代码，b获取类型为string json的引用，然后再获取b的字符串指针给变量c。
+
+看似没有问题，可是输出的c的内容是错的。再看下对应的汇编：
+
+```
+	const char* c = nullptr;
+007BB88E  mov         dword ptr [c],0  
+	{
+        std::string& b = a.get<std::string>();
+007BB895  lea         eax,[ebp-60h]  
+007BB898  push        eax  
+007BB899  lea         ecx,[a]  
+007BB89C  call        nlohmann::basic_json<std::map,std::vector,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,bool,__int64,unsigned __int64,double,std::allocator,nlohmann::adl_serializer,std::vector<unsigned char,std::allocator<unsigned char> > >::get<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,0> (0713D4Fh)   << 分配类实例
+007BB8A1  lea         ecx,[ebp-60h]  
+007BB8A4  mov         dword ptr [ebp-3Ch],ecx  
+		c = b.c_str();
+007BB8A7  mov         ecx,dword ptr [ebp-3Ch]  
+007BB8AA  call        std::basic_string<char,std::char_traits<char>,std::allocator<char> >::c_str (071A299h)  
+007BB8AF  mov         dword ptr [c],eax  
+	}
+007BB8B2  lea         ecx,[ebp-60h]  
+007BB8B5  call        std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> > (0714466h)   << 释放类实例
+	std::cout << c << "\n";
+```
+
+从汇编可以看出，a.get\<std::string\>()返回的是一个std::string的类实例，并不是引用，因此当给c赋值的代码块执行完后，返回的std::string类实例就被释放了。
+
+由此可得出nlohmann::json的get方法只能返回临时变量，如果要获取引用，需要使用get_ref方法，如下：
+
+```cpp
+	json a = "aa";
+	const char* c = nullptr;
+	{
+        std::string& b = a.get_ref<std::string&>();
+		c = b.c_str();
+	}
+	std::cout << c << "\n";
+```
+
