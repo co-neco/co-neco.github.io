@@ -1,0 +1,35 @@
+name: Deploy Hexo site
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'  # 每天零点触发一次
+  push:
+    branches:
+      - source
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache
+
+      - name: Install Hexo and dependencies
+        run: |
+          npm install hexo-cli -g
+          npm install
+
+      - name: Generate static files
+        run: hexo g -d
