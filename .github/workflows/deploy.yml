@@ -7,10 +7,6 @@ on:
     branches:
       - source
 
-env:
-  GH_PAT: ${{ secrets.GH_PAT }}
-  GH_PAT_VAR: ${{ variables.GH_PAT_VAR }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,10 +35,10 @@ jobs:
       #   run: hexo generate
 
       - name: Deploy to github pages
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name 'co-neco'
           git config --global user.email '1073352334@qq.com'
-          git remote set-url origin https://${{ env.GH_PAT }}@github.com/${{ github.repository }}.git
-          git remote -v
-          echo ${{ env.GH_PAT }}
+          git remote set-url origin https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
           hexo deploy
