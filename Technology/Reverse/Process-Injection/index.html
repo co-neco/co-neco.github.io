@@ -1,0 +1,794 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="process injection,Windows Internals" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Reverse/Process-Injection/">
+
+
+
+  <title>
+Process_Injection - Reverse - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Process_Injection
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-02-14 19:52:13">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-02-14T19:52:13+08:00">2022-02-14</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/58.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/35.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/66.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/11.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/42.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/29.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Reverse/" itemprop="item" rel="index" title="分类于 Reverse"><span itemprop="name">Reverse</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Reverse/Process-Injection/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="高级进程注入总结"><a href="#高级进程注入总结" class="headerlink" title="高级进程注入总结"></a>高级进程注入总结</h1><p>前几天看玄武的“每日安全”板块，发现了一篇关于<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL1JlZFRlYW1PcGVyYXRpb25zL0FkdmFuY2VkLVByb2Nlc3MtSW5qZWN0aW9uLVdvcmtzaG9w">进程注入</span>的文章，之前了解过一些相关的技术，不过是零散的。看到文章总结的挺详细的，且各种方法的异同细节容易忘，于是就想着总结一下各种<code>进程注入</code>的异同和优缺点，因此有了本文。</p>
+<blockquote>
+<ul>
+<li>关于常见的进程注入方法，请参考<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vTGl0dGxlSGFubi9wLzYzMzY5NTAuaHRtbA==">这个</span>和<span class="exturl" data-url="aHR0cHM6Ly93d3cuZWxhc3RpYy5jby9jbi9ibG9nL3Rlbi1wcm9jZXNzLWluamVjdGlvbi10ZWNobmlxdWVzLXRlY2huaWNhbC1zdXJ2ZXktY29tbW9uLWFuZC10cmVuZGluZy1wcm9jZXNz">这个</span>，本文将重点描述值得留意的方法（比如Module Stomping），和一些思路新颖的方法。</li>
+<li>以下描述的方法在<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL1JlZFRlYW1PcGVyYXRpb25zL0FkdmFuY2VkLVByb2Nlc3MtSW5qZWN0aW9uLVdvcmtzaG9w">进程注入</span>这个仓库都能找到。</li>
+</ul>
+</blockquote>
+<h2 id="进程注入简介"><a href="#进程注入简介" class="headerlink" title="进程注入简介"></a>进程注入简介</h2><p>进程注入就是将代码注入到另一个进程中，shellcode注入和DLL注入都属于进程注入。</p>
+<p>进程注入的作用是隐藏自身或者利用另一个进程的权限做一些不好的事情^_^，比如病毒等恶意程序注入到一个正常的进程，以此隐藏自己。</p>
+<p>进程注入的方法非常之多，很多与DLL注入有关，比如注册表（Image File Execution Options）、DLL劫持、输入法、COM、LSP劫持（LayerService Provider，与winsock有关）…</p>
+<p>除了DLL注入，还有shellcode注入，因为shellcode更小，所以shellcode的使用也更加多样。</p>
+<p>2017年，在黑客大会上Eugene Kogan和Tal Liberman又分享了更加隐蔽和特别的方法，比如Process Doppelganging。那么接下来就开始进程注入方法的介绍。</p>
+<h2 id="Module-Stomping"><a href="#Module-Stomping" class="headerlink" title="Module Stomping"></a>Module Stomping</h2><p>该方法通过在目标进程中加载一个合法DLL，然后将shellcode或恶意DLL覆写到这个合法DLL的地址空间里。</p>
+<p>伪代码如下（省略错误检查）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">HANDLE hTargetHandle = <span class="built_in">OpenProcess</span>(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_ALL_ACCESS | PROCESS_SUSPEND_RESUME, FALSE, targetPid);</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Use OpenProcess + VirtualAllocEx + CreateRemoteThread(the traditional dll injection method)</span></span><br><span class="line"><span class="built_in">injectLoadLibrary</span>(hTargetHandle, legitimateDll);</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (has executable section)</span><br><span class="line">    <span class="built_in">BypassCFG</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Copy every malware dll&#x27;s section into legitimate dll&#x27;s corresponding sections within the target process address space.</span></span><br><span class="line"><span class="keyword">for</span>(section : malwareDll)&#123;</span><br><span class="line">    <span class="built_in">WriteToMudole</span>(hTargetHandle, legitimateDllSection, section, section_size...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">RebuildImportTable</span>();</span><br><span class="line"><span class="built_in">RebuildRelocationTable</span>();</span><br><span class="line"></span><br><span class="line"><span class="built_in">callTLSCallback</span>();</span><br><span class="line"></span><br><span class="line"><span class="built_in">CreateRemoteThread</span>(malwareDllEntryPoint);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过该方法可以将恶意代码隐藏，使得Defender扫描目标进程空间时不会发现恶意代码的存在（因为恶意代码潜伏在合法的模块里）。</p>
+<p>该方法有两个值得关注的点：</p>
+<ul>
+<li><p>先在目标进程加载一个合法DLL，以此隐藏恶意代码。</p>
+</li>
+<li><p>它用了<code>SetProcessValidCallTargets</code>，该方法可以bypass开启CFG的程序。</p>
+</li>
+</ul>
+<blockquote>
+<p>与CFG(control flow guard)相关的知识可参考<code>MSDN</code>或者<code>System Internals 7th part1</code> security chapter。</p>
+</blockquote>
+<p>不过该方法还是有明显的不足，比如会调用显眼的VirtualAllocEx、WriteProcessMemory、VirtualProtectEx和CreateRemoteThread，通常的EDR(endpoint detection and response)都能检测出可能的恶意行为。</p>
+<blockquote>
+<p>该方法的详细细节可参考这篇<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmYtc2VjdXJlLmNvbS9oaWRpbmctbWFsaWNpb3VzLWNvZGUtd2l0aC1tb2R1bGUtc3RvbXBpbmcv">文章</span>。</p>
+</blockquote>
+<h2 id="Process-Hollowing"><a href="#Process-Hollowing" class="headerlink" title="Process Hollowing"></a>Process Hollowing</h2><p>该方法也比较经典，并被广泛使用，其基本流程如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CreateProcess</span>(“svchost.exe” , …, CREATE_SUSPENDED, …);</span><br><span class="line"><span class="built_in">NtUnmapViewOfSection</span>(…) <span class="function"><span class="keyword">and</span> <span class="title">VirtualAllocEx</span><span class="params">(…)</span></span>;</span><br><span class="line">For each section:</span><br><span class="line">	<span class="built_in">WriteProcessMemory</span>(..., EVIL_EXE, …);</span><br><span class="line">Relocate Image*;</span><br><span class="line">Set <span class="keyword">new</span> base address in the NT header of EVIL_EXE;</span><br><span class="line"><span class="built_in">SetThreadContext</span>(…);</span><br><span class="line"><span class="built_in">ResumeThread</span>(…);</span><br></pre></td></tr></table></figure>
+
+<p>该方法和<code>Module Stomping</code>很像，都是替换掉了一个模块，不过有以下三个不同：</p>
+<ul>
+<li><code>Process Hollowing</code>替换的模块是目标EXE程序</li>
+<li>该方法使用NtUnmapViewOfSection将EXE程序解除映射</li>
+<li>用ResumeThread来启动恶意程序的入口点</li>
+</ul>
+<blockquote>
+<p>该方法的详细实现可参考<span class="exturl" data-url="aHR0cHM6Ly93d3cuaXJlZC50ZWFtL29mZmVuc2l2ZS1zZWN1cml0eS9jb2RlLWluamVjdGlvbi1wcm9jZXNzLWluamVjdGlvbi9wcm9jZXNzLWhvbGxvd2luZy1hbmQtcGUtaW1hZ2UtcmVsb2NhdGlvbnMjYWxsb2NhdGluZy1tZW1vcnktaW4tZGVzdGluYXRpb24taW1hZ2U=">这个</span>。</p>
+</blockquote>
+<h2 id="Process-Doppelganging"><a href="#Process-Doppelganging" class="headerlink" title="Process Doppelganging"></a>Process Doppelganging</h2><p>接下来描述的几个进程注入方法使用了不同的注入思路，它们之间只有细微的差别，最后会总结它们的异同点。</p>
+<p>该方法是2017年在黑客大会介绍的，演讲者首先说明了Process Hollowing涉及的敏感操作和一些不足：</p>
+<ul>
+<li><p>Unmap目标进程的EXE模块（非常可疑），目前的的EDR一般都有Unmap检查。</p>
+</li>
+<li><p>如果不Unmap，而是直接覆写程序，那么覆写地址的页属性就不是共享的，也很可疑。</p>
+<blockquote>
+<p>页属性共享涉及到操作系统的共享内存机制，这里简单描述一下：</p>
+<p>为了节省内存，当一个模块加载进内存时，比如ntdll.dll，操作系统会看该模块是否已被其他进程加载过了（即已经在物理内存中了），如果在，那么操作系统只需要简单地将该物理区域映射到需要加载模块的进程中。因此，这些模块对应的内存是共享的，这些模块内存对应的进程pte(page table entry)会指向一个叫prototypePTE的结构，该结构会指向这些共享的物理内存。</p>
+<p>不过，如果我们向模块，比如ntdll.dll，的数据段写入数据，那么这时操作系统就会对ntdll.dll的数据段分配一段物理内存，然后当前进程对应数据段的pte就不会再指向prototypePTE，而是指向操作系统分配的物理内存。</p>
+<p>关于内存共享机制的详细描述，读者看参考Windows Internals 7th，第五章的Page fault handling部分。</p>
+</blockquote>
+</li>
+<li><p>直接覆写程序不够好，那就Unmap后再Remap：</p>
+<ul>
+<li><p>如果remap时的类型不是IMAGE，通过检查节的类型可判定是否可疑</p>
+</li>
+<li><p>如果remap时的类型是IMAGE，这时可疑的点就不多了。不过因为<code>Process Hollowing</code>用SetThreadContext修改了初始线程的执行入口点（ETHREAD.Win32StartAddress），那么我们可以检测其执行入口点是否是ETHREAD.Win32StartAddress。如果不是，那值得怀疑，并且我们可以检测其执行入口点对应的文件名，这样可进一步判定这段内存是否是可疑payload。</p>
+<blockquote>
+<p> 检测文件名可通过该字段查看：VAD(ETHREAD.Win32StartAddress).Subsection.ControlArea.FilePointer。</p>
+</blockquote>
+</li>
+</ul>
+<p>另外，如果要使用Remap，那就需要一个section，打开section需要一个文件句柄，也就是说Remap需要一个落地的文件，因此采取<code>process hollowing</code>时，攻击者很少会使用Remap的方式。</p>
+</li>
+</ul>
+<p>综上所述，Process Hollowing已经不是那么好了，那还有什么其他更隐蔽的方法吗？</p>
+<p>于是演讲者介绍了Process Doppelganging，该方法由<code>CreateFileTransacted</code>API开始。由于其内容较多，且不易描述，读者可查看这个<span class="exturl" data-url="aHR0cHM6Ly93d3cuYmxhY2toYXQuY29tL2RvY3MvZXUtMTcvbWF0ZXJpYWxzL2V1LTE3LUxpYmVybWFuLUxvc3QtSW4tVHJhbnNhY3Rpb24tUHJvY2Vzcy1Eb3BwZWxnYW5naW5nLnBkZg==">PPT</span>和这个<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tLzNnc3R1ZGVudC9JbmplY3QtZGxsLWJ5LVByb2Nlc3MtRG9wcGVsZ2FuZ2luZw==">源码</span>和这篇<span class="exturl" data-url="aHR0cHM6Ly9oc2hyemQud29yZHByZXNzLmNvbS8yMDE3LzEyLzE4L3Byb2Nlc3MtZG9wcGVsZ2FuZ2luZy1hLW5ldy13YXktdG8taW1wZXJzb25hdGUtYS1wcm9jZXNzLw==">文章</span>，这些资料讲得非常详细。</p>
+<p>这里归纳了简要的流程：</p>
+<ul>
+<li><p>创建一个transaction（事务）</p>
+</li>
+<li><p>打开原程序句柄（通过CreateFileTransacted）</p>
+</li>
+<li><p>向原程序句柄写入恶意代码，根据此时的文件内容，创建一个section</p>
+</li>
+<li><p>rollback（回滚）之前的写操作</p>
+<blockquote>
+<p>虽然回滚了文件的内容，但已生成的section映射的内容是修改后的，即内容是payload，解释可参考<code>Process Herpaderping</code>小节。</p>
+</blockquote>
+</li>
+<li><p>通过刚刚创建的section，创建进程（通过NtCreateProcessEx）</p>
+</li>
+<li><p>准备参数到目标进程（跨进程）</p>
+</li>
+<li><p>创建初始线程(NtCreateThreadEx)，之后唤醒线程（NtResumeThread）</p>
+</li>
+</ul>
+<p>以上流程可抽象如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transact -&gt; write -&gt; map -&gt; rollback -&gt; execute</span><br></pre></td></tr></table></figure>
+
+<p>该方法的新颖点在于通过Windows提供的<code>事务</code>API，将恶意代码写入打开的文件，并根据这个文件句柄创建一个section，之后回滚写入操作，最后再根据创建的section创建进程。这样可以隐藏执行的恶意代码，虽然你查看该进程时（比如procExp），其显示的是原程序的信息，但其真正执行的代码是恶意代码。同时，它比Process Hollowing更隐蔽，因为它不用Unmap，也不需要Remap，它就像正常启动一个进程一样。</p>
+<p>最近，我编译了这份代码，发现win10、win8.1和win7都失败了，说明windows已经patch了该方法，以下是win10测试的结果：</p>
+<ul>
+<li><p>如果覆盖用的是非PE文件，NtCreateSection返回错误，提示无效的PE。</p>
+</li>
+<li><p>如果覆盖用的是PE文件，创建进程成功，不过我们在procExp中看到的是名叫<code>System Idle Process</code>，观察该进程信息，其提示“请求的操作是在不再活动的事务的上下文中进行的”。</p>
+</li>
+</ul>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220216102919516.png" alt="image-20220216102919516"></p>
+<p>虽然该方法已经失效了，不过它的思路很好。之后介绍的<code>Process Herpaderping</code>借鉴了该方法，且目前也是有效的。</p>
+<blockquote>
+<p>可能我实践时，代码的参数没设置好，所以没有复现demo里的结果。从现在的恶意攻击看，基于<code>Process Doppelganging</code>的攻击很少，不知道是不是因为被patch了。不管怎么说，该方法是一个很好的起点。</p>
+<p>关于实例demo展示，读者可参考<span class="exturl" data-url="aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1UOXBXcVlHSHFMTSZ0PTI3cw==">这个</span>。</p>
+<p>关于该方法的描述详情，读者可参考这篇<span class="exturl" data-url="aHR0cHM6Ly9oc2hyemQud29yZHByZXNzLmNvbS8yMDE3LzEyLzE4L3Byb2Nlc3MtZG9wcGVsZ2FuZ2luZy1hLW5ldy13YXktdG8taW1wZXJzb25hdGUtYS1wcm9jZXNzLw==">文章</span>。</p>
+</blockquote>
+<h2 id="Transacted-Hollowing"><a href="#Transacted-Hollowing" class="headerlink" title="Transacted Hollowing"></a>Transacted Hollowing</h2><p>该方法借鉴了<code>Process Doppelganging</code>的<code>事务</code>特性和<code>Process Hollowing</code>启动进程的便捷性。通过<code>事务</code>特性，可以更好的隐藏恶意代码；通过便捷性，可以免去<code>Process Doppelganging</code>创建进程、准备进程参数的复杂过程。</p>
+<p>该方法的大致流程是：</p>
+<ul>
+<li>采用<code>Process Doppelganging</code>的前半段，transact -&gt; write -&gt; map -&gt; rollback</li>
+<li>Remap恶意代码的section到目标进程</li>
+<li>采用<code>process hollowing</code>的技巧，通过SetThreadContext和ResumeThread的执行恶意代码</li>
+</ul>
+<p>在<code>Process Doppelganging</code>小节，我们讲到process hollowing如果要Remap，需要有一个落地的文件。通过事务的回滚，可以免去这个落地的文件。因此，我们可以把<code>Transacted Hollowing</code>当做是增强版的<code>process hollowing</code>。</p>
+<blockquote>
+<ul>
+<li><p>关于该方法的代码，可参考这个<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhc2hlcmV6YWRlL3RyYW5zYWN0ZWRfaG9sbG93aW5n">仓库</span>。</p>
+</li>
+<li><p>关于该方法的描述细节，可参考这篇<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLm1hbHdhcmVieXRlcy5jb20vdGhyZWF0LWFuYWx5c2lzLzIwMTgvMDgvcHJvY2Vzcy1kb3BwZWxnYW5naW5nLW1lZXRzLXByb2Nlc3MtaG9sbG93aW5nX29zaXJpcy8=">文章</span>。</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="Process-Ghosting"><a href="#Process-Ghosting" class="headerlink" title="Process Ghosting"></a>Process Ghosting</h2><p>讲该方法之前，我们先说一下背景知识。</p>
+<blockquote>
+<p>在windows操作系统里，如果我们映射了可执行程序，那么可执行程序就不应该被修改，如果尝试修改，则返回错误。但这也是一个限制，即只针对映射过的可执行程序不能被修改，也就是说我们可以打开一个文件、对其设置删除标志、写payload到文件，之后映射文件，最后删除这个文件。</p>
+<blockquote>
+<p>注：如果我们以GENERIC_READ和GENERIC_WRITE打开文件，那么映射可执行程序之后，我们还是可以修改文件，这在<code>Process Herpaderping</code>将会体现。</p>
+</blockquote>
+</blockquote>
+<p>该方法与<code>Process Doppelganging</code>相似，它们的目的都是做的比<code>process hollowing</code>更隐蔽，该方法与</p>
+<p><code>Process Doppelganging</code>从实现上几乎一样，唯一的区别就是处理不落地文件的方式：</p>
+<ul>
+<li><p><code>Process Doppelganging</code>：通过<code>事务</code>API打开文件，修改文件（写入payload），创建section，再回滚修改的内容。</p>
+</li>
+<li><p><code>Process Ghosting</code>：打开文件，设置删除标志，修改文件（写入payload），创建section，删除文件。这样进程运行时，反病毒软件打不开文件，因此无法做检测。</p>
+<blockquote>
+<p>调用GetProcessImageFileName会返回空字符串。</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li><p>代码可参考这个<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhc2hlcmV6YWRlL3Byb2Nlc3NfZ2hvc3Rpbmc=">仓库</span>。</p>
+</li>
+<li><p>关于该方法的描述细节，可参考这篇<span class="exturl" data-url="aHR0cHM6Ly93d3cuZWxhc3RpYy5jby9ibG9nL3Byb2Nlc3MtZ2hvc3RpbmctYS1uZXctZXhlY3V0YWJsZS1pbWFnZS10YW1wZXJpbmctYXR0YWNr">文章</span>。</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="Ghostly-Hollowing"><a href="#Ghostly-Hollowing" class="headerlink" title="Ghostly Hollowing"></a>Ghostly Hollowing</h2><p>了解完<code>Process Ghosting</code>，我们来看<code>Ghostly Hollowing</code>。与<code>Transacted Hollowing</code>类似，该方法也是为了免去创建进程和准备进程参数的复杂过程。于是可以得到以下结论：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219142624707.png" alt="image-20220219142624707"></p>
+<blockquote>
+<ul>
+<li>关于该方法的实现，可参考这个<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhc2hlcmV6YWRlL3RyYW5zYWN0ZWRfaG9sbG93aW5n">仓库</span>。</li>
+</ul>
+</blockquote>
+<h2 id="Process-Herpaderping"><a href="#Process-Herpaderping" class="headerlink" title="Process Herpaderping"></a>Process Herpaderping</h2><p>这是本文描述的最后一个方法，因此我们先来一个方法小总结：</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Technique</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hollowing(including <code>Module Stomping</code>)</td>
+<td><code>map or VirtualAlloc -&gt; SetThreadContext -&gt; ResumeThread</code></td>
+</tr>
+<tr>
+<td>Doppelganging</td>
+<td><code>transact -&gt; write -&gt; map -&gt; rollback -&gt; execute</code></td>
+</tr>
+<tr>
+<td>Herpaderping</td>
+<td><code>write -&gt; map -&gt; modify -&gt; execute -&gt; close</code></td>
+</tr>
+<tr>
+<td>Ghosting</td>
+<td><code>setDeleteFlag -&gt; map -&gt; delete -&gt; execute</code></td>
+</tr>
+<tr>
+<td>Transacted Hollowing</td>
+<td><code>transact -&gt; write -&gt; map -&gt; rollback</code> + Hollowing</td>
+</tr>
+<tr>
+<td>Ghostly Hollowing</td>
+<td><code>setDeleteFlag -&gt; map -&gt; delete</code> + Hollowing</td>
+</tr>
+</tbody></table>
+<p>该方法的原理、实现都和<code>Ghosting</code>、<code>Doppelganging</code>类似，读者可以把<code>Ghosting</code>和<code>Herpaderping</code>都理解为<code>Doppelganging</code>的变体。<code>Ghosting</code>是删除文件，<code>Doppelganging</code>是替换文件的内容（不替换文件），<code>Herpaderping</code>是替换文件和文件内容，其结果是反病毒软件检测执行的进程时，其打开的程序文件内容是我们设定的（比如lsass.exe，包括文件签名）。</p>
+<p><code>Herpaderping</code>的流程如下：</p>
+<ul>
+<li>打开一个可读可写的文件</li>
+<li>向文件写入payload（calc.exe），创建section</li>
+<li>创建进程A（和Doppelganging一样，使用NtCreateProcessEx）</li>
+<li>向同一个文件写入伪装的程序，比如lsass.exe</li>
+<li>关闭并保存文件为output.exe（文件保存至磁盘，磁盘的内容是lsass.exe）</li>
+<li>准备进程参数，创建线程（这时payload开始执行）</li>
+</ul>
+<p>一个有趣的现象是如果我们不关闭执行payload（计算器）的进程A，那么双击output.exe时会启动另一个进程B，弹出另一个计算器。其原因是进程A有一个section，这个section指向的文件路径是output.exe，当我们启动进程B时，操作系统发现路径一样，于是使用了进程A的section对应的SectionObjectPointer，以此实现文件的共享，也就是使用已经映射到内存的output.exe来启动另一个计算器。但如果我们打开output.exe文件，会发现内容又是lsass.exe的。因为文件映射到内存包括data和image类别，而读文件是data类，所以data类对应的内存和image类对应的内存是分开的，也就是说操作系统的内存有两份output.exe文件的数据。下面贴一张关于进程A的section对应的SectionObject示意图。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219143458739.png" alt="image-20220219143458739"></p>
+<p><strong>这里我们通过windbg讲述刚刚的解释</strong>。首先拿到herpaderping的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2p4eS1zL2hlcnBhZGVycGluZw==">demo源码</span>，用visual studio编译完成后，我们启动一个windbg，启动命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\windbg.exe&quot;</span> ProcessHerpaderping.exe <span class="string">&quot;E:\my_knowledge\Reverse\Tools\CFF_Explorer\CFF Explorer.exe&quot;</span> E:\tmp\cpp_test_ano.exe</span><br></pre></td></tr></table></figure>
+
+<p>其中CFF Explorer.exe是要执行的payload（实际利用场景下，一般没有这样的落地文件，payload是恶意进程解密出来的），cpp_test_ano.exe是一个合法的可读可写文件。</p>
+<p>启动命令后，我们在herpaderp.cpp的142行下断点：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wil::unique_handle sectionHandle;</span><br><span class="line"><span class="keyword">auto</span> status = <span class="built_in">NtCreateSection</span>(&amp;sectionHandle,</span><br><span class="line">                              SECTION_ALL_ACCESS,</span><br><span class="line">                              <span class="literal">nullptr</span>,</span><br><span class="line">                              <span class="literal">nullptr</span>,</span><br><span class="line">                              PAGE_READONLY,</span><br><span class="line">                              SEC_IMAGE,</span><br><span class="line">                              targetHandle.<span class="built_in">get</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">//windbg命令如下：</span></span><br><span class="line">    bp `ProcessHerpaderping!herpaderp.cpp:<span class="number">142</span>`</span><br></pre></td></tr></table></figure>
+
+<p>142行是创建section，类型是SEC_IMAGE。在创建section之前，我们观察一下目标文件（targetHandle）的句柄：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219123625433.png" alt="image-20220219123625433"></p>
+<p>打开管理员权限的windbg，启动本地内核调试，查看这个句柄，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">lkd&gt; !process <span class="number">0</span> <span class="number">1</span> ProcessHerpaderping.exe</span><br><span class="line">PROCESS ffffac0f0ede7080</span><br><span class="line">...</span><br><span class="line">lkd&gt; .process /p ffffac0f0ede7080</span><br><span class="line">Implicit process is now ffffac0f`<span class="number">0</span>ede7080</span><br><span class="line">lkd&gt; !handle ac</span><br><span class="line">...</span><br><span class="line"><span class="number">00</span>ac: Object: ffffac0f2281a300  GrantedAccess: <span class="number">001201</span>9f (Protected) (Audit) Entry: ffff818476fff2b0</span><br><span class="line">Object: ffffac0f2281a300  Type: (ffffac0efc2d4d20) File</span><br><span class="line">    ObjectHeader: <span class="built_in">ffffac0f2281a2d0</span> (<span class="keyword">new</span> version)</span><br><span class="line">        HandleCount: <span class="number">1</span>  PointerCount: <span class="number">32655</span></span><br><span class="line">        Directory Object: <span class="number">00000000</span>  Name: \tmp\cpp_test_ano.exe &#123;HarddiskVolume2&#125;</span><br><span class="line">lkd&gt; dt nt!_FILE_OBJECT ffffac0f2281a300</span><br><span class="line">...</span><br><span class="line">   <span class="number">+0x028</span> SectionObjectPointer : <span class="number">0xffffac0f</span>`<span class="number">066</span>a6358 _SECTION_OBJECT_POINTERS</span><br><span class="line">...</span><br><span class="line">lkd&gt; dx -id <span class="number">0</span>,<span class="number">0</span>,ffffac0f0ede7080 -<span class="built_in">r1</span> ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)<span class="number">0xffffac0f066a6358</span>)</span><br><span class="line">((ntkrnlmp!_SECTION_OBJECT_POINTERS *)<span class="number">0xffffac0f066a6358</span>)                 : <span class="number">0xffffac0f066a6358</span> [Type: _SECTION_OBJECT_POINTERS *]</span><br><span class="line">    [<span class="number">+0x000</span>] DataSectionObject : <span class="number">0xffffac0f0727b1d0</span> [Type: <span class="type">void</span> *]</span><br><span class="line">    [<span class="number">+0x008</span>] SharedCacheMap   : <span class="number">0xffffac0f07911dc0</span> [Type: <span class="type">void</span> *]</span><br><span class="line">    [<span class="number">+0x010</span>] ImageSectionObject : <span class="number">0x0</span> [Type: <span class="type">void</span> *]</span><br></pre></td></tr></table></figure>
+
+<p>因为我们打开并写了目标文件，所以SectionObjectPointer的DataSectionObject不为空，即文件内容映射到了内存。</p>
+<p>我们单步步过142行，再观察一下SectionObjectPointer：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lkd&gt; dx -id <span class="number">0</span>,<span class="number">0</span>,ffffac0f0ede7080 -<span class="built_in">r1</span> ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)<span class="number">0xffffac0f066a6358</span>)</span><br><span class="line">((ntkrnlmp!_SECTION_OBJECT_POINTERS *)<span class="number">0xffffac0f066a6358</span>)                 : <span class="number">0xffffac0f066a6358</span> [Type: _SECTION_OBJECT_POINTERS *]</span><br><span class="line">    [<span class="number">+0x000</span>] DataSectionObject : <span class="number">0xffffac0f0727b1d0</span> [Type: <span class="type">void</span> *]</span><br><span class="line">    [<span class="number">+0x008</span>] SharedCacheMap   : <span class="number">0xffffac0f07911dc0</span> [Type: <span class="type">void</span> *]</span><br><span class="line">    [<span class="number">+0x010</span>] ImageSectionObject : <span class="number">0xffffac0f0ebd3720</span> [Type: <span class="type">void</span> *]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>现在目标文件以Image（可执行程序）这一类别加载进了内存，因此内存中现在有两份目标文件，一份是data类的，一份是image类的。注意这两类现在对应的内容是一样的，之后<code>ProcessHerpaderping</code>会向目标文件再写入数据，即修改data类所在的内存，然后关闭目标文件的句柄。此时image类和data类的内容就不同了，但在windows的设计里这是不应该出现的，详情可参考下面推荐的书。</p>
+<p>执行<code>ProcessHerpaderping</code>的剩下部分，它会等待创建的cpp_test_ano.exe进程退出（实际执行的是CFF Explorer.exe）。这时，如果我们用二进制编辑器打开cpp_test_ano.exe，会发现全是明文数据，不是可执行代码：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/process_injection/image-20220219133338725.png" alt="image-20220219133338725"></p>
+<p>如果我们双击cpp_test_ano.exe，会发现又弹出了一个CFF Explorer.exe进程，这时观察我们刚刚创建的进程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">lkd&gt; !process <span class="number">0</span> <span class="number">1</span> cpp_test_ano.exe</span><br><span class="line">PROCESS ffffac0f2b92f080</span><br><span class="line">...</span><br><span class="line"><span class="function">PROCESS <span class="title">ffffac0f1ccb6080</span><span class="params">(第二个是刚刚创建的进程)</span></span></span><br><span class="line"><span class="function">...</span></span><br><span class="line"><span class="function">lkd&gt; dt nt!_EPROCESS sectionobject imagefilepointer ffffac0f1ccb6080</span></span><br><span class="line"><span class="function">   +0x3c0 SectionObject    : <span class="number">0xffff8184</span>`<span class="number">7</span>b06ecf0 Void</span></span><br><span class="line"><span class="function">   <span class="number">+0x448</span> ImageFilePointer : <span class="number">0xffffac0f</span>`<span class="number">159</span>a2180 _FILE_OBJECT</span></span><br><span class="line"><span class="function">lkd&gt; dx -id <span class="number">0</span>,<span class="number">0</span>,ffffac0f0ede7080 -r1 ((ntkrnlmp!_FILE_OBJECT *)<span class="number">0xffffac0f159a2180</span>)</span></span><br><span class="line"><span class="function">((ntkrnlmp!_FILE_OBJECT *)<span class="number">0xffffac0f159a2180</span>)                 : <span class="number">0xffffac0f159a2180</span> [Type: _FILE_OBJECT *]</span></span><br><span class="line"><span class="function">    [<span class="number">+0x028</span>] SectionObjectPointer : <span class="number">0xffffac0f066a6358</span> [Type: _SECTION_OBJECT_POINTERS *]</span></span><br><span class="line"><span class="function">lkd&gt; dx -r1 ((ntkrnlmp!_SECTION_OBJECT_POINTERS *)<span class="number">0xffffac0f066a6358</span>)</span></span><br><span class="line"><span class="function">((ntkrnlmp!_SECTION_OBJECT_POINTERS *)<span class="number">0xffffac0f066a6358</span>)                 : <span class="number">0xffffac0f066a6358</span> [Type: _SECTION_OBJECT_POINTERS *]</span></span><br><span class="line"><span class="function">    [<span class="number">+0x000</span>] DataSectionObject : <span class="number">0xffffac0f0727b1d0</span> [Type: void *]</span></span><br><span class="line"><span class="function">    [<span class="number">+0x008</span>] SharedCacheMap   : <span class="number">0x0</span> [Type: void *]</span></span><br><span class="line"><span class="function">    [<span class="number">+0x010</span>] ImageSectionObject : <span class="number">0xffffac0f0ebd3720</span> [Type: void *]</span></span><br></pre></td></tr></table></figure>
+
+<p>刚创建的进程对应的ImageSectionObject和之前在<code>ProcessHerpaderping</code>进程看到的结果一样，代表刚创建的进程和<code>ProcessHerpaderping</code>启动的cpp_test_ano.exe进程共享了image类对应的内存，共享了对应的CFF Explorer程序代码。</p>
+<blockquote>
+<p>关于上面的解读，这涉及到windows操作系统对section的管理，比如文件的映射细节和文件的缓存管理，有兴趣的读者可以参考 <code>Windows Internals 7th part1</code> 第五章内存管理的section小节和<code>Windows Internals 7th part2</code>第十一章缓存管理器部分。</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>该方法的源码可参考这个<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2p4eS1zL2hlcnBhZGVycGluZw==">仓库</span>。</li>
+<li>该方法的作者用windbg进一步分析了共享的更多细节，可参考这个<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2p4eS1zL2hlcnBhZGVycGluZy9ibG9iL21haW4vcmVzL0RpdmluZ0RlZXBlci5tZA==">文档</span>。</li>
+</ul>
+</blockquote>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>虽然进程注入在不断更新，不过安全厂商也在与时俱进，目前很多安全厂商都有这些方法的监控了（比如上面提到的分析文章，大部分是安全厂商写的）。从<code>Process Doppelganging</code>开始，我们能看到新的方法都是源于操作系统的不足，并慢慢衍生，可能以后的进程注入会越来越底层，越来越复杂。</p>
+<p>本文涉及的细节很多，不能面面俱到，推荐读者看本文各个小节的推荐文章，最后再来看本文，相信读者会有更多的收获。</p>
+
+      <div class="tags">
+          <a href="/tags/process-injection/" rel="tag"><i class="ic i-tag"></i> process injection</a>
+          <a href="/tags/Windows-Internals/" rel="tag"><i class="ic i-tag"></i> Windows Internals</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Reverse/Process-Injection/" class="item leancloud_visitors" data-flag-title="Process_Injection" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Reverse/Process-Injection/" title="Process_Injection">https://conecoy.cn/Technology/Reverse/Process-Injection/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;61.jpg" title="COM学习笔记">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>COM学习笔记</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;17.jpg" title="混淆简介">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Obfuscation</span>
+  <h3>混淆简介</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">高级进程注入总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">进程注入简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Module-Stomping"><span class="toc-number">1.2.</span> <span class="toc-text">Module Stomping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Process-Hollowing"><span class="toc-number">1.3.</span> <span class="toc-text">Process Hollowing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Process-Doppelganging"><span class="toc-number">1.4.</span> <span class="toc-text">Process Doppelganging</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Transacted-Hollowing"><span class="toc-number">1.5.</span> <span class="toc-text">Transacted Hollowing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Process-Ghosting"><span class="toc-number">1.6.</span> <span class="toc-text">Process Ghosting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ghostly-Hollowing"><span class="toc-number">1.7.</span> <span class="toc-text">Ghostly Hollowing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Process-Herpaderping"><span class="toc-number">1.8.</span> <span class="toc-text">Process Herpaderping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">1.9.</span> <span class="toc-text">Conclusion</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Reverse/StackUnwind/" rel="bookmark" title="StackUnwind">StackUnwind</a></li><li><a href="/Technology/Reverse/VMP-anti-vmware/" rel="bookmark" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></li><li><a href="/Technology/Reverse/Mechanism-of-LFH/" rel="bookmark" title="Mechanism_of_LFH">Mechanism_of_LFH</a></li><li><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" rel="bookmark" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></li><li class="active"><a href="/Technology/Reverse/Process-Injection/" rel="bookmark" title="Process_Injection">Process_Injection</a></li><li><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" rel="bookmark" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></li><li><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="bookmark" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">单例模式的好与坏</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/Study-of-C-Coding-Standards/" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" title="C++安全编程规范笔记">C++安全编程规范笔记</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Reverse/Process-Injection/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

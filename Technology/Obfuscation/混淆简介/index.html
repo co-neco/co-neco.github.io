@@ -1,0 +1,707 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Introduction" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/">
+
+
+
+  <title>
+混淆简介 - Obfuscation - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">混淆简介
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-11-03 09:25:33">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-11-03T09:25:33+08:00">2022-11-03</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/68.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/41.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/46.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/62.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/63.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/64.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Obfuscation/" itemprop="item" rel="index" title="分类于 Obfuscation"><span itemprop="name">Obfuscation</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>之后准备学习混淆和反混淆，于是查阅了一些paper，然后根据自己的理解简单总结了一下，画了一张思维导图。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/obfuscation/image-20221103104740274.png" alt="image-20221103104740274"></p>
+<h2 id="混淆的意义"><a href="#混淆的意义" class="headerlink" title="混淆的意义"></a>混淆的意义</h2><p>混淆的意义在于保护产品，其作用在于增加逆向分析者的分析成本。</p>
+<h2 id="混淆的分类"><a href="#混淆的分类" class="headerlink" title="混淆的分类"></a>混淆的分类</h2><h3 id="源码混淆"><a href="#源码混淆" class="headerlink" title="源码混淆"></a>源码混淆</h3><p>由源代码转换到混淆后的源代码。</p>
+<h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><ul>
+<li><p>脚本、解释型语言（比如PowerShell）</p>
+<ul>
+<li><p>混淆源代码（变量重命名等），降低可读性。</p>
+<blockquote>
+<p>powershell混淆原理可参考：<span class="exturl" data-url="aHR0cHM6Ly9iYnMucGVkaXkuY29tL3RocmVhZC0yNDgwMzQuaHRt">Powershell 代码反混淆技术研究</span></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>编译型语言（比如C++）</p>
+<ul>
+<li><p>混淆源代码，降低可读性（针对源代码要提交给第三方的情况，编译出的二进制与未混淆没有区别），</p>
+<blockquote>
+<p>工具举例：Stunnix，这种与powershell类似，因此不做细节讨论。</p>
+</blockquote>
+</li>
+<li><p>给原程序逻辑添加控制流混淆、添加opaque predicate等（未找到开源工具），增加逆向难度。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h4><p>参考思维导图。</p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>将源代码解析为AST（Abstract Syntax Tree），执行混淆变换（Transformation），最后渲染（Render），转换成源代码。</p>
+<h4 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h4><ul>
+<li>脚本\解释型语言：该方法已被广泛运用，并无限制</li>
+<li>编译型语言：<ul>
+<li>混淆源代码的方式（变量名替换、常量替换成复杂的公式），没有限制</li>
+<li>添加混淆逻辑的方式，没有成熟的使用案例，仅在paper中找到了样本原型(prototype)，似乎源码也没有</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>c++的混淆实现可参考：<span class="exturl" data-url="aHR0cHM6Ly9hcnhpdi5vcmcvZnRwL2FyeGl2L3BhcGVycy8yMDAzLzIwMDMuMDM0NDkucGRm">Code Obfuscation for the C&#x2F;C++ Language</span></li>
+<li>源代码的混淆实现可参考：<a target="_blank" rel="noopener" href="https://www.esat.kuleuven.be/cosic/publications/article-806.pdf">On the Effectiveness of Source Code Transformations for Binary<br>Obfuscation</a></li>
+</ul>
+</blockquote>
+<h3 id="字节码混淆"><a href="#字节码混淆" class="headerlink" title="字节码混淆"></a>字节码混淆</h3><p>将源代码编译生成的字节码转换成混淆后的字节码，最后交由解释器执行。</p>
+<h4 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h4><p>保护编译生成的字节码（比如java），字节码几乎包含源码的所有信息，因此需要混淆逻辑，降低代码的可阅读<br>性、提高反混淆的难度。</p>
+<h4 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a>优缺点</h4><p>参考思维导图。</p>
+<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><p>将字节码解析成AST或其他可解析的形式，执行混淆变换，最后渲染（Render），输出混淆后的源代码。</p>
+<blockquote>
+<p>java字节码的混淆可参考：<span class="exturl" data-url="aHR0cHM6Ly9yZXNlYXJjaHNwYWNlLmF1Y2tsYW5kLmFjLm56L2JpdHN0cmVhbS9oYW5kbGUvMjI5Mi8zNDkxL1RSMTQ4LnBkZg==">A Taxonomy of Obfuscating Transformations</span></p>
+</blockquote>
+<h3 id="二进制代码混淆"><a href="#二进制代码混淆" class="headerlink" title="二进制代码混淆"></a>二进制代码混淆</h3><p>将可执行程序的二进制代码转换成混淆后的二进制代码。</p>
+<h4 id="作用-2"><a href="#作用-2" class="headerlink" title="作用"></a>作用</h4><p>增加二进制代码逆向阅读的难度。</p>
+<h4 id="优缺点-2"><a href="#优缺点-2" class="headerlink" title="优缺点"></a>优缺点</h4><p>参考思维导图。</p>
+<h4 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h4><ul>
+<li>代码虚拟化，将代码转换成另一套表示，并按特定语义解释执行</li>
+<li>反汇编二进制代码，根据二进制代码的某些特征，执行对应的混淆变换<blockquote>
+<p>二进制代码的混淆可参考：<span class="exturl" data-url="aHR0cHM6Ly9iYWNrLmVuZ2luZWVyaW5nLzEzLzA0LzIwMjIv">Writing a Mutation Engine and breaking Aimware</span></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="c-元编程-metaprogramming"><a href="#c-元编程-metaprogramming" class="headerlink" title="c++ 元编程(metaprogramming)"></a>c++ 元编程(metaprogramming)</h3><p>添加保护接口，对使用这些接口的字符串和函数进行保护。</p>
+<h4 id="作用-3"><a href="#作用-3" class="headerlink" title="作用"></a>作用</h4><p>利用C++的模版特性（编译时）和状态机，实现代码保护，比如字符串加密、函数调用隐藏。</p>
+<h4 id="限制-1"><a href="#限制-1" class="headerlink" title="限制"></a>限制</h4><p>仅适用于使用c++语言，且支持c++11及以上版本。</p>
+<blockquote>
+<ul>
+<li>c++ 元编程的混淆可参考：<span class="exturl" data-url="aHR0cHM6Ly93d3cuYmxhY2toYXQuY29tL2RvY3MvZXUtMTQvbWF0ZXJpYWxzL2V1LTE0LUFuZHJpdmV0LUMtcGx1cy1wbHVzMTEtTWV0YXByb2dyYW1taW5nLUFwcGxpZWQtVG8tc29mdHdhcmUtT2JmdXNjYXRpb24td3AucGRm">C++11 metaprogramming applied to software obfuscation</span></li>
+<li>开源项目可参考：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FuZHJpdmV0L0FEVm9iZnVzY2F0b3I=">ADVobfuscator</span></li>
+</ul>
+</blockquote>
+<h2 id="代码混淆方法"><a href="#代码混淆方法" class="headerlink" title="代码混淆方法"></a>代码混淆方法</h2><p>不管是哪一类代码混淆，使用的混淆变换（Obfuscation Tansformation）都是适用的。</p>
+<ul>
+<li><p>代码混淆的通用方法可参考：<span class="exturl" data-url="aHR0cHM6Ly9yZXNlYXJjaHNwYWNlLmF1Y2tsYW5kLmFjLm56L2JpdHN0cmVhbS9oYW5kbGUvMjI5Mi8zNDkxL1RSMTQ4LnBkZg==">A Taxonomy of Obfuscating Transformations</span></p>
+</li>
+<li><p>这里不涉及二进制代码的混淆方法</p>
+</li>
+</ul>
+<h3 id="控制流混淆"><a href="#控制流混淆" class="headerlink" title="控制流混淆"></a>控制流混淆</h3><p>修改原有程序的控制流，或者在原有程序的控制流上添加假的控制流(opaque predicate)。 </p>
+<h4 id="Opaque-Predicate"><a href="#Opaque-Predicate" class="headerlink" title="Opaque Predicate"></a>Opaque Predicate</h4><p>可理解为一个返回bool类型的函数。混淆时返回结果已知，在代码运行时需要一定的计算才能知道返回结果。</p>
+<p>该函数的重点在于构造一个适宜计算难度的公式，使得逆向分析人员难以阅读，编译器无法优化掉，使源程序的</p>
+<p>控制流更加复杂。</p>
+<h4 id="Computation-变换-举例"><a href="#Computation-变换-举例" class="headerlink" title="Computation 变换(举例)"></a>Computation 变换(举例)</h4><ul>
+<li><p>插入死代码或不相关的代码</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/obfuscation/image-20221103134641581.png" alt="image-20221103134641581"></p>
+<p>给定一个顺序执行序列，S1到Sn：<br>a) 添加一个opaque predicate(T)，由于该predicate恒为true，所以只会走左边。<br>b) 添加一个opaque predicate(?)，该predicate返回值未知，但左右边代码一致。<br>c) 添加一个opaque predicate(T)，想对于b)，右边的S(b)序列添加了bug。</p>
+</li>
+<li><p>混淆Loop控制流</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/obfuscation/image-20221103134701976.png" alt="image-20221103134701976"></p>
+<p>添加一个opaque predicate(T)，不影响流程，但是使得流程复杂了。</p>
+<blockquote>
+<p>可以将循环的执行体拆分为多个部分，在这些部分中穿插opaque predicate(F)，增加控制流的复杂度。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="数据混淆"><a href="#数据混淆" class="headerlink" title="数据混淆"></a>数据混淆</h3><h4 id="Data-变换（举例）"><a href="#Data-变换（举例）" class="headerlink" title="Data 变换（举例）"></a>Data 变换（举例）</h4><ul>
+<li><p>变量表示</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/obfuscation/image-20221103135055555.png" alt="image-20221103135055555">  </p>
+<p>将 i 转换成 c1*i + c2 形式（简单例子，通常有更复杂的)。</p>
+</li>
+<li><p>变量拆分（split）</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/obfuscation/image-20221103135137655.png" alt="image-20221103135137655"></p>
+<p>以布尔变量为例，将布尔变量拆分为两个变量p和q，通过2p + q的方式来代表布尔变量。真实使用时如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/obfuscation/image-20221103135158027.png" alt="image-20221103135158027"></p>
+<p>布尔变量的定义改成p和q变量的定义，布尔变量的位运算交给AND和OR函数。</p>
+</li>
+<li><p>变量整合(merge)</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/obfuscation/image-20221103135215506.png" alt="image-20221103135215506"></p>
+<p>将类型为int的X和Y变量转换成类型为long的Z，执行对应的公式计算。</p>
+</li>
+<li><p>数据拆分与整合</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<h3 id="反反混淆"><a href="#反反混淆" class="headerlink" title="反反混淆"></a>反反混淆</h3><h4 id="Opaque-Predicates"><a href="#Opaque-Predicates" class="headerlink" title="Opaque Predicates"></a>Opaque Predicates</h4><ul>
+<li>复杂度选择</li>
+<li>别名(alias)的应用</li>
+<li>inter-procedual的构造方法（predicate涉及的变量（公式）在不同地方被更新）</li>
+<li>使用有关联的opaque predicates</li>
+<li>使用P(?)，而不是简单的P(F)或者P(T)</li>
+<li>反程序切片技术(program-slicing)，比如增加切片大小（增加变量的依赖变量）</li>
+</ul>
+<h2 id="反混淆"><a href="#反混淆" class="headerlink" title="反混淆"></a>反混淆</h2><h3 id="分析记录的代码-trace"><a href="#分析记录的代码-trace" class="headerlink" title="分析记录的代码(trace)"></a>分析记录的代码(trace)</h3><ul>
+<li><p>通过动态二进制插桩或者unicorn模拟获取trace代码</p>
+</li>
+<li><p>分析trace</p>
+<p>构造CFG（control flow graph），消除多余的代码</p>
+<ul>
+<li>使用常用的编译优化方法，比如常量折叠(constant folding)，消除共同子表达式(common<br>subexpression)等</li>
+<li>定位opaque predicates，对简单的predicates使用模式匹配去掉（结合符号执行）</li>
+<li>对于数据变换这一类混淆，简单的情况下也可使用模式匹配；复杂的情况一般都需要具体分析（比如变<br>量拆分这种）</li>
+<li>其他的各种优化（程序切片，污点分析…）</li>
+</ul>
+</li>
+<li><p>根据优化后的trace，重构CFG，分析优化的代码</p>
+</li>
+</ul>
+<blockquote>
+<p>注：一般的编译器优化可以借用LLVM的编译器优化实现。（比如将汇编代码转成LLVM IR、再编译成可执<br>    行文件，之后用IDA等工具再进行分析）</p>
+<p>反混淆案例可参考：<br>    <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0pvbmF0aGFuU2Fsd2FuL1ZNUHJvdGVjdC1kZXZpcnR1YWxpemF0aW9u">https://github.com/JonathanSalwan/VMProtect-devirtualization</span><br>    <span class="exturl" data-url="aHR0cHM6Ly9iYnMucGVkaXkuY29tL3RocmVhZC0yNzM4MzAuaHRt">https://bbs.pediy.com/thread-273830.htm</span><br>    <span class="exturl" data-url="aHR0cHM6Ly9iYnMucGVkaXkuY29tL3RocmVhZC0yNjc3NDEuaHRt">https://bbs.pediy.com/thread-267741.htm</span></p>
+</blockquote>
+<h3 id="动态符号执行（Symbolic-Execution）"><a href="#动态符号执行（Symbolic-Execution）" class="headerlink" title="动态符号执行（Symbolic Execution）"></a>动态符号执行（Symbolic Execution）</h3><p>通过符号执行，尽可能获取所有path对应的trace，针对这些trace再进行上一小节的优化。</p>
+<blockquote>
+<ul>
+<li>由于符号执行会有路径爆炸等问题，针对路径少、混淆程度轻的程序，该方法适用。</li>
+<li>该方法可参考ollvm的反混淆入门：<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLnF1YXJrc2xhYi5jb20vZGVvYmZ1c2NhdGlvbi1yZWNvdmVyaW5nLWFuLW9sbHZtLXByb3RlY3RlZC1wcm9ncmFtLmh0bWw=">Deobfuscation: recovering an OLLVM-protected program</span></li>
+</ul>
+</blockquote>
+<h3 id="污点分析-动态符号执行"><a href="#污点分析-动态符号执行" class="headerlink" title="污点分析 + 动态符号执行"></a>污点分析 + 动态符号执行</h3><p>给一个特定输入，记录trace，通过污点分析得到相关指令，符号执行该trace得出下一个输入（不同路径）；然<br>后循环上述方式，整合所有输入，重构CFG。</p>
+<blockquote>
+<p>该方法可参考：<span class="exturl" data-url="aHR0cHM6Ly9zaGVsbC1zdG9ybS5vcmcvdGFsa3MvRElNVkEyMDE4LWRlb2JmdXNjYXRpb24tc2Fsd2FuLWJhcmRpbi1wb3RldC5wZGY=">Symbolic deobfuscation: from virtualized code back to the original</span></p>
+</blockquote>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>比较有参考价值的paper放在seafile的JJDPS\混淆调研\资料目录下。</p>
+
+      <div class="tags">
+          <a href="/tags/Introduction/" rel="tag"><i class="ic i-tag"></i> Introduction</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Obfuscation/混淆简介/" class="item leancloud_visitors" data-flag-title="混淆简介" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" title="混淆简介">https://conecoy.cn/Technology/Obfuscation/混淆简介/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Reverse/Process-Injection/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;1.jpg" title="Process_Injection">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Reverse</span>
+  <h3>Process_Injection</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;60.jpg" title="linux的信号同步与异步笔记">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>linux的信号同步与异步笔记</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B7%E6%B7%86%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">混淆的意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B7%E6%B7%86%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">混淆的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E6%B7%B7%E6%B7%86"><span class="toc-number">2.1.</span> <span class="toc-text">源码混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">2.1.1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">2.1.2.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.1.3.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%99%90%E5%88%B6"><span class="toc-number">2.1.4.</span> <span class="toc-text">限制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B7%E6%B7%86"><span class="toc-number">2.2.</span> <span class="toc-text">字节码混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="toc-number">2.2.3.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86"><span class="toc-number">2.3.</span> <span class="toc-text">二进制代码混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8-2"><span class="toc-number">2.3.1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-2"><span class="toc-number">2.3.2.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-2"><span class="toc-number">2.3.3.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#c-%E5%85%83%E7%BC%96%E7%A8%8B-metaprogramming"><span class="toc-number">2.4.</span> <span class="toc-text">c++ 元编程(metaprogramming)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8-3"><span class="toc-number">2.4.1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%99%90%E5%88%B6-1"><span class="toc-number">2.4.2.</span> <span class="toc-text">限制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">代码混淆方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E6%B5%81%E6%B7%B7%E6%B7%86"><span class="toc-number">3.1.</span> <span class="toc-text">控制流混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Opaque-Predicate"><span class="toc-number">3.1.1.</span> <span class="toc-text">Opaque Predicate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Computation-%E5%8F%98%E6%8D%A2-%E4%B8%BE%E4%BE%8B"><span class="toc-number">3.1.2.</span> <span class="toc-text">Computation 变换(举例)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B7%B7%E6%B7%86"><span class="toc-number">3.2.</span> <span class="toc-text">数据混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Data-%E5%8F%98%E6%8D%A2%EF%BC%88%E4%B8%BE%E4%BE%8B%EF%BC%89"><span class="toc-number">3.2.1.</span> <span class="toc-text">Data 变换（举例）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%8F%8D%E6%B7%B7%E6%B7%86"><span class="toc-number">3.3.</span> <span class="toc-text">反反混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Opaque-Predicates"><span class="toc-number">3.3.1.</span> <span class="toc-text">Opaque Predicates</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E6%B7%B7%E6%B7%86"><span class="toc-number">4.</span> <span class="toc-text">反混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E8%AE%B0%E5%BD%95%E7%9A%84%E4%BB%A3%E7%A0%81-trace"><span class="toc-number">4.1.</span> <span class="toc-text">分析记录的代码(trace)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C%EF%BC%88Symbolic-Execution%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">动态符号执行（Symbolic Execution）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%A1%E7%82%B9%E5%88%86%E6%9E%90-%E5%8A%A8%E6%80%81%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C"><span class="toc-number">4.3.</span> <span class="toc-text">污点分析 + 动态符号执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">4.4.</span> <span class="toc-text">附录</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li class="active"><a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" rel="bookmark" title="混淆简介">混淆简介</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Reverse/Process-Injection/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Mechanism-of-LFH/" title="Mechanism_of_LFH">Mechanism_of_LFH</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" title="C++安全编程规范笔记">C++安全编程规范笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/Study-of-C-Coding-Standards/" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/StackUnwind/" title="StackUnwind">StackUnwind</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Obfuscation/混淆简介/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

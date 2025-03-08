@@ -1,0 +1,695 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="C++ Programming" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/">
+
+
+
+  <title>
+c++编程错误锦囊 - Development - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">c++编程错误锦囊
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-10-19 20:13:41">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-10-19T20:13:41+08:00">2021-10-19</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/44.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/47.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/14.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/16.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/32.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/55.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Development/" itemprop="item" rel="index" title="分类于 Development"><span itemprop="name">Development</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="1-基类需要定义虚析构函数"><a href="#1-基类需要定义虚析构函数" class="headerlink" title="1 基类需要定义虚析构函数"></a>1 基类需要定义虚析构函数</h2><p>根据开发场景，继承类有两种情况：</p>
+<ul>
+<li><p>继承类是别人写的，那么继承类可能会有析构函数，如果调用以下代码，那么继承类的析构函数不会被调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BaseClass* = <span class="keyword">new</span> InheritedClass;</span><br><span class="line"><span class="keyword">delete</span> BaseClass;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>继承类是自己写的，开发者可能会觉得继承类不需要析构函数，因此可以不给基类加虚析构函数。但随着需求的变化，可能继承类添加了析构函数。如果开发者没同时给基类加虚析构函数，那么就会出问题。</p>
+</li>
+</ul>
+<p>最佳实践：基类应该总是定义虚析构函数，不管当前需析构函数是否是有用的。</p>
+<blockquote>
+<p>注：</p>
+<ul>
+<li><p>如果该基类不需要多态析构（比如基类没有虚函数，或者基类本意不希望显式分配任何对象等），那么该基类的析构函数应该是protected且不是virtual的。</p>
+<p>不过有一个特殊情况，如果在使用子类时，用到了unique_ptr，比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;BaseClass&gt; b = std::<span class="built_in">make_unique</span>&lt;InheritedClass&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>因为std::unique_ptr强制需要’std::unique_ptr&lt;BaseClass&gt;‘里的BaseClass提供public的析构函数，因此以上语句会编译出错。具体原因可查看<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9hLzU5Njk1MjIy">这个答案</span>。针对unique_ptr的这个限制，我尝试寻找过解决方法，比如<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvNTYzNzc2MzQvcHJvdGVjdGVkLWRlc3RydWN0b3Itd2l0aC11bmlxdWUtcHRy">这个答案</span>，其中有一个是在基类添加 friend std::unique_ptr&lt;BaseClass&gt;。但正如<code>Peter</code>所说，std::unique_ptr&lt;BaseClass&gt;的用法只会调用基类的虚构函数(因为BaseClass的析构函数是non-virtual)。因此，针对这种特殊情况，我们可以采用protected的虚析构函数 + friend std::default_delete&lt;BaseClass&gt;。（virtual的原因是std::unique_ptr使用deleter时，能找到对应的子类析构函数，不过在shared_ptr中就不存在这种情况）。</p>
+<p>关于何时不需要析构函数是virtual的，可参考<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMzAwOTg2L3doZW4tc2hvdWxkLXlvdS1ub3QtdXNlLXZpcnR1YWwtZGVzdHJ1Y3RvcnM=">这个讨论</span>中，‘sep’和‘andy’的回答。</p>
+</li>
+<li><p>因为编译器默认会给类添加public且nonvirtual的析构函数，所以我们应该总显式定义析构函数</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="2-使用delete关键字删除特定类型"><a href="#2-使用delete关键字删除特定类型" class="headerlink" title="2 使用delete关键字删除特定类型"></a>2 使用delete关键字删除特定类型</h2><p>因为某些特殊原因，可能某个类的一个成员变量是void*，但该变量是指向一个类实例的，那么在使用delete时，需要指明这个成员变量的类型，否则delete不能正确调用类实例对应的析构函数，造成内存泄漏等问题：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>()&#123;</span><br><span class="line">        m_pointer = <span class="keyword">new</span> B;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ~<span class="built_in">A</span>()&#123;</span><br><span class="line">        <span class="comment">//delete m_pointer;  --&gt; wrong delete</span></span><br><span class="line">        <span class="built_in">delete</span> (B*)m_pointer;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="type">void</span>* m_pointer;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-shared-ptr的参数是一个数组时，显示定义对应的释放操作"><a href="#3-shared-ptr的参数是一个数组时，显示定义对应的释放操作" class="headerlink" title="3 shared_ptr的参数是一个数组时，显示定义对应的释放操作"></a>3 shared_ptr的参数是一个数组时，显示定义对应的释放操作</h2><p>因为shared_ptr最终会使用delete关键字释放内容，所以如果内容是new分配的一个数组，那么程序将会出现问题。为避免这个问题，可以给shared_ptr具体的释放方法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">shared_ptr</span>&lt;WCHAR&gt;(<span class="keyword">new</span> WCHAR[nLen * <span class="built_in">sizeof</span>(WCHAR)]&#123; <span class="number">0</span> &#125;, std::<span class="built_in">default_delete</span>&lt;WCHAR[]&gt;());</span><br><span class="line"><span class="comment">//释放方法：std::default_delete&lt;WCHAR[]&gt;()</span></span><br><span class="line"><span class="comment">//释放方法也可以写成一个lambda</span></span><br></pre></td></tr></table></figure>
+
+<p>在讨论中，<code>sysml</code>也给出了c++17的解决方法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">shared_ptr</span>&lt;WCHAR[]&gt;(<span class="keyword">new</span> WCHAR[nLen * <span class="built_in">sizeof</span>(WCHAR)]&#123; <span class="number">0</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这样使得代码看起来更加简洁。</p>
+<h2 id="4-类的构造函数初始化所有成员变量"><a href="#4-类的构造函数初始化所有成员变量" class="headerlink" title="4 类的构造函数初始化所有成员变量"></a>4 类的构造函数初始化所有成员变量</h2><p>因为release版本不会自动初始化类的成员变量，所以应对所有成员变量赋默认值。</p>
+<blockquote>
+<p>注：STL的类会初始化（因为编译器生成的默认构造函数会初始化这些成员变量）</p>
+</blockquote>
+<h2 id="释放后的指针应该赋值为NULL或nullptr"><a href="#释放后的指针应该赋值为NULL或nullptr" class="headerlink" title="释放后的指针应该赋值为NULL或nullptr"></a>释放后的指针应该赋值为NULL或nullptr</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">__try&#123;</span><br><span class="line">    PVOID p = <span class="built_in">VirtualAlloc</span>(..., size, ...);</span><br><span class="line">&#125;</span><br><span class="line">__finally&#123;</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="built_in">VirtualFree</span>(p, ...);</span><br><span class="line">        p = <span class="literal">NULL</span>;  <span class="comment">// --&gt; set p as NULL</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-如果类有复制构造函数或复制赋值运算符的其中一个，那必须补齐另外一个"><a href="#5-如果类有复制构造函数或复制赋值运算符的其中一个，那必须补齐另外一个" class="headerlink" title="5 如果类有复制构造函数或复制赋值运算符的其中一个，那必须补齐另外一个"></a>5 如果类有复制构造函数或复制赋值运算符的其中一个，那必须补齐另外一个</h2><p>根据c++的 Law of The Big Three 规则（暂不考虑move语义），我们知道如果定义了以下其中一个，那么另外两个会被编译器隐式定义：</p>
+<ul>
+<li>析构函数</li>
+<li>复制构造函数</li>
+<li>复制赋值运算符</li>
+</ul>
+<p>因此，如果一个类有复制构造函数，并且没有重载复制赋值运算符，那么会出现隐患，这个类也是危险的类：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* wrong definition*/</span> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>()&#123;a = <span class="number">1</span>; b = <span class="keyword">new</span> <span class="type">int</span>;&#125;</span><br><span class="line">    ~<span class="built_in">A</span>()&#123;</span><br><span class="line">        <span class="keyword">delete</span> b;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">A</span>(<span class="type">const</span> A&amp; instance)&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;a = instance.a;</span><br><span class="line">        <span class="keyword">this</span>-&gt;b = <span class="keyword">new</span> <span class="type">int</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">int</span>* b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">A a;    <span class="comment">// a.b points to addr1</span></span><br><span class="line"><span class="function">A <span class="title">b</span><span class="params">(a)</span></span>; <span class="comment">// b.b points to addr2</span></span><br><span class="line">b = a;  <span class="comment">// b.b points to addr1 --&gt; error</span></span><br></pre></td></tr></table></figure>
+
+<p>因为复制构造函数和重载的复制赋值运算符必须成对存在，对于move语义的两个方法也是一样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>()&#123;a = <span class="number">1</span>; b = <span class="keyword">new</span> <span class="type">int</span>;&#125;</span><br><span class="line">    ~<span class="built_in">A</span>()&#123;</span><br><span class="line">        <span class="keyword">delete</span> b;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">A</span>(<span class="type">const</span> A&amp; instance)&#123;</span><br><span class="line">        <span class="built_in">Copy</span>(instance);</span><br><span class="line">    &#125;</span><br><span class="line">    A&amp; <span class="keyword">operator</span>=(<span class="type">const</span> A&amp; instance)&#123;</span><br><span class="line">        <span class="built_in">Copy</span>(instance);</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// move semantics</span></span><br><span class="line">    <span class="built_in">A</span>(A&amp;&amp; instance)&#123;...&#125;</span><br><span class="line">    A&amp; <span class="keyword">operator</span>=(A&amp;&amp; instance)&#123;...&#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">void</span> <span class="built_in">Copy</span>(<span class="type">const</span> A&amp; instance)&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;a = instance.a;</span><br><span class="line">        <span class="keyword">this</span>-&gt;b = <span class="keyword">new</span> <span class="type">int</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">int</span>* b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-包含运算符的宏要用括号括起来"><a href="#6-包含运算符的宏要用括号括起来" class="headerlink" title="6 包含运算符的宏要用括号括起来"></a>6 包含运算符的宏要用括号括起来</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MEM_BUFFER_NUMBER 2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MEM_BUFFER_SIZE (sizeof(PVOID) * MEM_BUFFER_NUMBER)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="7-引用变量需要加-，即使是auto"><a href="#7-引用变量需要加-，即使是auto" class="headerlink" title="7 引用变量需要加&amp;，即使是auto"></a>7 引用变量需要加&amp;，即使是auto</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A&amp; GetA();</span></span><br><span class="line"><span class="keyword">auto</span>&amp; A = <span class="built_in">GetA</span>();</span><br><span class="line"><span class="comment">// 不是 auto A = GetA();</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="8-智能指针的合理使用"><a href="#8-智能指针的合理使用" class="headerlink" title="8 智能指针的合理使用"></a>8 智能指针的合理使用</h2><p>智能指针在C++中有几个，比如shared_ptr，unique_ptr，auto_ptr等，每一个都有各自的用途和其存在意义，因此开发中需要跟进实际场景，使用合适的智能指针。</p>
+<p>根据我实际开发的场景，总结建议如下：</p>
+<ul>
+<li><p>避免所有场景都使用shared_ptr。shared_ptr是功能最丰富的智能指针，大部分资源的自动分配与释放都可以用shared_ptr解决。但如果所有场景都使用shared_ptr，会存在如下弊端：</p>
+<ul>
+<li><p>掩盖设计：如果资源的主体是该资源唯一的拥有者，那么使用shared_ptr会掩盖这个背景，比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>()&#123;m_a = <span class="keyword">new</span> std::<span class="built_in">string</span>(<span class="string">&quot;aaa&quot;</span>);&#125;</span><br><span class="line">    ~<span class="built_in">A</span>()&#123;<span class="keyword">delete</span> m_a;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string* m_a;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//因为要管理m_a的分配和释放，改进后的A如下：</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">A</span>()&#123;m_a = std::<span class="built_in">make_unique</span>&lt;std::string&gt;(<span class="string">&quot;aaa&quot;</span>);&#125;    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::unique_ptr&lt;std::string&gt; m_a;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//通过使用unique_ptr，可以看出类A的实例a是唯一拥有m_a的主体，且实例a管理m_a的生命周期。</span></span><br><span class="line"><span class="comment">//如果这里使用的是shared_ptr，那么当我们看类A的声明时，我们不知道m_a有这一层含义。</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：</p>
+<p>掩盖设计只是一个小点，影响更大的是随后的开发。因为掩盖设计会影响开发者对这部分代码的理解，使得这部分代码的设计在之后的开发中越来越模糊。而这带来的最明显的后果就是降低可维护性（这里的设计可以理解成某一个设计模式，或者一个设计场景）。</p>
+<p>相反，如果使用unique_ptr，那么unique_ptr的限制会让开发者清楚资源的拥有者，提示开发者代码的设计目标（比如资源的唯一拥有者应该是谁，资源该如何分享，该返回原指针还是资源的引用），且能保证资源的生命周期。</p>
+</blockquote>
+</li>
+<li><p>影响软件的性能：shared_ptr在资源的释放时机上比unique_ptr更晚。shared_ptr使得资源的拥有者是多个，只有最后一个拥有者释放该资源后，资源才会被释放。</p>
+</li>
+</ul>
+<blockquote>
+<p>注：何时选择哪种智能指针请参考<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9hLzc2NTgwODk=">这个回答</span>。</p>
+</blockquote>
+</li>
+<li><p>给资源使用unique_ptr时，如果调用方(caller)想获取该资源，但不能控制其生命周期，那么返回的类型如下：</p>
+<ul>
+<li><p>如果该资源肯定存在，即不为nullptr，那么返回资源的引用</p>
+</li>
+<li><p>如果该资源可能为nullptr，那么返回指向资源的指针</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接着class A的例子</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="comment">// Return m_a</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">//m_a肯定存在的情况</span></span><br><span class="line">    <span class="function">std::string&amp; <span class="title">GetA</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> *m_a.<span class="built_in">get</span>();&#125;</span><br><span class="line">    <span class="comment">//m_a可能为nullptr的情况</span></span><br><span class="line">    <span class="function">std::string* <span class="title">GetA</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> m_a.<span class="built_in">get</span>();&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="9-windows平台字符集的处理"><a href="#9-windows平台字符集的处理" class="headerlink" title="9 windows平台字符集的处理"></a>9 windows平台字符集的处理</h2><p>需要传输到网络的数据中，字符串应该均用utf-8编码。因为windows使用的是默认windows ANSI编码，所以字符串在传输中应该转为utf-8编码。</p>
+<p>Windows平台在处理字符时，默认使用的代码页(code page)是CP_ACP，不是CP_UTF8。即windows平台默认的字符串可能与其他机器不兼容，其他机器解析会乱码，比如字符串包含中文时。</p>
+<blockquote>
+<p>下面是MSDN的描述：</p>
+<p><strong>Note</strong> The ANSI code pages can be different on different computers, or can be changed for a single computer, leading to data corruption. For the most consistent results, applications should use Unicode, such as UTF-8 or UTF-16, instead of a specific code page, unless legacy standards or data formats prevent the use of Unicode. If using Unicode is not possible, applications should tag the data stream with the appropriate encoding name when protocols allow it. HTML and XML files allow tagging, but text files do not.</p>
+</blockquote>
+<p>另外，如果windows的系统语言是英语，那么windows本地的windows ANSI编码(CP_ACP)是不支持中文之类的。因此在这种情况下，需要先使用unicode字符集，然后再编码成utf-8。</p>
+<blockquote>
+<p>Windows提供了<strong>MultiByteToWideChar</strong>和<strong>WideCharToMultiByte</strong>这两个winapi用于多字节字符和unicode字符的转换。由于unicode只是一种字符的表示方式（用两个code point表示一个字符），并不存在编码，因此在使用上述的两个winapi需要注意：</p>
+<ul>
+<li><strong>WideCharToMultiByte</strong>的CodePage参数表示将unicode字符串转换成哪种编码格式的多字节字符。</li>
+<li><strong>MultiByteToWideChar</strong>的CodePage参数表示将哪种编码格式的多字节字符转换成unicode字符。如果这里提供的codePage错误，那么转换会成功，但结果是错误的。另外，如果多字节字符包含中文，但不是utf-8编码，比如是windows ANSI编码，那么编译的程序在中文系统是表示正确的，但是在英文系统就会乱码，因为英文系统的windows ANSI本地编码识别不了这些中文字符。</li>
+</ul>
+</blockquote>
+<p>编程实践：</p>
+<ul>
+<li>在工程开始的最初，就只使用unicode。只在显式需要的时候，再转换成utf-8编码的多字节字符（比如使用json时）。</li>
+<li>可以使用一套代码，既支持多字节也支持unicode，在这两种字符集切换时保持windows ANSI的编码。只在显式需要的时候，再转换成utf-8编码的多字节字符。</li>
+</ul>
+<h2 id="10-try和c-最好不要混用"><a href="#10-try和c-最好不要混用" class="headerlink" title="10 __try和c++最好不要混用"></a>10 __try和c++最好不要混用</h2><p>开发中，遇到__try需要使用类的情况，如果该类没有析构函数的时候，可以正常编译；</p>
+<p>但如果该类有析构函数，就会编译失败，例子如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CLA</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">CLA</span>():<span class="built_in">a</span>(<span class="number">3</span>) &#123;&#125;</span><br><span class="line">	~<span class="built_in">CLA</span>() &#123; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">ss</span><span class="params">()</span> </span>&#123; a = <span class="number">4</span>; &#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">int</span> a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">__try &#123;</span><br><span class="line">	<span class="comment">//sstring c(&quot;aaaa&quot;);</span></span><br><span class="line">	CLA c;</span><br><span class="line">&#125;</span><br><span class="line">__finally &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;1111&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并报错：</p>
+<p><code>error C2712: Cannot use __try in functions that require object unwinding</code></p>
+<p>在之前的开发中，我以为是报c++异常（即使用了try关键字）时，才会出现这个情况。因此我尝试在CLA的析构函数加上noexcept，但仍然报同样的错误。</p>
+<p>再思考下报错信息里的<code>require object unwinding</code>，这里我最初理解的是使用try的情况下，会做unwinding。但根据目前的情况，应理解成如果一个类有析构函数，那么这个类的实例就需要unwinding，即使这个析构函数从开发者的视角是不会抛异常的。</p>
+<p>总结：在使用__try的函数里，尽量不要使用类。</p>
+<h2 id="11-向前声明使用智能指针"><a href="#11-向前声明使用智能指针" class="headerlink" title="11 向前声明使用智能指针"></a>11 向前声明使用智能指针</h2><p>先来看一段代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// B.h</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line"><span class="comment">// method declarations</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::unique_ptr&lt;A&gt; ptr;</span><br><span class="line"><span class="comment">// variable declarations</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//--------------------------------</span></span><br><span class="line"><span class="comment">// B.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;A.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// B class implementation</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//--------------------------------</span></span><br><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;B.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    B b;</span><br><span class="line">    <span class="comment">// call B&#x27;s methods.</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译这份代码时，会报错<code>use of undefined type &#39;A&#39;</code>，即没有找到A类的实现，所以报错了。</p>
+<p>不过我们已经向前声明了，为什么会出现这个问题呢？</p>
+<p>原因是使用std::unique_ptr时，unique_ptr会在合适的场所调用A的析构函数，以下是std::unique_ptr的声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">T</span>,</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Deleter</span> = std::default_delete&lt;T&gt;</span><br><span class="line">&gt; <span class="keyword">class</span> unique_ptr;</span><br></pre></td></tr></table></figure>
+
+<p>根据上面的例子，按理说B.h不会调用A类的析构函数，因为我们只是声明。</p>
+<p>接下来看一下<code>C++ reference documentation</code>中关于std::unique_ptr的一段描述：</p>
+<blockquote>
+<p><code>std::unique_ptr</code> <em>may be constructed for an incomplete type</em> <code>T</code><em>, such as to facilitate the use as a handle in the Pimpl idiom.</em> <strong>If the default deleter is used, <code>T</code> must be complete at the point in code where the deleter is invoked, which happens in the destructor, move assignment operator, and reset member function of <code>std::unique_ptr</code></strong><em>. (Conversely,</em> <code>std::shared_ptr</code> <em>can’t be constructed from a raw pointer to incomplete type, but can be destroyed where</em> <code>T</code> <em>is incomplete).</em></p>
+</blockquote>
+<p>回想一下，上面的代码没有提供B类的析构函数，因此编译器会自动生成一个。</p>
+<p>自动生成的析构函数会调用A类的析构函数，也就需要A类的实现了。</p>
+<p>所以解决方法如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// B.h</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line"><span class="comment">// method declarations</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ~<span class="built_in">B</span>();</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::unique_ptr&lt;A&gt; ptr;</span><br><span class="line"><span class="comment">// variable declarations</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//--------------------------------</span></span><br><span class="line"><span class="comment">// B.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;A.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// B class implementation</span></span><br><span class="line">B::~<span class="built_in">B</span>()&#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="12-C-nlohmann-json-获取引用类型"><a href="#12-C-nlohmann-json-获取引用类型" class="headerlink" title="12 C++ nlohmann::json 获取引用类型"></a>12 C++ nlohmann::json 获取引用类型</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">json a = <span class="string">&quot;aa&quot;</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* c = <span class="literal">nullptr</span>;</span><br><span class="line">&#123;</span><br><span class="line">       std::string&amp; b = a.<span class="built_in">get</span>&lt;std::string&gt;();</span><br><span class="line">	c = b.<span class="built_in">c_str</span>();</span><br><span class="line">&#125;</span><br><span class="line">std::cout &lt;&lt; c &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>观察上面这段代码，b获取类型为string json的引用，然后再获取b的字符串指针给变量c。</p>
+<p>看似没有问题，可是输出的c的内容是错的。再看下对应的汇编：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">	const char* c = nullptr<span class="comment">;</span></span><br><span class="line">007BB88E  <span class="keyword">mov</span>         <span class="built_in">dword</span> <span class="built_in">ptr</span> [c],<span class="number">0</span>  </span><br><span class="line">	&#123;</span><br><span class="line"><span class="symbol">        std:</span>:string&amp; b = a<span class="number">.</span>get&lt;<span class="keyword">std</span>::string&gt;()<span class="comment">;</span></span><br><span class="line">007BB895  <span class="keyword">lea</span>         <span class="built_in">eax</span>,[<span class="built_in">ebp</span>-<span class="number">60h</span>]  </span><br><span class="line">007BB898  <span class="keyword">push</span>        <span class="built_in">eax</span>  </span><br><span class="line">007BB899  <span class="keyword">lea</span>         <span class="built_in">ecx</span>,[a]  </span><br><span class="line">007BB89C  <span class="keyword">call</span>        nlohmann::basic_json&lt;<span class="keyword">std</span>::map,<span class="keyword">std</span>::vector,<span class="keyword">std</span>::basic_string&lt;char,<span class="keyword">std</span>::char_traits&lt;char&gt;,<span class="keyword">std</span>::allocator&lt;char&gt; &gt;,bool,__int64,unsigned __int64,double,<span class="keyword">std</span>::allocator,nlohmann::adl_serializer,<span class="keyword">std</span>::vector&lt;unsigned char,<span class="keyword">std</span>::allocator&lt;unsigned char&gt; &gt; &gt;::get&lt;<span class="keyword">std</span>::basic_string&lt;char,<span class="keyword">std</span>::char_traits&lt;char&gt;,<span class="keyword">std</span>::allocator&lt;char&gt; &gt;,<span class="keyword">std</span>::basic_string&lt;char,<span class="keyword">std</span>::char_traits&lt;char&gt;,<span class="keyword">std</span>::allocator&lt;char&gt; &gt;,<span class="number">0</span>&gt; (<span class="number">0713D4Fh</span>)   &lt;&lt; 分配类实例</span><br><span class="line">007BB8A1  <span class="keyword">lea</span>         <span class="built_in">ecx</span>,[<span class="built_in">ebp</span>-<span class="number">60h</span>]  </span><br><span class="line">007BB8A4  <span class="keyword">mov</span>         <span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">ebp</span>-<span class="number">3Ch</span>],<span class="built_in">ecx</span>  </span><br><span class="line">		c = b<span class="number">.</span>c_str()<span class="comment">;</span></span><br><span class="line">007BB8A7  <span class="keyword">mov</span>         <span class="built_in">ecx</span>,<span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">ebp</span>-<span class="number">3Ch</span>]  </span><br><span class="line">007BB8AA  <span class="keyword">call</span>        <span class="keyword">std</span>::basic_string&lt;char,<span class="keyword">std</span>::char_traits&lt;char&gt;,<span class="keyword">std</span>::allocator&lt;char&gt; &gt;::c_str (<span class="number">071A299h</span>)  </span><br><span class="line">007BB8AF  <span class="keyword">mov</span>         <span class="built_in">dword</span> <span class="built_in">ptr</span> [c],<span class="built_in">eax</span>  </span><br><span class="line">	&#125;</span><br><span class="line">007BB8B2  <span class="keyword">lea</span>         <span class="built_in">ecx</span>,[<span class="built_in">ebp</span>-<span class="number">60h</span>]  </span><br><span class="line">007BB8B5  <span class="keyword">call</span>        <span class="keyword">std</span>::basic_string&lt;char,<span class="keyword">std</span>::char_traits&lt;char&gt;,<span class="keyword">std</span>::allocator&lt;char&gt; &gt;::~basic_string&lt;char,<span class="keyword">std</span>::char_traits&lt;char&gt;,<span class="keyword">std</span>::allocator&lt;char&gt; &gt; (<span class="number">0714466h</span>)   &lt;&lt; 释放类实例</span><br><span class="line"><span class="symbol">	std:</span>:cout &lt;&lt; c &lt;&lt; <span class="string">&quot;\n&quot;</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<p>从汇编可以看出，a.get&lt;std::string&gt;()返回的是一个std::string的类实例，并不是引用，因此当给c赋值的代码块执行完后，返回的std::string类实例就被释放了。</p>
+<p>由此可得出nlohmann::json的get方法只能返回临时变量，如果要获取引用，需要使用get_ref方法，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">json a = <span class="string">&quot;aa&quot;</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* c = <span class="literal">nullptr</span>;</span><br><span class="line">&#123;</span><br><span class="line">       std::string&amp; b = a.<span class="built_in">get_ref</span>&lt;std::string&amp;&gt;();</span><br><span class="line">	c = b.<span class="built_in">c_str</span>();</span><br><span class="line">&#125;</span><br><span class="line">std::cout &lt;&lt; c &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+
+      <div class="tags">
+          <a href="/tags/C-Programming/" rel="tag"><i class="ic i-tag"></i> C++ Programming</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Development/c++编程错误锦囊/" class="item leancloud_visitors" data-flag-title="c++编程错误锦囊" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">https://conecoy.cn/Technology/Development/c++编程错误锦囊/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Reverse/Mechanism-of-LFH/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;2.jpg" title="Mechanism_of_LFH">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Reverse</span>
+  <h3>Mechanism_of_LFH</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;51.jpg" title="记一次win10下程序以兼容方式启动导致的死锁">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>记一次win10下程序以兼容方式启动导致的死锁</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%B1%BB%E9%9C%80%E8%A6%81%E5%AE%9A%E4%B9%89%E8%99%9A%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">1 基类需要定义虚析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8delete%E5%85%B3%E9%94%AE%E5%AD%97%E5%88%A0%E9%99%A4%E7%89%B9%E5%AE%9A%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">2 使用delete关键字删除特定类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-shared-ptr%E7%9A%84%E5%8F%82%E6%95%B0%E6%98%AF%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E6%97%B6%EF%BC%8C%E6%98%BE%E7%A4%BA%E5%AE%9A%E4%B9%89%E5%AF%B9%E5%BA%94%E7%9A%84%E9%87%8A%E6%94%BE%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">3 shared_ptr的参数是一个数组时，显示定义对应的释放操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E6%89%80%E6%9C%89%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">4 类的构造函数初始化所有成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8A%E6%94%BE%E5%90%8E%E7%9A%84%E6%8C%87%E9%92%88%E5%BA%94%E8%AF%A5%E8%B5%8B%E5%80%BC%E4%B8%BANULL%E6%88%96nullptr"><span class="toc-number">5.</span> <span class="toc-text">释放后的指针应该赋值为NULL或nullptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%A6%82%E6%9E%9C%E7%B1%BB%E6%9C%89%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%88%96%E5%A4%8D%E5%88%B6%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E5%85%B6%E4%B8%AD%E4%B8%80%E4%B8%AA%EF%BC%8C%E9%82%A3%E5%BF%85%E9%A1%BB%E8%A1%A5%E9%BD%90%E5%8F%A6%E5%A4%96%E4%B8%80%E4%B8%AA"><span class="toc-number">6.</span> <span class="toc-text">5 如果类有复制构造函数或复制赋值运算符的其中一个，那必须补齐另外一个</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%8C%85%E5%90%AB%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E5%AE%8F%E8%A6%81%E7%94%A8%E6%8B%AC%E5%8F%B7%E6%8B%AC%E8%B5%B7%E6%9D%A5"><span class="toc-number">7.</span> <span class="toc-text">6 包含运算符的宏要用括号括起来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%BC%95%E7%94%A8%E5%8F%98%E9%87%8F%E9%9C%80%E8%A6%81%E5%8A%A0-%EF%BC%8C%E5%8D%B3%E4%BD%BF%E6%98%AFauto"><span class="toc-number">8.</span> <span class="toc-text">7 引用变量需要加&amp;，即使是auto</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E7%9A%84%E5%90%88%E7%90%86%E4%BD%BF%E7%94%A8"><span class="toc-number">9.</span> <span class="toc-text">8 智能指针的合理使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-windows%E5%B9%B3%E5%8F%B0%E5%AD%97%E7%AC%A6%E9%9B%86%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">10.</span> <span class="toc-text">9 windows平台字符集的处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-try%E5%92%8Cc-%E6%9C%80%E5%A5%BD%E4%B8%8D%E8%A6%81%E6%B7%B7%E7%94%A8"><span class="toc-number">11.</span> <span class="toc-text">10 __try和c++最好不要混用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E5%90%91%E5%89%8D%E5%A3%B0%E6%98%8E%E4%BD%BF%E7%94%A8%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">12.</span> <span class="toc-text">11 向前声明使用智能指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-C-nlohmann-json-%E8%8E%B7%E5%8F%96%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">13.</span> <span class="toc-text">12 C++ nlohmann::json 获取引用类型</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="bookmark" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></li><li><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="bookmark" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></li><li class="active"><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="bookmark" title="c++编程错误锦囊">c++编程错误锦囊</a></li><li><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="bookmark" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></li><li><a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="bookmark" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></li><li><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="COM学习笔记">COM学习笔记</a></li><li><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" rel="bookmark" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></li><li><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></li><li><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" rel="bookmark" title="单例模式的好与坏">单例模式的好与坏</a></li><li><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++安全编程规范笔记">C++安全编程规范笔记</a></li><li><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Reverse/Mechanism-of-LFH/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/" title="分类于 新年計画">新年計画</a>
+</div>
+
+    <span><a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" title="新年の始まり">新年の始まり</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/Study-of-C-Coding-Standards/" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Mechanism-of-LFH/" title="Mechanism_of_LFH">Mechanism_of_LFH</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Obfuscation/" title="分类于 Obfuscation">Obfuscation</a>
+</div>
+
+    <span><a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" title="混淆简介">混淆简介</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">单例模式的好与坏</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Development/c++编程错误锦囊/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

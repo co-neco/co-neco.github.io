@@ -1,0 +1,580 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="linux,signal" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/">
+
+
+
+  <title>
+linux的信号同步与异步笔记 - Development - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">linux的信号同步与异步笔记
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-11-25 10:08:09">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-11-25T10:08:09+08:00">2022-11-25</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/15.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/42.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/28.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/35.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/55.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/50.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Development/" itemprop="item" rel="index" title="分类于 Development"><span itemprop="name">Development</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>昨天和同事在讨论安卓ANR的SIGQUIT信号处理时，有以下一些疑惑：</p>
+<ul>
+<li>blocked signal是什么意思，有什么意义，是针对进程的还是线程的</li>
+<li>pthread_sigmask是针对当前线程还是进程的</li>
+<li>关于sigwait的线程，sigwait等待的signal是blocked还是unblocked，或者都可以</li>
+<li>如何一个signal handler和sigwait都可以处理一个signal，那谁先接收到该信号</li>
+</ul>
+<p>接下来每个小节会按顺序说明这几个问题。</p>
+<blockquote>
+<p>因为blocked和pending翻译起来有点别扭，所以相关专业词汇就直接用英文描述了。</p>
+</blockquote>
+<h2 id="blocked-signal"><a href="#blocked-signal" class="headerlink" title="blocked signal"></a>blocked signal</h2><p>blocked signal简单理解就是被中断的信号。不允许这些信号被信号处理器处理。</p>
+<p>blocked signal是针对线程的（以线程为对象）。</p>
+<p>其作用在于防止某些线程处理特定信号。</p>
+<p>其意义有两个：</p>
+<ul>
+<li>完成开发者需求：对线程手动设置了signal mask，那么线程不会这些信号，防止错误发生。</li>
+<li>操作系统的机制：signal handler处理信号A时，信号A会被操作系统设置为blocked signal，即signal handler在处理特定信号时，不会处理相同类别的信号。当signal handler处理完信号A后，信号A会还原为unblocked signal（以上仅针对同一个线程。一个线程的signal handler在处理信号A时，另一个线程也可以使用上述的signal handler去处理信号A）。</li>
+</ul>
+<h2 id="pthread-sigmask是针对当前线程还是进程的"><a href="#pthread-sigmask是针对当前线程还是进程的" class="headerlink" title="pthread_sigmask是针对当前线程还是进程的"></a>pthread_sigmask是针对当前线程还是进程的</h2><p>针对线程的，哪个线程调用pthread_sigmask，哪个线程的signal mask会对应改变。</p>
+<h2 id="sigwait等待的signal是blocked还是unblocked，或者都可以"><a href="#sigwait等待的signal是blocked还是unblocked，或者都可以" class="headerlink" title="sigwait等待的signal是blocked还是unblocked，或者都可以"></a>sigwait等待的signal是blocked还是unblocked，或者都可以</h2><p>都可以。根据官方文档，sigwait是同步的，当sigwait对应的线程接收到处于pending状态的signal，sigwait返回对应的信号。这里没说处于pending状态的signal是blocked或者unblocked（即线程的sigmask是否包含该信号），通过实验证明，blocked和unblocked都可以。</p>
+<h2 id="如何一个signal-handler和sigwait都处理同一个signal，那谁会接收到该信号"><a href="#如何一个signal-handler和sigwait都处理同一个signal，那谁会接收到该信号" class="headerlink" title="如何一个signal handler和sigwait都处理同一个signal，那谁会接收到该信号"></a>如何一个signal handler和sigwait都处理同一个signal，那谁会接收到该信号</h2><p>根据实验表明，sigwait会接收到该signal，signal handler不会被执行。</p>
+<p>另外，如果signal handler等待SIGINT信号，而sigwait等待SIGQUIT信号，在发送SIGINT后，该线程仍处于sigwait的同步等待状态，signal handler无法执行。</p>
+
+      <div class="tags">
+          <a href="/tags/linux/" rel="tag"><i class="ic i-tag"></i> linux</a>
+          <a href="/tags/signal/" rel="tag"><i class="ic i-tag"></i> signal</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Development/linux的信号同步与异步笔记/" class="item leancloud_visitors" data-flag-title="linux的信号同步与异步笔记" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">https://conecoy.cn/Technology/Development/linux的信号同步与异步笔记/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;14.jpg" title="混淆简介">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Obfuscation</span>
+  <h3>混淆简介</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;30.jpg" title="C++工程预编译笔记.md">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>C++工程预编译笔记.md</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#blocked-signal"><span class="toc-number">1.</span> <span class="toc-text">blocked signal</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pthread-sigmask%E6%98%AF%E9%92%88%E5%AF%B9%E5%BD%93%E5%89%8D%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E8%BF%9B%E7%A8%8B%E7%9A%84"><span class="toc-number">2.</span> <span class="toc-text">pthread_sigmask是针对当前线程还是进程的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sigwait%E7%AD%89%E5%BE%85%E7%9A%84signal%E6%98%AFblocked%E8%BF%98%E6%98%AFunblocked%EF%BC%8C%E6%88%96%E8%80%85%E9%83%BD%E5%8F%AF%E4%BB%A5"><span class="toc-number">3.</span> <span class="toc-text">sigwait等待的signal是blocked还是unblocked，或者都可以</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%B8%80%E4%B8%AAsignal-handler%E5%92%8Csigwait%E9%83%BD%E5%A4%84%E7%90%86%E5%90%8C%E4%B8%80%E4%B8%AAsignal%EF%BC%8C%E9%82%A3%E8%B0%81%E4%BC%9A%E6%8E%A5%E6%94%B6%E5%88%B0%E8%AF%A5%E4%BF%A1%E5%8F%B7"><span class="toc-number">4.</span> <span class="toc-text">如何一个signal handler和sigwait都处理同一个signal，那谁会接收到该信号</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="bookmark" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></li><li><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="bookmark" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></li><li><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="bookmark" title="c++编程错误锦囊">c++编程错误锦囊</a></li><li><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="bookmark" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></li><li><a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="bookmark" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></li><li><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="COM学习笔记">COM学习笔记</a></li><li class="active"><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" rel="bookmark" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></li><li><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></li><li><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" rel="bookmark" title="单例模式的好与坏">单例模式的好与坏</a></li><li><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++安全编程规范笔记">C++安全编程规范笔记</a></li><li><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/Study-of-C-Coding-Standards/" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="COM学习笔记">COM学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" title="C++安全编程规范笔记">C++安全编程规范笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Mechanism-of-LFH/" title="Mechanism_of_LFH">Mechanism_of_LFH</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">单例模式的好与坏</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Development/linux的信号同步与异步笔记/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

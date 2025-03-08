@@ -1,0 +1,691 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/">
+
+
+
+  <title>
+关于VS点击单个测试用例卡死的分析 - Reverse - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">关于VS点击单个测试用例卡死的分析
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2024-01-30 09:20:39">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2024-01-30T09:20:39+08:00">2024-01-30</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/31.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/63.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/59.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/12.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/67.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/22.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Reverse/" itemprop="item" rel="index" title="分类于 Reverse"><span itemprop="name">Reverse</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>某一天，点击VS的单个测试用例时，发现卡死了，VS提示没有响应，以下是测试工程的结构：</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Project_name</span><br><span class="line"><span class="bullet">-</span> <span class="string">namespace</span></span><br><span class="line"> <span class="bullet">-</span> <span class="string">test_suite_name</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">test1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">test2    &lt;---- 点击test2，就卡死</span></span><br></pre></td></tr></table></figure>
+
+<p>提示如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/DFFC8052-EC83-4a42-BA89-E14B6A80F95E.png"></p>
+<p>当时简单用windbg看了下，没有看出原因。因为当时可以使用命令行选项来跑单个测试用例，所以这个问题就搁置了。</p>
+<p>之后重装了操作系统，发现没有这个卡死问题了。一段时间后，结果又出现了这个卡死。看来还是得把这个问题解决，在VS的UI测试单元测试用例还是挺实用的。</p>
+<h2 id="盲猜诱因"><a href="#盲猜诱因" class="headerlink" title="盲猜诱因"></a>盲猜诱因</h2><p>之前有一次停电，然后电脑没关，导致了电脑突然关机，有些进程没有及时保存各自的数据。于是怀疑是VS的缓存一致性被破坏了。</p>
+<p>参考microsoft社区的<span class="exturl" data-url="aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL2Fuc3dlcnMvcXVlc3Rpb25zLzEyMjExMzYvdmlzdWFsLXN0dWRpby0yMDIyLWNsZWFyLWxvY2FsLWNhY2hlcw==">回答</span>，清空了以下三部分：</p>
+<blockquote>
+<ul>
+<li><p>Component Cache</p>
+<p>Close Visual Studio (ensure devenv.exe is not present in the Task Manager) and delete the C:\Users\xxxx AppData\Local\Microsoft\VisualStudio\your version xxx\ComponentModelCache directory</p>
+</li>
+<li><p>Temp folder</p>
+<p>Delete the C:\Users\xxxx \AppData\Local\Temp directory</p>
+</li>
+<li><p>Roslyn folder</p>
+<p>C:\Users\xxxx\AppData\Local\Microsoft\VisualStudio\Roslyn</p>
+</li>
+</ul>
+</blockquote>
+<p>重启VS，结果依旧卡死。清除缓存不行，看来只能上windbg了。</p>
+<h2 id="初步分析"><a href="#初步分析" class="headerlink" title="初步分析"></a>初步分析</h2><p>VS是32位的，一般启动不会有管理员权限，所以用windbg直接附加就可以分析了。</p>
+<blockquote>
+<p>windbg安装：windbg属于WDK的一部分，安装请参考这篇<span class="exturl" data-url="aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJpdmVycy9kb3dubG9hZC10aGUtd2Rr">官方文档</span>。</p>
+</blockquote>
+<p>因为是界面卡死，然后界面对应的线程是主线程，主线程在windbg里是0号线程，所以切过去，看下栈：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">051</span>&gt; ~<span class="number">0</span>s</span><br><span class="line">eax=<span class="number">00000000</span> ebx=<span class="number">00000002</span> ecx=<span class="number">00000000</span> edx=<span class="number">00000000</span> esi=<span class="number">00000000</span> edi=<span class="number">00000001</span></span><br><span class="line">eip=<span class="number">7585586</span>c esp=<span class="number">006</span>fe590 ebp=<span class="number">006</span>fe600 iopl=<span class="number">0</span>         nv up ei pl nz ac pe nc</span><br><span class="line">cs=<span class="number">0023</span>  ss=<span class="number">002</span>b  ds=<span class="number">002</span>b  es=<span class="number">002</span>b  fs=<span class="number">0053</span>  gs=<span class="number">002</span>b             efl=<span class="number">00200216</span></span><br><span class="line">win32u!NtUserMsgWaitForMultipleObjectsEx<span class="number">+0xc</span>:</span><br><span class="line"><span class="number">7585586</span>c c21400          ret     <span class="number">14</span>h</span><br><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; kv</span><br><span class="line"> # ChildEBP RetAddr  Args to Child              </span><br><span class="line"><span class="number">00</span> <span class="number">006</span>fe58c <span class="number">75</span>bdc37a <span class="number">00000001</span> <span class="number">222</span>d4b14 ffffffff win32u!NtUserMsgWaitForMultipleObjectsEx<span class="number">+0xc</span> (FPO: [<span class="number">5</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">01</span> <span class="number">006</span>fe600 <span class="number">75</span>bdc2ac <span class="number">00000001</span> <span class="number">222</span>d4b14 ffffffff USER32!RealMsgWaitForMultipleObjectsEx<span class="number">+0x7a</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">02</span> <span class="number">006</span>fe620 <span class="number">5</span>a051583 <span class="number">00000001</span> <span class="number">222</span>d4b14 ffffffff USER32!MsgWaitForMultipleObjectsEx<span class="number">+0x4c</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">03</span> <span class="number">006</span>fe644 <span class="number">750173</span>cd <span class="number">00000001</span> <span class="number">222</span>d4b14 ffffffff vslog!VSResponsiveness::Detours::DetourMsgWaitForMultipleObjectsEx<span class="number">+0x45</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">04</span> <span class="number">006</span>fe6c4 <span class="number">75017074</span> <span class="number">222</span>d4b14 <span class="number">00000001</span> <span class="number">006</span>fe814 combase!CCliModalLoop::BlockFn<span class="number">+0x14b</span> (FPO: [Non-Fpo]) (CONV: thiscall) [onecore\com\combase\dcomrem\callctrl.cxx @ <span class="number">2156</span>] </span><br><span class="line"><span class="number">05</span> <span class="number">006</span>fe780 <span class="number">75016</span>a97 <span class="number">00000002</span> ffffffff <span class="number">00000001</span> combase!ClassicSTAThreadWaitForHandles<span class="number">+0xb4</span> (FPO: [Non-Fpo]) (CONV: stdcall) [onecore\com\combase\dcomrem\classicsta.cpp @ <span class="number">51</span>] </span><br><span class="line"><span class="number">06</span> <span class="number">006</span>fe7ac <span class="number">5</span>a051a35 <span class="number">00000002</span> ffffffff <span class="number">00000001</span> combase!CoWaitForMultipleHandles<span class="number">+0x77</span> (FPO: [Non-Fpo]) (CONV: stdcall) [onecore\com\combase\dcomrem\sync.cxx @ <span class="number">122</span>] </span><br><span class="line"><span class="number">07</span> <span class="number">006</span>fe7dc <span class="number">58</span>c9056e <span class="number">00000002</span> ffffffff <span class="number">00000001</span> vslog!VSResponsiveness::Detours::DetourCoWaitForMultipleHandles<span class="number">+0x72</span> (FPO: [<span class="number">5</span>,<span class="number">1</span>,<span class="number">4</span>])</span><br><span class="line"><span class="number">0</span>8 <span class="number">006</span>fe830 <span class="number">58</span>c904fe <span class="number">00000000</span> ffffffff <span class="number">00000001</span> clr!MsgWaitHelper<span class="number">+0x64</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>9 <span class="number">006</span>fe8b4 <span class="number">58</span>d6c4ae <span class="number">00000001</span> <span class="number">222</span>d4b14 <span class="number">00000000</span> clr!Thread::DoAppropriateWaitWorker<span class="number">+0x1d8</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>a <span class="number">006</span>fe920 <span class="number">58</span>d6c5f7 <span class="number">00000001</span> <span class="number">222</span>d4b14 <span class="number">00000000</span> clr!Thread::DoAppropriateWait<span class="number">+0x64</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>b <span class="number">006</span>fe96c <span class="number">58</span>bd13cc ffffffff <span class="number">00000001</span> <span class="number">00000000</span> clr!CLREventBase::WaitEx<span class="number">+0x121</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>c <span class="number">006</span>fe984 <span class="number">58</span>d57bbb ffffffff <span class="number">00000001</span> <span class="number">00000000</span> clr!CLREventBase::Wait<span class="number">+0x1a</span> (FPO: [<span class="number">3</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">0</span>d <span class="number">006</span>fea10 <span class="number">58</span>d57cec <span class="number">009e9</span>a08 ffffffff bb93f<span class="number">1e9</span> clr!AwareLock::EnterEpilogHelper<span class="number">+0xa8</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>e <span class="number">006</span>fea58 <span class="number">58</span>d57ac5 <span class="number">009e9</span>a08 ffffffff <span class="number">006</span>feb48 clr!AwareLock::EnterEpilog<span class="number">+0x48</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>f <span class="number">006</span>fea70 <span class="number">58</span>ca97d2 bb93f0ad <span class="number">006</span>feb48 <span class="number">2</span>d87a548 clr!AwareLock::Enter<span class="number">+0x4a</span> (FPO: [<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">10</span> <span class="number">006</span>feb1c <span class="number">14550</span>bb2 <span class="number">179</span>f3680 <span class="number">17</span>a052a0 <span class="number">179</span>f3640 clr!JITutil_MonReliableEnter<span class="number">+0xb5</span> (FPO: [Non-Fpo])</span><br><span class="line">WARNING: Frame IP <span class="keyword">not</span> in any known <span class="keyword">module</span>. Following frames may be wrong.</span><br><span class="line"><span class="number">11</span> <span class="number">006</span>feb54 <span class="number">145508</span>d8 <span class="number">17</span>a<span class="number">02e6</span>c <span class="number">12e7</span>ad50 <span class="number">2</span>d94c2f0 <span class="number">0x14550bb2</span></span><br><span class="line"><span class="number">12</span> <span class="number">006</span>feba8 <span class="number">1452</span>a5f1 <span class="number">04e3</span>b530 <span class="number">17</span>a05074 <span class="number">17</span>a01b44 <span class="number">0x145508d8</span></span><br><span class="line"><span class="number">13</span> <span class="number">006</span>fecac <span class="number">14529755</span> <span class="number">179</span>f3640 <span class="number">173</span>a15cc <span class="number">17</span>a017d8 <span class="number">0x1452a5f1</span></span><br><span class="line"><span class="number">14</span> <span class="number">006</span>fed28 <span class="number">55</span>abcc3a <span class="number">006</span>fed94 <span class="number">55</span>a53674 <span class="number">03612</span>f48 <span class="number">0x14529755</span></span><br><span class="line"><span class="number">15</span> <span class="number">006</span>fed30 <span class="number">55</span>a53674 <span class="number">03612</span>f48 <span class="number">0363</span>c814 <span class="number">00000000</span> mscorlib_ni!System.Runtime.CompilerServices.AsyncMethodBuilderCore+MoveNextRunner.<span class="built_in">InvokeMoveNext</span>(System.Object)$##<span class="number">600711</span>C<span class="number">+0x1a</span></span><br><span class="line"><span class="number">16</span> <span class="number">006</span>fed94 <span class="number">55</span>a535a7 <span class="number">00000001</span> <span class="number">17</span>a018ec <span class="number">00000000</span> mscorlib_ni!System.Threading.ExecutionContext.<span class="built_in">RunInternal</span>(System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object, Boolean)$##<span class="number">6003</span>C30<span class="number">+0xc4</span></span><br><span class="line">...</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>栈帧0-2的前两个参数是等待的句柄数和句柄数组：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; dd <span class="number">222</span>d4b14  l1</span><br><span class="line"><span class="number">222</span>d4b14  <span class="number">00001</span>8fc</span><br><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; !handle <span class="number">00001</span>8fc f</span><br><span class="line">Handle <span class="number">18</span>fc</span><br><span class="line">  Type         	Event</span><br><span class="line">  Attributes   	<span class="number">0</span></span><br><span class="line">  GrantedAccess	<span class="number">0x1f0003</span>:</span><br><span class="line">         Delete,ReadControl,WriteDac,WriteOwner,Synch</span><br><span class="line">         QueryState,ModifyState</span><br><span class="line">  HandleCount  	<span class="number">2</span></span><br><span class="line">  PointerCount 	<span class="number">34922</span></span><br><span class="line">  Name         	&lt;none&gt;</span><br><span class="line">  Object Specific Information</span><br><span class="line">    Event Type Auto Reset</span><br><span class="line">    Event is Waiting</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个句柄表示一个事件，且是non-signaled状态。值得注意的是这个句柄被打开了两次(HandleCount)，可猜测有一个线程获取了这个事件，而主线程在等待这个事件，结果那个线程有没有将这个事件值为signaled状态，导致死锁。</p>
+<p>栈帧继续往下看，观察3-6，关于combase模块，从模块的函数名可看出该模块负责等待；然后栈帧3是vslog模块用inlinehook的方式劫持等待函数，用于记录等待事件，无响应的窗口弹出应该就是通过这种方式实现的，即记录等待的时间，如果超时就提示。</p>
+<p>再观察栈帧8-16，可看到进入等待的一个流程。从17开始，就看不到模块名了，这是因为.net程序的托管代码需要通过clr模块的jit化，编译成机器码（汇编代码）才能执行，所以这一片内存是clr专门为动态jit化的代码分配的内存，所以看不到模块信息。</p>
+<p>栈帧再往后就是一些.net模块的栈，其中可看到一些C#的函数，不过都属于框架的东西、多线程异步调用，没有太多参考内容。</p>
+<p>观察其他线程的信息，没找到相关有用的信息，那现在的线索就只有主线程的等待流程了，即栈帧8-16了。</p>
+<h2 id="等待流程分析"><a href="#等待流程分析" class="headerlink" title="等待流程分析"></a>等待流程分析</h2><p>为方便阅读，这里把栈帧8-16单独提出来</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>8 <span class="number">006</span>fe830 <span class="number">58</span>c904fe <span class="number">00000000</span> ffffffff <span class="number">00000001</span> clr!MsgWaitHelper<span class="number">+0x64</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>9 <span class="number">006</span>fe8b4 <span class="number">58</span>d6c4ae <span class="number">00000001</span> <span class="number">222</span>d4b14 <span class="number">00000000</span> clr!Thread::DoAppropriateWaitWorker<span class="number">+0x1d8</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>a <span class="number">006</span>fe920 <span class="number">58</span>d6c5f7 <span class="number">00000001</span> <span class="number">222</span>d4b14 <span class="number">00000000</span> clr!Thread::DoAppropriateWait<span class="number">+0x64</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>b <span class="number">006</span>fe96c <span class="number">58</span>bd13cc ffffffff <span class="number">00000001</span> <span class="number">00000000</span> clr!CLREventBase::WaitEx<span class="number">+0x121</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>c <span class="number">006</span>fe984 <span class="number">58</span>d57bbb ffffffff <span class="number">00000001</span> <span class="number">00000000</span> clr!CLREventBase::Wait<span class="number">+0x1a</span> (FPO: [<span class="number">3</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">0</span>d <span class="number">006</span>fea10 <span class="number">58</span>d57cec <span class="number">009e9</span>a08 ffffffff bb93f<span class="number">1e9</span> clr!AwareLock::EnterEpilogHelper<span class="number">+0xa8</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>e <span class="number">006</span>fea58 <span class="number">58</span>d57ac5 <span class="number">009e9</span>a08 ffffffff <span class="number">006</span>feb48 clr!AwareLock::EnterEpilog<span class="number">+0x48</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">0</span>f <span class="number">006</span>fea70 <span class="number">58</span>ca97d2 bb93f0ad <span class="number">006</span>feb48 <span class="number">2</span>d87a548 clr!AwareLock::Enter<span class="number">+0x4a</span> (FPO: [<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">10</span> <span class="number">006</span>feb1c <span class="number">14550</span>bb2 <span class="number">179</span>f3680 <span class="number">17</span>a052a0 <span class="number">179</span>f3640 clr!JITutil_MonReliableEnter<span class="number">+0xb5</span> (FPO: [Non-Fpo])</span><br></pre></td></tr></table></figure>
+
+<p>为什么会一直等待一个事件句柄呢，这需要细看这个句柄是哪里来的。仔细观察栈帧的参数部分，可看到句柄数组最后出现在栈帧10，也就是说CLREventBase::WaitEx提供了等待事件的句柄给Thread::DoAppropriateWait函数。那打开IDA，开始解析clr模块，观察CLREventBase::WaitEx函数：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/58BF08C3-B31E-480e-99ED-51452C9FC063.png"></p>
+<p>可看到v7变量是this指针，this变量是CLREventBase实例，而this变量就是等待的数组地址，由此可知CLREventBase是一个没有虚表的类，第一个成员就是等待事件的句柄。</p>
+<p>接下来要看CLREventBase实例是在哪生成的，观察栈，在IDA寻找，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240130145952115.png" alt="image-20240130145952115"></p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240130150212590.png" alt="image-20240130150212590"></p>
+<p>可看到CLREventBase实例其实是AwareLock类的一个成员，从Wait的调用往上，可看到AwareLock::AllocLockSemEvent函数，该函数会调用CLREventBase::CreateMonitorEvent，然后CreateMonitorEvent方法会调用CreateEventW(0, 0, 0, 0)来创建事件，这个事件就是0-2栈帧等待的事件句柄。观察到AllocLockSemEvent函数的调用有一个条件：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( (*((_DWORD *)<span class="keyword">this</span> + <span class="number">6</span>) &amp; <span class="number">8</span>) == <span class="number">0</span> )</span><br><span class="line">    AwareLock::<span class="built_in">AllocLockSemEvent</span>(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如果this+6*4 地址处的成员变量的第4位不为0，则认为不需要创建事件句柄，这里可理解为第4位不为0，则事件句柄就是存在的，和单例模式的实例创建类似，如果没有才创建。继续往上回溯，看AwareLock的实例是怎么来的：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240130151048057.png" alt="image-20240130151048057"></p>
+<p>这是16号栈帧，最后一个有用的栈帧，从代码可看出AwareLock的实例是从ObjHeader::GetSyncBlock来的，google一下该函数，发现这个函数是获取对象的同步块。那这个对象是什么时候，从哪创建的呢？</p>
+<p>分析到这里，线索断了。</p>
+<h2 id="NET程序调试"><a href="#NET程序调试" class="headerlink" title=".NET程序调试"></a>.NET程序调试</h2><p>其实，我们之前是在调试非托管代码，而.NET程序存在文件中的元数据包含的是托管代码，托管代码通过jit化，转成机器码并执行。</p>
+<p>只分析非托管代码，能获取的信息是有限的，因此最后还是需要分析托管代码，.NET框架提供了一个sos扩展，该扩展可方便windbg观察托管代码的数据，比如栈、函数的变量和参数等。</p>
+<p>因为对sos扩展的使用不熟，所以之前尝试了非托管代码的分析，目前看来走不通了，那就从整体.NET程序的流程来分析。</p>
+<h3 id="加载sos-dll"><a href="#加载sos-dll" class="headerlink" title="加载sos.dll"></a>加载sos.dll</h3><p>为使用sos模块，需要显式在windbg中加载sos模块，加载的方法有两种：</p>
+<ul>
+<li><p>.load <sos_dll_path></p>
+</li>
+<li><p>.loadby sos <some_module_path></p>
+<blockquote>
+<p>这里的some_module_path是和sos在同一个目录的模块，且已经被加载到进程里了。</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>关于sos模块的基本使用方法可参考微软的<span class="exturl" data-url="aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL2RvdG5ldC9mcmFtZXdvcmsvdG9vbHMvc29zLWRsbC1zb3MtZGVidWdnaW5nLWV4dGVuc2lvbg==">这篇官方文档</span>。</p>
+</blockquote>
+<h3 id="从托管代码的角度观察栈"><a href="#从托管代码的角度观察栈" class="headerlink" title="从托管代码的角度观察栈"></a>从托管代码的角度观察栈</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; .loadby sos clrjit</span><br><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; !sos.<span class="function">help</span></span><br><span class="line"><span class="function">The call to <span class="title">LoadLibrary</span><span class="params">(sos)</span> failed, Win32 error 0n2 &quot;系统找不到指定的文件。&quot;</span></span><br><span class="line"><span class="function">0:<span class="number">000</span>&gt; !CLRStack</span></span><br><span class="line"><span class="function">OS Thread Id: <span class="number">0x5734</span> (<span class="number">0</span>)</span></span><br><span class="line"><span class="function">Child SP       IP Call Site</span></span><br><span class="line"><span class="function"><span class="number">006</span>fe9ac <span class="number">7585586</span>c [GCFrame: <span class="number">006</span>fe9ac] </span></span><br><span class="line"><span class="function"><span class="number">006</span>fea8c <span class="number">7585586</span>c [GCFrame: <span class="number">006</span>fea8c] </span></span><br><span class="line"><span class="function">...</span></span><br><span class="line"><span class="function"><span class="number">0</span>:<span class="number">000</span>&gt; !sos.help</span></span><br><span class="line"><span class="function">-------------------------------------------------------------------------------</span></span><br><span class="line"><span class="function">SOS is a debugger extension DLL designed to aid in the debugging of managed</span></span><br><span class="line"><span class="function">programs. Functions are listed by category, then roughly in order of</span></span><br><span class="line"><span class="function">importance. Shortcut names for popular functions are listed in parenthesis.</span></span><br><span class="line"><span class="function">Type <span class="string">&quot;!help &lt;functionname&gt;&quot;</span> for detailed info on that function. </span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">Object Inspection                  Examining code and stacks</span></span><br><span class="line"><span class="function">-----------------------------      -----------------------------</span></span><br><span class="line"><span class="function">DumpObj (do)                       Threads</span></span><br><span class="line"><span class="function">...</span></span><br></pre></td></tr></table></figure>
+
+<p> 从以上命令可看到，有时即使执行了.load和.loadby命令，帮助文档还是打不开，但使用了sos的其中一个命令后，就可以打开帮助文档了。</p>
+<p>关于sos有哪些命令，可在微软的官方了解，也可以用!sos.help来了解，如果要了解某一条具体的命令，可以输<code>!help sos_command</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; !help CLRStack</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">!CLRStack [-a] [-l] [-p] [-n]</span><br><span class="line">!CLRStack [-a] [-l] [-p] [-i] [variable name] [frame]</span><br><span class="line"></span><br><span class="line">CLRStack attempts to provide a <span class="literal">true</span> stack trace <span class="keyword">for</span> managed code only. It is</span><br><span class="line">handy <span class="keyword">for</span> clean, simple traces when debugging straightforward managed </span><br><span class="line">programs.</span><br></pre></td></tr></table></figure>
+
+<p>了解了sos的基本资料后，我们观察下完整的主线程的栈：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; !CLRStack</span><br><span class="line">OS Thread Id: <span class="number">0x5734</span> (<span class="number">0</span>)</span><br><span class="line">Child SP       IP Call Site</span><br><span class="line"><span class="number">006</span>fe9ac <span class="number">7585586</span>c [GCFrame: <span class="number">006</span>fe9ac] </span><br><span class="line"><span class="number">006</span>fea8c <span class="number">7585586</span>c [GCFrame: <span class="number">006</span>fea8c] </span><br><span class="line"><span class="number">006</span>feaa8 <span class="number">7585586</span>c [HelperMethodFrame_1OBJ: <span class="number">006</span>feaa8] System.Threading.Monitor.<span class="built_in">ReliableEnter</span>(System.Object, Boolean ByRef)</span><br><span class="line"><span class="number">006</span>feb24 <span class="number">14550</span>bb2 Microsoft.CodeAnalysis.Options.GlobalOptionService.<span class="built_in">RefreshOption</span>(Microsoft.CodeAnalysis.Options.OptionKey, System.Object)</span><br><span class="line"><span class="number">006</span>feb64 <span class="number">145508</span>d8 Microsoft.VisualStudio.LanguageServices.Implementation.Options.LanguageSettingsPersister.<span class="built_in">RefreshLanguageSettings</span>(Microsoft.VisualStudio.TextManager.Interop.LANGPREFERENCES3[])</span><br><span class="line"><span class="number">006</span>febb0 <span class="number">1452</span>a5f1 Microsoft.VisualStudio.LanguageServices.Implementation.Options.LanguageSettingsPersister..<span class="built_in">ctor</span>(Microsoft.CodeAnalysis.Editor.Shared.Utilities.IThreadingContext, Microsoft.VisualStudio.TextManager.Interop.IVsTextManager4, Microsoft.CodeAnalysis.Options.IGlobalOptionService)</span><br><span class="line"><span class="number">006</span>fecbc <span class="number">14529755</span> Microsoft.VisualStudio.LanguageServices.Implementation.Options.LanguageSettingsPersisterProvider+d__<span class="number">5.</span><span class="built_in">MoveNext</span>()</span><br><span class="line"><span class="number">006</span>fed30 <span class="number">55</span>abcc3a System.Runtime.CompilerServices.AsyncMethodBuilderCore+MoveNextRunner.<span class="built_in">InvokeMoveNext</span>(System.Object)</span><br><span class="line"><span class="number">006</span>fed38 <span class="number">55</span>a53674 System.Threading.ExecutionContext.<span class="built_in">RunInternal</span>(System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object, Boolean)</span><br><span class="line"><span class="number">006</span>feda4 <span class="number">55</span>a535a7 System.Threading.ExecutionContext.<span class="built_in">Run</span>(System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object, Boolean)</span><br><span class="line"><span class="number">006</span>fedb8 <span class="number">55</span>abcb8e System.Runtime.CompilerServices.AsyncMethodBuilderCore+MoveNextRunner.<span class="built_in">Run</span>()</span><br><span class="line"><span class="number">006</span>fede8 <span class="number">51</span>b<span class="number">0e8f</span>d Microsoft.VisualStudio.Threading.JoinableTaskFactory+SingleExecuteProtector.<span class="built_in">TryExecute</span>()</span><br><span class="line"><span class="number">006</span>fee2c <span class="number">51</span>ac0c4a Microsoft.VisualStudio.Threading.JoinableTaskFactory+SingleExecuteProtector+c.<span class="built_in">b__20_0</span>(System.Object)</span><br><span class="line"><span class="number">006</span>fee30 <span class="number">5449</span>efae System.Windows.Threading.ExceptionWrapper.<span class="built_in">InternalRealCall</span>(System.Delegate, System.Object, Int32)</span><br><span class="line"><span class="number">006</span>fee50 <span class="number">5449</span>ee95 System.Windows.Threading.ExceptionWrapper.<span class="built_in">TryCatchWhen</span>(System.Object, System.Delegate, System.Object, Int32, System.Delegate)</span><br><span class="line"><span class="number">006</span>fee94 <span class="number">544</span>a11cd System.Windows.Threading.DispatcherOperation.<span class="built_in">InvokeImpl</span>()</span><br><span class="line"><span class="number">006</span>feecc <span class="number">5449</span>f67f System.Windows.Threading.DispatcherOperation.<span class="built_in">InvokeInSecurityContext</span>(System.Object)</span><br><span class="line"><span class="number">006</span>feed4 <span class="number">544</span>a0f9b System.Windows.Threading.DispatcherOperation.<span class="built_in">Invoke</span>()</span><br><span class="line"><span class="number">006</span>fef08 <span class="number">5449</span>d456 System.Windows.Threading.Dispatcher.<span class="built_in">ProcessQueue</span>()</span><br><span class="line"><span class="number">006</span>fef48 <span class="number">5449</span>c57c System.Windows.Threading.Dispatcher.<span class="built_in">WndProcHook</span>(IntPtr, Int32, IntPtr, IntPtr, Boolean ByRef)</span><br><span class="line"><span class="number">006</span>fef94 <span class="number">5449e771</span> MS.Win<span class="number">32.</span>HwndWrapper.<span class="built_in">WndProc</span>(IntPtr, Int32, IntPtr, IntPtr, Boolean ByRef)</span><br><span class="line"><span class="number">006</span>fefd0 <span class="number">5449</span>ea5c MS.Win<span class="number">32.</span>HwndSubclass.<span class="built_in">DispatcherCallbackOperation</span>(System.Object)</span><br><span class="line"><span class="number">006</span>fefe0 <span class="number">5449</span>ef52 System.Windows.Threading.ExceptionWrapper.<span class="built_in">InternalRealCall</span>(System.Delegate, System.Object, Int32)</span><br><span class="line"><span class="number">006</span>ff000 <span class="number">5449</span>ee95 System.Windows.Threading.ExceptionWrapper.<span class="built_in">TryCatchWhen</span>(System.Object, System.Delegate, System.Object, Int32, System.Delegate)</span><br><span class="line"><span class="number">006</span>ff044 <span class="number">5449</span>d072 System.Windows.Threading.Dispatcher.<span class="built_in">LegacyInvokeImpl</span>(System.Windows.Threading.DispatcherPriority, System.TimeSpan, System.Delegate, System.Object, Int32)</span><br><span class="line"><span class="number">006</span>ff0a0 <span class="number">5449e5</span>c4 MS.Win<span class="number">32.</span>HwndSubclass.<span class="built_in">SubclassWndProc</span>(IntPtr, Int32, IntPtr, IntPtr)</span><br></pre></td></tr></table></figure>
+
+<p>首先GCFrame是保护对象引用的，其实不是方法调用，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">// This frame protects object references for the EE&#x27;s convenience.</span></span><br><span class="line"><span class="comment">// This frame type actually is created from C++.</span></span><br><span class="line"><span class="comment">//------------------------------------------------------------------------</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GCFrame</span> : <span class="keyword">public</span> Frame &#123;<span class="comment">/*...*/</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>往下看，可以看到Microsoft.CodeAnalysis.Options.GlobalOptionService.RefreshOption是调用等待的函数，这个函数是C#语言的函数，我们可以找到该函数所处模块，然后用dnSpy反编译代码查看对应的代码。为找到该函数对应的模块，首先使用<code>!CLTStack -a</code>命令打印所有栈帧：</p>
+<blockquote>
+<p>因为某些原因，我重启了VS，以下偏移会不太一样，不过不影响分析流程的理解。</p>
+</blockquote>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240130170349796.png" alt="image-20240130170349796"></p>
+<p>Microsoft.CodeAnalysis.Options.GlobalOptionService的类实例是0x3a4d75b4，点击这个地址，会执行命令<code>!DumpObj /d 3a4d75b4</code>，该命令结果如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; !DumpObj /d <span class="number">3</span>a4d75b4</span><br><span class="line">Name:        Microsoft.CodeAnalysis.Options.GlobalOptionService</span><br><span class="line">MethodTable: <span class="number">17196770</span></span><br><span class="line">EEClass:     <span class="number">127</span>da2a4</span><br><span class="line">Size:        <span class="number">64</span>(<span class="number">0x40</span>) bytes</span><br><span class="line">File:        c:\<span class="function">program <span class="title">files</span> <span class="params">(x86)</span>\microsoft visual studio\2019\community\common7\ide\commonextensions\microsoft\managedlanguages\vbcsharp\languageservices\Microsoft.CodeAnalysis.Workspaces.dll</span></span><br><span class="line"><span class="function">Fields:</span></span><br><span class="line"><span class="function">      MT    Field   Offset                 Type VT     Attr    Value Name</span></span><br><span class="line"><span class="function"><span class="number">17195</span>bc4  <span class="number">4000669</span>        <span class="number">4</span> ...eThreadingService  <span class="number">0</span> instance <span class="number">3</span>a4b4788 _workspaceThreadingService</span></span><br><span class="line"><span class="function"><span class="number">00000000</span>  <span class="number">400066</span>a        <span class="number">8</span>                       <span class="number">0</span> instance <span class="number">3</span>a4d7898 _lazyAllOptions</span></span><br><span class="line"><span class="function">...</span></span><br></pre></td></tr></table></figure>
+
+<p>其中有一个File字段，这个字段对应的RefreshOption方法的所在模块。</p>
+<p>题外话，DumpObj的结果还有一个MethodTable字段，点击地址，会执行<code>!DumpMT /d 17196770</code>命令，输出这个类的方法统计信息。由于这样无法打印该类的所有方法，所以我们通过执行<code>!help DumpMT</code>命令，可以查看其具体用法，如下：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">0:000&gt; !help DumpMT</span></span><br><span class="line"><span class="section">-------------------------------------------------------------------------------</span></span><br><span class="line">!DumpMT [-MD] &lt;MethodTable address&gt;</span><br><span class="line"></span><br><span class="line">Examine a MethodTable. Each managed object has a MethodTable pointer at the </span><br><span class="line">start. If you pass the &quot;-MD&quot; flag, you&#x27;ll also see a list of all the methods </span><br><span class="line">defined on the object.</span><br></pre></td></tr></table></figure>
+
+<p>所以，最终执行<code>!DumpMT /d -MD 17196770</code>命令可查看该类的所有方法，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; !DumpMT /d -MD <span class="number">17196770</span></span><br><span class="line">EEClass:         <span class="number">127</span>da2a4</span><br><span class="line">Module:          <span class="number">2</span>a5533d8</span><br><span class="line">Name:            Microsoft.CodeAnalysis.Options.GlobalOptionService</span><br><span class="line">mdToken:         <span class="number">0200027</span>e</span><br><span class="line">File:            c:\<span class="function">program <span class="title">files</span> <span class="params">(x86)</span>\microsoft visual studio\2019\community\common7\ide\commonextensions\microsoft\managedlanguages\vbcsharp\languageservices\Microsoft.CodeAnalysis.Workspaces.dll</span></span><br><span class="line"><span class="function">BaseSize:        <span class="number">0x40</span></span></span><br><span class="line"><span class="function">ComponentSize:   <span class="number">0x0</span></span></span><br><span class="line"><span class="function">Slots in VTable: <span class="number">33</span></span></span><br><span class="line"><span class="function">Number of IFaces in IFaceMap: <span class="number">1</span></span></span><br><span class="line"><span class="function">--------------------------------------</span></span><br><span class="line"><span class="function">MethodDesc Table</span></span><br><span class="line"><span class="function">   Entry MethodDe    JIT Name</span></span><br><span class="line"><span class="function"><span class="number">55</span>a64838 <span class="number">5565</span>c838 PreJIT System.Object.ToString()</span></span><br><span class="line"><span class="function"><span class="number">55</span>a64720 <span class="number">5579</span>a7a0 PreJIT System.Object.Equals(System.Object)</span></span><br><span class="line"><span class="function"><span class="number">55</span>a6d270 <span class="number">5579</span>a7c0 PreJIT System.Object.GetHashCode()</span></span><br><span class="line"><span class="function"><span class="number">55</span>a1ff2c <span class="number">5579</span>a7c8 PreJIT System.Object.Finalize()</span></span><br><span class="line"><span class="function"><span class="number">070</span>8f6b9 <span class="number">17196630</span>   NONE Microsoft.CodeAnalysis.Options.GlobalOptionService.GetRegisteredOptions()</span></span><br><span class="line"><span class="function"><span class="number">1e8</span>a8210 <span class="number">171966</span>d4    JIT Microsoft.CodeAnalysis.Options.GlobalOptionService.RefreshOption(Microsoft.CodeAnalysis.Options.OptionKey, System.Object)</span></span><br><span class="line"><span class="function"><span class="number">171</span>a3c90 <span class="number">171966e8</span>    JIT Microsoft.CodeAnalysis.Options.GlobalOptionService.RegisterWorkspace(Microsoft.CodeAnalysis.Workspace)</span></span><br><span class="line"><span class="function"><span class="number">070</span>8f6f9 <span class="number">171966</span>f0   NONE Microsoft.CodeAnalysis.Options.GlobalOptionService.UnregisterWorkspace(Microsoft.CodeAnalysis.Workspace)</span></span><br><span class="line"><span class="function"><span class="number">171</span>a3c00 <span class="number">171966</span>f8    JIT Microsoft.CodeAnalysis.Options.GlobalOptionService.add_OptionChanged(System.EventHandler`<span class="number">1</span>)</span></span><br><span class="line"><span class="function"><span class="number">070</span>8f701 <span class="number">17196700</span>   NONE Microsoft.CodeAnalysis.Options.GlobalOptionService.remove_OptionChanged(System.EventHandler`<span class="number">1</span>)</span></span><br><span class="line"><span class="function"><span class="number">070</span>8fc28 <span class="number">17196708</span>    JIT Microsoft.CodeAnalysis.Options.GlobalOptionService..cctor()</span></span><br><span class="line"><span class="function">...</span></span><br></pre></td></tr></table></figure>
+
+<p>紧接正文，找到模块后，用dnSpy打开，查看如下代码：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Microsoft.CodeAnalysis.Options.GlobalOptionService</span></span><br><span class="line"><span class="comment">// Token: 0x06001E97 RID: 7831 RVA: 0x00065854 File Offset: 0x00063A54</span></span><br><span class="line">[<span class="meta">NullableContext(2)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">RefreshOption</span>(<span class="params">OptionKey2 optionKey, <span class="built_in">object</span> newValue</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">object</span> gate = <span class="keyword">this</span>._gate;</span><br><span class="line">	<span class="keyword">lock</span> (gate)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">object</span> objA;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>._currentValues.TryGetValue(optionKey, <span class="keyword">out</span> objA) &amp;&amp; <span class="built_in">object</span>.Equals(objA, newValue))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">this</span>._currentValues = <span class="keyword">this</span>._currentValues.SetItem(optionKey, newValue);</span><br><span class="line">	&#125;</span><br><span class="line">	List&lt;OptionChangedEventArgs&gt; changedOptions = <span class="keyword">new</span> List&lt;OptionChangedEventArgs&gt;</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">new</span> OptionChangedEventArgs(optionKey, newValue)</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="keyword">this</span>.RaiseOptionChangedEvent(changedOptions);</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据我们在非托管代码的分析，当时的等待事件句柄应该就是这个this._gate对象里的事件句柄了。从代码中可了解到，应该是其他线程锁住了_gate这个对象，导致主线程一直等待，然后锁住_gate的线程又因为什么原因，一直在等待，所以导致了死锁。那么锁住_gate的线程是谁呢？这时就需要打印所有线程的栈了。</p>
+<h3 id="观察所有线程的栈"><a href="#观察所有线程的栈" class="headerlink" title="观察所有线程的栈"></a>观察所有线程的栈</h3><p>运行命令<code>~*e !CLRStack</code>，打印所有线程的栈，其中发现一个与GlobalOptionService类有关的线程，其栈如下：</p>
+<blockquote>
+<p>注：在’~*’后面要跟一个’e’，这样才能对所有线程执行扩展命令。</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">OS Thread Id: <span class="number">0x1d30</span> (<span class="number">11</span>)</span><br><span class="line">Child SP       IP Call Site</span><br><span class="line">GetFrameContext failed: <span class="number">1</span></span><br><span class="line"><span class="number">00000000</span> <span class="number">00000000</span> </span><br><span class="line">OS Thread Id: <span class="number">0x65a0</span> (<span class="number">12</span>)</span><br><span class="line">Child SP       IP Call Site</span><br><span class="line"><span class="number">066</span>cede8 <span class="number">7717315</span>c [GCFrame: <span class="number">066</span>cede8] </span><br><span class="line"><span class="number">066</span>cee98 <span class="number">7717315</span>c [HelperMethodFrame_1OBJ: <span class="number">066</span>cee98] System.Threading.Monitor.<span class="built_in">ObjWait</span>(Boolean, Int32, System.Object)</span><br><span class="line"><span class="number">066</span>cef24 <span class="number">55</span>a2f348 System.Threading.Monitor.<span class="built_in">Wait</span>(System.Object, Int32, Boolean)</span><br><span class="line"><span class="number">066</span>cef34 <span class="number">55</span>a3d46d System.Threading.Monitor.<span class="built_in">Wait</span>(System.Object, Int32)</span><br><span class="line"><span class="number">066</span>cef38 <span class="number">55</span>aba689 System.Threading.ManualResetEventSlim.<span class="built_in">Wait</span>(Int32, System.Threading.CancellationToken)</span><br><span class="line"><span class="number">066</span>cef8c <span class="number">55</span>ab8a29 System.Threading.Tasks.Task.<span class="built_in">SpinThenBlockingWait</span>(Int32, System.Threading.CancellationToken)</span><br><span class="line"><span class="number">066</span>cefcc <span class="number">55</span>b1b4f9 System.Threading.Tasks.Task.<span class="built_in">InternalWait</span>(Int32, System.Threading.CancellationToken)</span><br><span class="line"><span class="number">066</span>cf030 <span class="number">55</span>ab8896 System.Threading.Tasks.Task.<span class="built_in">Wait</span>(Int32, System.Threading.CancellationToken)</span><br><span class="line"><span class="number">066</span>cf040 <span class="number">55</span>ab884d System.Threading.Tasks.Task.<span class="built_in">Wait</span>(System.TimeSpan)</span><br><span class="line"><span class="number">066</span>cf058 <span class="number">51</span>b10529 Microsoft.VisualStudio.Threading.JoinableTaskFactory.<span class="built_in">WaitSynchronouslyCore</span>(System.Threading.Tasks.Task)</span><br><span class="line"><span class="number">066</span>cf0cc <span class="number">51</span>b104a7 Microsoft.VisualStudio.Threading.JoinableTaskFactory.<span class="built_in">WaitSynchronously</span>(System.Threading.Tasks.Task)</span><br><span class="line"><span class="number">066</span>cf110 <span class="number">51</span>b0c176 Microsoft.VisualStudio.Threading.JoinableTask.<span class="built_in">CompleteOnCurrentThread</span>()</span><br><span class="line"><span class="number">066</span>cf17c <span class="number">1e8</span>a0eb3 Microsoft.VisualStudio.Threading.JoinableTask`<span class="number">1</span>[[System.Collections.Immutable.ImmutableArray`<span class="number">1</span>[[System.__Canon, mscorlib]], System.Collections.Immutable]].<span class="built_in">CompleteOnCurrentThread</span>()</span><br><span class="line"><span class="number">066</span>cf18c <span class="number">1e7</span>cc435 Microsoft.VisualStudio.Threading.JoinableTaskFactory.Run[[System.Collections.Immutable.ImmutableArray`<span class="number">1</span>[[System.__Canon, mscorlib]], System.Collections.Immutable]](System.Func`<span class="number">1</span>&gt;&gt;, Microsoft.VisualStudio.Threading.JoinableTaskCreationOptions)</span><br><span class="line"><span class="number">066</span>cf1ac <span class="number">1e7</span>cc3d0 Microsoft.VisualStudio.Threading.JoinableTaskFactory.Run[[System.Collections.Immutable.ImmutableArray`<span class="number">1</span>[[System.__Canon, mscorlib]], System.Collections.Immutable]](System.Func`<span class="number">1</span>&gt;&gt;)</span><br><span class="line"><span class="number">066</span>cf1c4 <span class="number">1e7</span>cc37d Microsoft.CodeAnalysis.Editor.Shared.Utilities.WorkspaceThreadingService.Run[[System.Collections.Immutable.ImmutableArray`<span class="number">1</span>[[System.__Canon, mscorlib]], System.Collections.Immutable]](System.Func`<span class="number">1</span>&gt;&gt;) [/_/src/EditorFeatures/Core/Shared/Utilities/WorkspaceThreadingService.cs @ <span class="number">28</span>]</span><br><span class="line"><span class="number">066</span>cf<span class="number">1e0</span> <span class="number">1e7</span>cc2f5 Microsoft.CodeAnalysis.Options.GlobalOptionService.g__GetOptionPersistersSlow|<span class="number">16</span>_0(Microsoft.CodeAnalysis.Shared.Utilities.IWorkspaceThreadingService, System.Collections.Immutable.ImmutableArray`<span class="number">1</span>&gt;, System.Threading.CancellationToken) [/_/src/Workspaces/Core/Portable/Options/GlobalOptionService.cs @ <span class="number">128</span>]</span><br><span class="line"><span class="number">066</span>cf1fc <span class="number">1e7</span>cc25b Microsoft.CodeAnalysis.Options.GlobalOptionService.<span class="built_in">GetOptionPersisters</span>() [/_/src/Workspaces/Core/Portable/Options/GlobalOptionService.cs @ <span class="number">114</span>]</span><br><span class="line"><span class="number">066</span>cf214 <span class="number">1e7</span>cc1ae Microsoft.CodeAnalysis.Options.GlobalOptionService.<span class="built_in">LoadOptionFromSerializerOrGetDefault</span>(Microsoft.CodeAnalysis.Options.OptionKey) [/_/src/Workspaces/Core/Portable/Options/GlobalOptionService.cs @ <span class="number">144</span>]</span><br><span class="line"><span class="number">066</span>cf234 <span class="number">1e7</span>cbdd1 Microsoft.CodeAnalysis.Options.GlobalOptionService.<span class="built_in">GetOption_NoLock</span>(Microsoft.CodeAnalysis.Options.OptionKey) [/_/src/Workspaces/Core/Portable/Options/GlobalOptionService.cs @ <span class="number">345</span>]</span><br><span class="line"><span class="number">066</span>cf250 <span class="number">1e7</span>cbd3b Microsoft.CodeAnalysis.Options.GlobalOptionService.<span class="built_in">GetOption</span>(Microsoft.CodeAnalysis.Options.OptionKey)</span><br><span class="line"><span class="number">066</span>cf288 <span class="number">1e7</span>cbc75 Microsoft.CodeAnalysis.Options.OptionsHelpers.GetOption[[System.Boolean, mscorlib]](Microsoft.CodeAnalysis.Options.OptionKey, System.Func`<span class="number">2</span>) [/_/src/Workspaces/Core/Portable/Options/OptionsHelpers.cs @ <span class="number">29</span>]</span><br><span class="line"><span class="number">066</span>cf2a0 <span class="number">1e7</span>cbaeb Microsoft.CodeAnalysis.Options.GlobalOptionService.GetOption[[System.Boolean, mscorlib]](Microsoft.CodeAnalysis.Options.Option2`<span class="number">1</span>) [/_/src/Workspaces/Core/Portable/Options/GlobalOptionService.cs @ <span class="number">312</span>]</span><br><span class="line"><span class="number">066</span>cf2bc <span class="number">1e7</span>cb669 Microsoft.CodeAnalysis.Options.OptionServiceFactory+OptionService.GetOption[[System.Boolean, mscorlib]](Microsoft.CodeAnalysis.Options.Option2`<span class="number">1</span>) [/_/src/Workspaces/Core/Portable/Options/OptionServiceFactory.cs @ <span class="number">120</span>]</span><br><span class="line"><span class="number">066</span>cf2cc <span class="number">1e7</span>caf45 Microsoft.CodeAnalysis.Remote.RemoteHostOptions.<span class="built_in">IsUsingServiceHubOutOfProcess</span>(Microsoft.CodeAnalysis.Host.HostWorkspaceServices) [/_/src/Workspaces/Remote/Core/RemoteHostOptions.cs @ <span class="number">69</span>]</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>该线程也在等待，其中GlobalOptionService的最后一个调用是GlobalOptionService.g__GetOptionPersistersSlow|16_0，观察源代码:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">static</span> ImmutableArray&lt;IOptionPersister&gt; &lt;GetOptionPersisters&gt;g__GetOptionPersistersSlow|<span class="number">16</span>_0(IWorkspaceThreadingService workspaceThreadingService, [Nullable(<span class="keyword">new</span> <span class="built_in">byte</span>[]&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>&#125;)] ImmutableArray&lt;Lazy&lt;IOptionPersisterProvider&gt;&gt; optionSerializerProviders, CancellationToken cancellationToken) &#123;</span><br><span class="line">		<span class="keyword">if</span> (workspaceThreadingService != <span class="literal">null</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> workspaceThreadingService.Run&lt;ImmutableArray&lt;IOptionPersister&gt;&gt;(() =&gt; GlobalOptionService.&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1(optionSerializerProviders, cancellationToken));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> GlobalOptionService.&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1(optionSerializerProviders, cancellationToken).WaitAndGetResult_CanCallOnBackground(cancellationToken);</span><br></pre></td></tr></table></figure>
+
+<p>因为该函数是最后一个函数，即workspaceThreadingService不为null。从栈来看，调用workspaceThreadingService.Run方法后，就调用Microsoft.VisualStudio.Threading.JoinableTask.CompleteOnCurrentThread()，做同步等待，即等待异步的g__GetOptionPersistersAsync|16_1函数执行完成。</p>
+<p>g__GetOptionPersistersAsync|16_1方法如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">static</span> Task&lt;ImmutableArray&lt;IOptionPersister&gt;&gt; &lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1([Nullable(<span class="keyword">new</span> <span class="built_in">byte</span>[]&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>&#125;)] ImmutableArray&lt;Lazy&lt;IOptionPersisterProvider&gt;&gt; optionSerializerProviders, CancellationToken cancellationToken)</span><br><span class="line">&#123;</span><br><span class="line">    GlobalOptionService.&lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d;</span><br><span class="line">    &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d.&lt;&gt;t__builder = AsyncTaskMethodBuilder&lt;ImmutableArray&lt;IOptionPersister&gt;&gt;.Create();</span><br><span class="line">    &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d.optionSerializerProviders = optionSerializerProviders;</span><br><span class="line">    &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d.cancellationToken = cancellationToken;</span><br><span class="line">    &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d.&lt;&gt;<span class="number">1</span>__state = <span class="number">-1</span>;</span><br><span class="line">    &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d.&lt;&gt;t__builder.Start&lt;GlobalOptionService.&lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d&gt;(<span class="keyword">ref</span> &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d);</span><br><span class="line">    <span class="keyword">return</span> &lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|<span class="number">16</span>_1&gt;d.&lt;&gt;t__builder.Task;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&lt;&lt;GetOptionPersisters&gt;g__GetOptionPersistersAsync|16_1&gt;d 是编译器生成的类，应该属于lambda、闭包那一类。该类实现了IAsyncStateMachine接口，该接口有一个MoveNext方法，在该类的实现如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> IAsyncStateMachine.MoveNext() &#123;</span><br><span class="line">    <span class="built_in">int</span> num = <span class="keyword">this</span>.&lt;&gt;<span class="number">1</span>__state;</span><br><span class="line">    ImmutableArray&lt;IOptionPersister&gt; result;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        ConfiguredValueTaskAwaitable&lt;ImmutableArray&lt;IOptionPersister&gt;&gt;.ConfiguredValueTaskAwaiter awaiter;</span><br><span class="line">        <span class="keyword">if</span> (num != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            awaiter = <span class="keyword">this</span>.optionSerializerProviders.SelectAsArrayAsync(<span class="keyword">new</span> Func&lt;Lazy&lt;IOptionPersisterProvider&gt;, CancellationToken, ValueTask&lt;IOptionPersister&gt;&gt;(GlobalOptionService.&lt;&gt;c.&lt;&gt;<span class="number">9.</span>&lt;GetOptionPersisters&gt;b__16_3), <span class="keyword">this</span>.cancellationToken).ConfigureAwait(<span class="literal">false</span>).GetAwaiter();</span><br><span class="line"><span class="comment">//以下省略...</span></span><br></pre></td></tr></table></figure>
+
+<p>调用SelectAsArrayAsync函数，该函数接收一个参数&lt;GetOptionPersisters&gt;b__16_3，这个参数是一个函数，该函数实现如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> ValueTask&lt;IOptionPersister&gt; &lt;GetOptionPersisters&gt;b__16_3(Lazy&lt;IOptionPersisterProvider&gt; lazyProvider, CancellationToken cancellationToken)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">return</span> lazyProvider.Value.GetOrCreatePersisterAsync(cancellationToken);</span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
+
+<p>GetOrCreatePersisterAsync函数是IOptionPersisterProvider接口的一个函数，该函数会在另一个线程执行。再往回看主线程的栈</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">010</span>ff074 <span class="number">1e8</span>a110d Microsoft.VisualStudio.LanguageServices.Implementation.Options.LanguageSettingsPersisterProvider+d__<span class="number">5.</span><span class="built_in">MoveNext</span>() [/_/src/VisualStudio/Core/Def/Implementation/Options/LanguageSettingsPersisterProvider.cs @ <span class="number">50</span>]</span><br><span class="line"><span class="number">010</span>ff<span class="number">0e8</span> <span class="number">55</span>abcc3a System.Runtime.CompilerServices.AsyncMethodBuilderCore+MoveNextRunner.<span class="built_in">InvokeMoveNext</span>(System.Object)</span><br></pre></td></tr></table></figure>
+
+<p>最底下是异步调用，然后异步调用会调用LanguageSettingsPersisterProvider类的相关函数，执行<code>!CLRStack -a</code>命令，找到这个类对应的模块名为</p>
+<p>Microsoft.VisualStudio.LanguageServices.dll，用dnSpy打开，定位到该类，发现恰好有GetOrCreatePersisterAsync函数：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131095542869.png" alt="image-20240131095542869"></p>
+<p>也就是说IOptionPersisterProvider接口的实现类是LanguageSettingsPersisterProvider，该函数负责执行状态机类&lt;GetOrCreatePersisterAsync&gt;d__5，也就是主线程栈上的LanguageSettingsPersisterProvider+d__5类的MoveNext函数。MoveNext函数会新建一个LanguageSettingsPersister实例：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131101620825.png" alt="image-20240131101620825"></p>
+<p>该构造函数会初始化一个map，描述语言配置，比如C#、F#，如果_textManager.GetUserPreferences4能获取到对应语言的配置，那么就调用RefreshLanguageSettings，进一步调用RefreshOption更新选项配置：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131101914130.png" alt="image-20240131101914130"></p>
+<p>这与主线程的栈是一致的。到这里梳理一下流程：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131132733546.png" alt="image-20240131132733546"></p>
+<p>红圈中两个线程相互等待，导致死锁。</p>
+<h2 id="VS卡死的原因"><a href="#VS卡死的原因" class="headerlink" title="VS卡死的原因"></a>VS卡死的原因</h2><p>根据调试分析，发现如果有对应的语言配置，就会去更新选项配置。回想起不久前，我安装了C#的开发环境，可能是因为这样，导致VS能找到C#的语言配置，所以走入了新流程，即更新选项配置，但这时由于另一个线程锁住了_gate，所以这就导致主线程的等待。</p>
+<h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>既然大概有眉目了，那第一种方法就是卸载C#的开发环境。不过这不是长久之计，还是需要更优雅的方法。google之后，我发现roslyn开源库里正好提到了这个问题，有一个open的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2RvdG5ldC9yb3NseW4vaXNzdWVzLzM0Mjgz">issue</span>，并且开发者在高版本还修复了这个问题，merge是<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2RvdG5ldC9yb3NseW4vcHVsbC81NDg0NQ==">这个</span>，关键代码如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//之前：</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">object</span> <span class="title">GetOption</span>(<span class="params">OptionKey optionKey</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">object</span> gate = <span class="keyword">this</span>._gate;</span><br><span class="line">	<span class="built_in">object</span> option_NoLock;</span><br><span class="line">	<span class="keyword">lock</span> (gate)</span><br><span class="line">	&#123;</span><br><span class="line">		option_NoLock = <span class="keyword">this</span>.GetOption_NoLock(optionKey);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> option_NoLock;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//之后</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">object</span> <span class="title">GetOption</span>(<span class="params">OptionKey optionKey</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Ensure the option persisters are available before taking the global lock</span></span><br><span class="line">    <span class="keyword">var</span> persisters = GetOptionPersisters();</span><br><span class="line">    </span><br><span class="line">	<span class="built_in">object</span> gate = <span class="keyword">this</span>._gate;</span><br><span class="line">	<span class="built_in">object</span> option_NoLock;</span><br><span class="line">	<span class="keyword">lock</span> (gate)</span><br><span class="line">	&#123;</span><br><span class="line">		option_NoLock = <span class="keyword">this</span>.GetOption_NoLock(optionKey, persisters);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> option_NoLock;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里persister类实例的构建放在了gate对象锁的外面，这样就不会导致主线程无限等待了。</p>
+<p>也就是说更新对应Microsoft.CodeAnalysis.workspaces.dll的版本就行了，我尝试更新了.NET的运行时，似乎都没更新这个dll，最后我下载了VS的扩展开发组件，该组件包含了roslyn的对应dll，替换dll后问题解决。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/VS_deadlock_analysis/image-20240131115945607.png" alt="image-20240131115945607"></p>
+
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Reverse/关于VS点击单个测试用例卡死的分析/" class="item leancloud_visitors" data-flag-title="关于VS点击单个测试用例卡死的分析" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" title="关于VS点击单个测试用例卡死的分析">https://conecoy.cn/Technology/Reverse/关于VS点击单个测试用例卡死的分析/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;18.jpg" title="C++ Concurrency In Action 学习笔记">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>C++ Concurrency In Action 学习笔记</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;60.jpg" title="aarch64架构的某so模拟执行分析">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Reverse</span>
+  <h3>aarch64架构的某so模拟执行分析</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B2%E7%8C%9C%E8%AF%B1%E5%9B%A0"><span class="toc-number">1.</span> <span class="toc-text">盲猜诱因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E6%AD%A5%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">初步分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">等待流程分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NET%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95"><span class="toc-number">4.</span> <span class="toc-text">.NET程序调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BDsos-dll"><span class="toc-number">4.1.</span> <span class="toc-text">加载sos.dll</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%89%98%E7%AE%A1%E4%BB%A3%E7%A0%81%E7%9A%84%E8%A7%92%E5%BA%A6%E8%A7%82%E5%AF%9F%E6%A0%88"><span class="toc-number">4.2.</span> <span class="toc-text">从托管代码的角度观察栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E6%89%80%E6%9C%89%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%A0%88"><span class="toc-number">4.3.</span> <span class="toc-text">观察所有线程的栈</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VS%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-number">5.</span> <span class="toc-text">VS卡死的原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">解决问题</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Reverse/StackUnwind/" rel="bookmark" title="StackUnwind">StackUnwind</a></li><li><a href="/Technology/Reverse/VMP-anti-vmware/" rel="bookmark" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></li><li><a href="/Technology/Reverse/Mechanism-of-LFH/" rel="bookmark" title="Mechanism_of_LFH">Mechanism_of_LFH</a></li><li><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" rel="bookmark" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></li><li><a href="/Technology/Reverse/Process-Injection/" rel="bookmark" title="Process_Injection">Process_Injection</a></li><li class="active"><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" rel="bookmark" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></li><li><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="bookmark" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="COM学习笔记">COM学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/Study-of-C-Coding-Standards/" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Obfuscation/" title="分类于 Obfuscation">Obfuscation</a>
+</div>
+
+    <span><a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" title="混淆简介">混淆简介</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Reverse/关于VS点击单个测试用例卡死的分析/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

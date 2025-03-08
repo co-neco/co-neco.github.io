@@ -1,0 +1,824 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="LFH,heap,vulnerability,Win7" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Reverse/Mechanism-of-LFH/">
+
+
+
+  <title>
+Mechanism_of_LFH - Reverse - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Mechanism_of_LFH
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-08-18 20:29:18">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-08-18T20:29:18+08:00">2021-08-18</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/8.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/30.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/57.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/4.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/60.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/67.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Reverse/" itemprop="item" rel="index" title="分类于 Reverse"><span itemprop="name">Reverse</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Reverse/Mechanism-of-LFH/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="LFH原理解析"><a href="#LFH原理解析" class="headerlink" title="LFH原理解析"></a>LFH原理解析</h1><p>​		为了精确利用堆相关的漏洞，了解操作系统的堆管理方式是很重要的。这篇文章的主题是在win7的各种堆保护措施下，我们能实施哪些利用手段，获得EIP的控制权。</p>
+<p>​		本篇文章将分析两种win7下可能利用的方式：</p>
+<ul>
+<li><p>对_HEAP_ENTRY.SegmentOffset 的利用</p>
+<blockquote>
+<p>其在“Understanding the LFH”（以下简称LFH paper，  LFH 是Low Fragmentation Heap 的缩写）中有描述；</p>
+</blockquote>
+</li>
+<li><p>对FreeEntryOffset的利用。</p>
+</li>
+</ul>
+<p>本文参考了<span class="exturl" data-url="aHR0cDovL3d3dy5pbGxtYXRpY3MuY29tL1VuZGVyc3RhbmRpbmdfdGhlX0xGSC5wZGY=">Understanding the LFH</span>，由于LFH paper 只阐述了利用原理，真实情况会更复杂，所以本文会以调试器下的真实情况进一步阐述利用原理。</p>
+<h2 id="本文主旨"><a href="#本文主旨" class="headerlink" title="本文主旨"></a>本文主旨</h2><ul>
+<li>明确win7 的堆管理器在分配和释放堆块时会做哪些检查</li>
+<li>分析堆相关漏洞的利用可行性，并扩展LFH paper 中描述的漏洞利用原理</li>
+<li>介绍win7 的堆管理机制，这有助于大家学习win8 和win10 的堆管理机制</li>
+</ul>
+<h2 id="本文由来"><a href="#本文由来" class="headerlink" title="本文由来"></a>本文由来</h2><p>在开始正文前，先来一段小插曲——这篇文章是如何产生的，说明这个的目的是让大家更好的理解本文的着力点，如果不感兴趣可直接跳过这一段，看目录之后的正文。如果大家对win7 的堆管理非常熟悉，那么可以直接看最后的两个测试。</p>
+<p>之前在学习堆溢出相关的漏洞时，发现winXP 和win7 的堆管理结构不一样，比如在win7，_HEAP_ENTRY 结构的size 字段是加密的，但是用windbg 的!heap 命令时又能看到正确的size；win7 中没有Lookaside List，连FreeLists 也从winXP 的一个_LIST_ENTRY 数组变成了仅仅一个_LIST_ENTRY，与该进程所有状态为Free的堆块构成一个双向链表（除前端堆管理的堆块）。所以在学习win7 上的堆溢出漏洞时，利用技巧(Exploit)能明白，但要去查看堆布局，了解堆布局的形成原理可能还欠火候。为了更好的理解堆溢出相关的漏洞或利用堆的Exploit，我希望更深入地了解win7的堆管理方式，在学习blackhat提供的paper时，我找到了一篇佳文——“Understanding the LFH”。       通过LFH paper 的学习，我明白了win7 下的堆管理方式。</p>
+<p>原本堆管理的学习就应该在此结束了，但在学习Corelan Team 的文章<span class="exturl" data-url="aHR0cHM6Ly93d3cuY29yZWxhbi5iZS9pbmRleC5waHAvMjAxMy8wNy8wMi9yb290LWNhdXNlLWFuYWx5c2lzLWludGVnZXItb3ZlcmZsb3dzLw==">Root Cause Analysis – Integer Overflows</span>时，我又产生了疑惑。在这篇整数溢出文章中(在winXP 上做的实验)，因为整数溢出造成循环次数被放大，导致写内存异常（暗示了任意写的漏洞）。于是Corelan Team描述了三种不同的方法来利用此漏洞，同时也说明了这些方法的局限性。这三种方法是Lookaside List Overwrite、Freelist[0] Insert Attack、Freelist[0] Searching Attack。令我不解的是winXP SP2 以后（包括SP2）不是有Safe Unlink 和checksum 的检查吗？但在Lookaside List Overwrite的方法中，似乎没有Safe Unlink检测和checksum检测的身影。最后，我了解到是win XP 的检测范围不够完全，导致以上利用方式能够成功（具体的堆检测方法和范围可参考<span class="exturl" data-url="aHR0cHM6Ly9ibG9ncy50ZWNobmV0Lm1pY3Jvc29mdC5jb20vc3JkLzIwMDkvMDgvMDQvcHJldmVudGluZy10aGUtZXhwbG9pdGF0aW9uLW9mLXVzZXItbW9kZS1oZWFwLWNvcnJ1cHRpb24tdnVsbmVyYWJpbGl0aWVzLw==">堆检测</span>）。</p>
+<p>于是我好奇在win7 下，堆管理器在分配和释放堆块时分别做了哪些检测，哪些漏洞利用方式是有效的，于是便有了本文的第一个目的。在实践具体的漏洞利用方式时，我发现LFH paper 仅陈述了利用方式的工作原理，但实际情况还要考虑其他因素，比如有没有其他检测会妨碍漏洞利用，堆分配布局和预想的情况会不会不一样等，于是便有了本文的第二个目的。LFH paper 是一篇很好的文章，原作者的本意可能就是陈述漏洞利用原理，具体实践交给读者，所以接下来就来实践一次吧。</p>
+<h2 id="Prerequisite（知识储备）"><a href="#Prerequisite（知识储备）" class="headerlink" title="Prerequisite（知识储备）"></a>Prerequisite（知识储备）</h2><p>虽然本篇文章不涉及winXP 的堆管理，但明白其原理能更好地理解win7 的堆管理，因此没有了解过winXP 堆管理的坛友可以先看看这方面的知识，比如《0day安全软件漏洞分析技术》和《软件调试》的堆相关章节。本文在讲述中会明确说明每一个结构和结构之间的关系，并重复解释一些概念，这样对winXP 堆管理有点遗忘的坛友也能更好地理解。由于本文关于堆管理器的讲解较简短，所以也推荐坛友在有疑惑的时候，参考LFH paper 这篇文章，参考链接是：<span class="exturl" data-url="aHR0cDovL3d3dy5pbGxtYXRpY3MuY29tL1VuZGVyc3RhbmRpbmdfdGhlX0xGSC5wZGY=">英文版</span>，论坛中也有一个中文版：<span class="exturl" data-url="aHR0cHM6Ly9iYnMucGVkaXkuY29tL3RocmVhZC0yNDY3NjUuaHRt">中文版</span>。</p>
+<h2 id="heap-manager（堆管理器）"><a href="#heap-manager（堆管理器）" class="headerlink" title="heap manager（堆管理器）"></a>heap manager（堆管理器）</h2><p>为了更好地理解之后的两个利用测试，这里需要说明堆管理器的工作原理。关于堆管理器，LFH paper 中详细地描述了其代码级的工作原理，这里不再重复其内容，本文会通过windbg动态观察堆管理器，以此来了解其管理机制。win7 的堆管理器分两部分，后端和前端，后端类似winXP 的FreeLists，前端与LFH 紧密相关。 </p>
+<h3 id="后端堆"><a href="#后端堆" class="headerlink" title="后端堆"></a>后端堆</h3><h4 id="结构介绍"><a href="#结构介绍" class="headerlink" title="结构介绍"></a>结构介绍</h4><p>在说明后端堆的管理方式前，先理清一些结构和成员之间的关系，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/1.png" alt="img"></p>
+<p>_HEAP 结构是堆管理中最重要的结构，也是HeapCreate 返回的值。在其0xB8 偏移处，有一个BlocksIndex 的指针，该指针指向_HEAP_LIST_LOOKUP，这个结构便是后端堆管理器主要操作的结构体，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/2.png"></p>
+<p>_HEAP_LIST_LOOKUP 的每个成员解释都已标注，不过包含‘(*)’的项还需要一些补充：</p>
+<ul>
+<li><p>ArraySize：图中的解释不能完全说明其用途，之后直接看调试信息来具体说明。 </p>
+</li>
+<li><p>ExtraItem：在win7 中ListHints 数组的元素是_LIST_ENTRY，包括了Flink 和Blink，而在win8 中，ListHints 数组的元素仅是一个指针，即Flink，没有Blink了。在之后的讲解中，会看到win7 中这里的Blink非常重要，由此可知win8 的堆管理又有很多的变化。 </p>
+</li>
+<li><p>OutOfRangeItems：类似winXP 中的FreeLists 中的第一个_LIST_ENTRY 元素。在winXP 中，FreeLists[0]是一个双向链表，该链表中都是大小  &gt;&#x3D; 0x400 的堆块（这些堆块都是free 状态的，因为FreeLists 被用来管理被释放的堆块，以便之后的分配），不过FreeLists[0]和FreeLists 数组中其他元素不一样的地方是，该双向链表中的每个堆块的大小可以不一样。在win7 中，<br>_HEAP_LIST_LOOKUP.ListHints 类似winXP 的FreeLists，ListHints 中的最后一个元素和winXP 的FreeLists[0]类似，包含较大的堆块，且堆块大小参差不齐。而OutOfRangeItems 指示的就是ListHints 最后一个元素中所包含的堆块数。最后还要说一点，ListHints 和winXP 的FreeLists只是类似。在ListHints 中，每个_LIST_ENTRY 元素的Blink不是用于指向前一个堆块的，这在之后会进一步说明。 </p>
+</li>
+<li><p>BaseIndex：因为创建新的_HEAP_LIST_LOOKUP 结构作为扩展时，新ListHints中的第一个元素会承接旧ListHints的最后一个元素（因为旧ListHints 有了扩展，所以在创建新的扩展结构时，旧ListHints 的最后一个元素_LIST_ENTRY 不需要<br>管理大小过大且不相等的堆块，因此其_LIST_ENTRY.Flink 被置为0，在之后的分配中，旧ListHints的最后一个元素管理一个特定大小的堆块，不再管理大小不一的堆块，这个特定大小按如下公式计算：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ArraySize - BaseIndex - <span class="number">1</span>) * <span class="number">8</span></span><br></pre></td></tr></table></figure>
+
+<p>该大小包括堆块的_HEAP_ENTRY头结构。同时，由于创建了新的扩展结构，旧_HEAP_LIST_LOOKUP 的OutOfRangeItems 将被置为0）。</p>
+</li>
+</ul>
+<h4 id="后端堆实践"><a href="#后端堆实践" class="headerlink" title="后端堆实践"></a>后端堆实践</h4><p>打开一个应用程序，然后开启windbg调试器，并附加上去。</p>
+<p>首先查看进程的堆，这里以进程默认堆为例，第一步是获取默认堆的地址，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/3.png" alt="img"></p>
+<p>因为默认堆是第一个，所以0x005a0000 就是_HEAP结构的地址了。接下来看下该结构的_HEAP_LIST_LOOKUP 结构： </p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/4.png" alt="img"></p>
+<p>BlocksIndex 在_HEAP 的0xB8 偏移处，其值为0x005a0150，类型为void*，但其真正的类型是_HEAP_LIST_LOOKUP *（以下简称结构A）。</p>
+<ul>
+<li>该结构中有扩展结构（以下简称结构B），其地址为0x005a3fe8。</li>
+<li>ArraySize：0x80，表示结构A的ListHints 数组有  ArraySize - BaseIndex &#x3D; 0x80 - 0 &#x3D; 0x80 个元素。</li>
+<li>ExtraItem：1，表示ListHints 数组中的元素为_LIST_ENTRY，而不仅仅是一个指针（win8 中ExtraItem 为0）。</li>
+<li>ItemCount：0xCB，代表该结构A管理着0xCB个空闲堆块。</li>
+<li>OutOfRangeItems：0，表示该结构A管理的堆块中没有大小  &gt; (ArraySize - BaseIndex - 1) * 8  的堆块，正如之前所解释的，因为有了扩展结构B，所以原本超过  (ArraySize - BaseIndex - 1) * 8  这个大小的堆块由结构B接手管理。</li>
+<li>BaseIndex：0，说明这是最外层的_HEAP_LIST_LOOKUP 结构。</li>
+<li>ListHead：_HEAP.FreeLists 的地址，即  0x005a0000 + 0xC4 &#x3D; 0x005a00c4，其中0xC4 是FreeLists 相对于_HEAP 结构的偏移。需要再说明一下，win7的FreeLists仅为一个_LIST_ENTRY结构，它是一个双向链表的头部，该双向链表中包含了进程中所有被释放的堆块（除前端堆管理的堆块）。</li>
+<li>ListsInUseUlong：0x005a0174，是一个地址，指向一块Bitmap，该Bitmap 的字节数为ListHints 数组的元素数除以8，因为Bitmap 的每一个bit 表示一个ListHints 的元素，所以8个bit（一个字节）就代表8个元素。</li>
+<li>ListHints：0x005a0184，指向_LIST_ENTRY数组。再仔细观察一下，最后两个成员的值仅相差0x10，代表Bitmap后就是实际的_LIST_ENTRY数组。</li>
+</ul>
+<p>在说ListHints数组的具体内容前，先把整个结构讲述完整，因此接下来观察扩展结构B:（由于操作失误，中间多输出了一个结果） </p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/5.png" alt="img"></p>
+<ul>
+<li>ExtendLookup：NULL，代表结构B没有扩展结构。</li>
+<li>ArraySize：0x800，表示ListHints数组有 ArraySize - BaseIndex &#x3D; 0x800 - 0x80 &#x3D; 0x780  个元素，相应地，结构B 的Bitmap 大小也就是  0x780 &#x2F; 8   &#x3D; 0xF0  字节。</li>
+<li>OutOfRangeItems：1，代表有一个堆块由于大小太大，大于等于了  (0x800 - 0x80 - 1) * 8 &#x3D; 0x3BF8，所以被链在了结构B的ListHints的最后一个元素上。通过!heap -p -a  命令，可看到该堆块的总大小为0x20E48，远远大于0x3BF8。</li>
+<li>BaseIndex：0x80，代表上一个_HEAP_LIST_LOOKUP 结构（结构A）的ListHints的元素有0x80 个。为了接着结构A，结构B的ListHints的第一个元素所管理的堆大小应该比结构A的ListHints的最后一个元素多8个字节。ListHead 仍然指向_HEAP.FreeLists。</li>
+<li>结构B中最后两个成员的值相差0xF0，即Bitmap的大小为0xF0。</li>
+</ul>
+<p>OK，整个_HEAP_LIST_LOOKUP结构讲完了，接下来观察该结构中最重要的ListHints数组，这里用结构A的ListHints举例：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/6.png" alt="img"></p>
+<p>调试器首先输出了ListsInUseUlong 的内容，大小为0x10 字节，紧接着就是ListHints 数组了。从图中可看出两个特点：</p>
+<ul>
+<li>第二列和第四列很整齐，而且还是以4为单位递增的，不过从0x005a0294开始，就没有以4递增了。</li>
+<li>一个比较奇怪的是第二列和第四列的值都是奇数。</li>
+</ul>
+<p>从之前的分析中，可知第二列和第四列是_LIST_ENTRY.Blink，在winXP 中，Blink 是用来指向一个堆块的，所以Blink的值应该与8对齐，但现在是奇数，所以它已不是winXP里的Blink了，而是win7 里的另一个概念，这个结构会在之后的”激活LFH”中讲述。</p>
+<p>回头看ListsInUseUlong，以首4 字节0xfdf3fffc 为例，第一个字节是0xFC，其二进制形式为11111100。Bitmap 的每一位代表ListHints<br>的一个元素，第一位为0，代表ListHints 的第一个元素没有堆块，从上图可看到ListHints的第一个_LIST_ENTRY 确实为空，第二个元素同样如此。从0xFC 的第三位开始都是1，代表ListHints的对应元素都是有堆块的，观察上图确实如此。接下来我们直接走到第三个字节0xF3,其二进制为11110011，第三位为0，所以ListHints 的第  2 * 8 + 3 &#x3D; 0x13  个元素里没有堆块，即 0x005a0184 + 0x12 * 8 &#x3D; 0x005a0214  处的元素没有堆块(注意数组第一个元素的索引是0，所以这里是0x12，不是0x13)。</p>
+<h4 id="后端堆分配和释放"><a href="#后端堆分配和释放" class="headerlink" title="后端堆分配和释放"></a>后端堆分配和释放</h4><p>到这里，后端堆的基本布局就讲述完了，接下来描述后端堆的分配和释放。简单地说，后端堆的分配和释放和winXP的FreeLists很相似，都是操作对应的双向链表，进行Unlink和Link-in，只是win7还会根据情况修改ListsInUseUlong。由于篇幅关系，这里不再具体说明了，大家可参考winXP的分配和释放逻辑。</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>到此，后端堆管理器的部分讲述完了。稍微总结一下，后端堆中最主要的结构是_HEAP_LIST_LOOKUP，其中ListHints 用于管理被释放的堆块，ListsInUseUlong用于指示ListHints对应元素是否有堆块。如果开启了LFH，将创建一个_HEAP_LIST_LOOKUP 结构作为扩展。扩展结构的ArraySize 远比之前的结构的ArraySize 大(0x800 远大于0x80)，因此包含的堆块范围也更大。堆管理器会根据堆的分配情况启动LFH，在满足一定条件下，LFH会被开启，对应大小的堆块由前端堆管理，包括分配和释放，即LFH是由前端堆管理的。关于刚才说的条件，就是分配特定大小的堆块数量达到0x12。当该条件满足时，堆管理器会为这个特定大小的堆块启动LFH，注意仅是为这个特定大小的堆块，其他大小的堆块仍然使用后端堆管理。</p>
+<h3 id="前端堆"><a href="#前端堆" class="headerlink" title="前端堆"></a>前端堆</h3><h4 id="结构介绍-1"><a href="#结构介绍-1" class="headerlink" title="结构介绍"></a>结构介绍</h4><p>前端堆中涉及的结构比后端堆多，为了概括地描述整个前端堆的逻辑，这里只讨论其中的关键成员：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/7.png" alt="img"></p>
+<p>距_HEAP偏移0xD4的位置是FrontEndHeap，类型为void *，其真实类型为_LFH_HEAP *，然后_LFH_HEAP.LocalData.SegmentInfo这个数组是前端堆的核心。该数组的每个成员都是一个_HEAP_LOCAL_SEGMENT_INFO，分别对应不同大小的堆块，其中Hint和ActiveSubsegment的作用一样，可以理解为ActiveSubsegment是Hint的补充，反过来理解也可以。因为在为某个特定大小的堆块开启LFH时，_HEAP_LOCAL_SEGMENT_INFO结构会被创建，Hint为NULL，而ActiveSubsegment为非NULL。但有时Hint为非NULL，而ActiveSubsegment 为NULL。</p>
+<p>Hint和ActiveSubsegment都指向_HEAP_SUNSEGMENT结构，该结构体是前端堆管理的堆空间，以下拿ActiveSubsegment 举例</p>
+<ul>
+<li>UserBlocks：指向的结构本身只是一个_HEAP_USERDATA_HEADER，大小为0x10，紧跟着UserBlocks 的一大片内存空间才是真正的堆空间，这片内存中包含了很多相同大小的堆块，彼此相邻。这些堆块最初被创建时都是Free 状态，等有分配请求，就会修改其状态为Busy，等释放就修改为Free。</li>
+<li>ActiveSubsegment.AggregateExchg：其结构是_INTERLOCK_SEQ<ul>
+<li>Depth：UserBlocks 中还剩多少个空闲的堆块，即状态为Free的。</li>
+<li>FreeEntryOffset 表示相对UserBlocks的偏移（相对_HEAP_USERDATA_HEADER 结构），该偏移处是下一个即将被分配的堆块，即如果程序调用HeapAlloc，分配对应大小的堆块，那么该偏移处的堆块会被返回给程序，供程序使用。</li>
+<li>OffsetAndDepth 仅是方便读取Depth和FreeEntryOffset成员。</li>
+</ul>
+</li>
+</ul>
+<h4 id="前端堆实践"><a href="#前端堆实践" class="headerlink" title="前端堆实践"></a>前端堆实践</h4><p>简要说明了一下结构关系，我们用windbg来具体观察一下。以堆块大小为0x30，用户区大小为  0x30 - 8 &#x3D; 0x28  为例（堆块包括头结构_HEAP_ENTRY和用户区）。为了找到对应的_HEAP_SUBSEGMENT结构，需执行一系列命令，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/8.png" alt="img"></p>
+<p>首先通过_HEAP结构找到FrontEndHeap变量，该变量指向_LFH_HEAP结构，然后定位_LFH_HEAP.LocalData 变量，该变量指向_HEAP_LOCAL_DATA 结构。之后定位LocalData.SegmentInfo，从(0x005a7d08 + 0x310 + 0x18)开始的一片内存，存放着前端堆中管理的所有大小对应的_HEAP_LOCAL_SEGMENT_INFO数组（以下简称结构C）。为了找到堆块大小为0x30所对应的结构C元素，上图用了一个公式  0x005a7d08 + 310 + 18 + 68*(28 &#x2F; 8)，其中的0x68为单个结构C的大<br>小，因为第一个结构C保留不用，所以第二个结构C才开始存储对应大小的堆块，第二个结构C对应的堆块大小为0x10，用户区大小（UserSize）为0x8。因此为找到堆块大小为0x30（堆块用户区大小为0x28），需要定位到第6 个结构C 元素，即<br>FrontEndHeap.LocalData.SegmentInfo[5]。</p>
+<p>前端堆为堆块的大小划分了几个级别，第一个级别的堆块其大小之差为8，第二个级别的堆块其大小之差为0x10，第三级别是0x20，第四级别是0x40…。RtlpBucketBlockSizes 数组用于定义级别关系，如以下代码所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> RtlpBucketBlockSizes[]</span><br><span class="line">  </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E0</span> _RtlpBucketBlockSizes dd <span class="number">0</span> </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E0</span> </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">8</span>, <span class="number">10</span>h, <span class="number">18</span>h, <span class="number">20</span>h, <span class="number">28</span>h, <span class="number">30</span>h, <span class="number">38</span>h, <span class="number">40</span>h, <span class="number">48</span>h, <span class="number">50</span>h, <span class="number">58</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">60</span>h, <span class="number">68</span>h, <span class="number">70</span>h, <span class="number">78</span>h, <span class="number">80</span>h, <span class="number">88</span>h, <span class="number">90</span>h, <span class="number">98</span>h, <span class="number">0</span>A0h, <span class="number">0</span>A8h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">0B0</span>h, <span class="number">0</span>B8h, <span class="number">0</span>C0h, <span class="number">0</span>C8h, <span class="number">0</span>D0h, <span class="number">0</span>D8h, <span class="number">0E0</span>h, <span class="number">0E8</span>h, <span class="number">0</span>F0h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">0</span>F8h, <span class="number">100</span>h, <span class="number">110</span>h, <span class="number">120</span>h, <span class="number">130</span>h, <span class="number">140</span>h, <span class="number">150</span>h, <span class="number">160</span>h, <span class="number">170</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">180</span>h, <span class="number">190</span>h, <span class="number">1</span>A0h, <span class="number">1</span>B0h, <span class="number">1</span>C0h, <span class="number">1</span>D0h, <span class="number">1E0</span>h, <span class="number">1</span>F0h, <span class="number">200</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">220</span>h, <span class="number">240</span>h, <span class="number">260</span>h, <span class="number">280</span>h, <span class="number">2</span>A0h, <span class="number">2</span>C0h, <span class="number">2E0</span>h, <span class="number">300</span>h, <span class="number">320</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">340</span>h, <span class="number">360</span>h, <span class="number">380</span>h, <span class="number">3</span>A0h, <span class="number">3</span>C0h, <span class="number">3E0</span>h, <span class="number">400</span>h, <span class="number">440</span>h, <span class="number">480</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">4</span>C0h, <span class="number">500</span>h, <span class="number">540</span>h, <span class="number">580</span>h, <span class="number">5</span>C0h, <span class="number">600</span>h, <span class="number">640</span>h, <span class="number">680</span>h, <span class="number">6</span>C0h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">700</span>h, <span class="number">740</span>h, <span class="number">780</span>h, <span class="number">7</span>C0h, <span class="number">800</span>h, <span class="number">880</span>h, <span class="number">900</span>h, <span class="number">980</span>h, <span class="number">0</span>A00h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">0</span>A80h, <span class="number">0B00</span>h, <span class="number">0</span>B80h, <span class="number">0</span>C00h, <span class="number">0</span>C80h, <span class="number">0</span>D00h, <span class="number">0</span>D80h, <span class="number">0E00</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">0E80</span>h, <span class="number">0</span>F00h, <span class="number">0</span>F80h, <span class="number">1000</span>h, <span class="number">1100</span>h, <span class="number">1200</span>h, <span class="number">1300</span>h, <span class="number">1400</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">1500</span>h, <span class="number">1600</span>h, <span class="number">1700</span>h, <span class="number">1800</span>h, <span class="number">1900</span>h, <span class="number">1</span>A00h, <span class="number">1</span>B00h, <span class="number">1</span>C00h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">1</span>D00h, <span class="number">1E00</span>h, <span class="number">1</span>F00h, <span class="number">2000</span>h, <span class="number">2200</span>h, <span class="number">2400</span>h, <span class="number">2600</span>h, <span class="number">2800</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">2</span>A00h, <span class="number">2</span>C00h, <span class="number">2E00</span>h, <span class="number">3000</span>h, <span class="number">3200</span>h, <span class="number">3400</span>h, <span class="number">3600</span>h, <span class="number">3800</span>h </span><br><span class="line">.text:<span class="number">7</span>DEA<span class="number">79E4</span>                 dd <span class="number">3</span>A00h, <span class="number">3</span>C00h, <span class="number">3E00</span>h, <span class="number">90909090</span>h </span><br></pre></td></tr></table></figure>
+
+<p>其中，第一个元素为0，对应LocalData.SegmentInfo的第一个元素，正好SegmentInfo[0]不管理堆块。第二个是8，SegmentInfo[1]中堆块的用户区大小也为8，堆块大小为0x10。因此_RtlpBucketBlockSizes的元素都指的是堆块用户区大小，并非堆块大小。观察上图，LocalData.SegmentInfo[5].BucketIndex为5，而_RtlpBucketBlockSizes[5]是0x28，由此可知BucketIndex的值就是<br>_RtlpBucketBlockSizes 的索引，BucketIndex很重要，在“激活LFH ”  小节中还会继续探讨。</p>
+<p>那么有个问题，如果分配的用户区大小在两个堆块大小之间时该怎么办呢？比如程序申请的用户区大小为0x108(0x100 和0x110 之间)，那么分配出去的堆块的用户区大小其实是[0x21] &#x3D; 0x110，即前端堆采用“向上取整”的方式来分配堆。</p>
+<p>找到对应的结构C后，可以看到其Hint为NULL，ActiveSubsegment 为0x00629bb8。再观察ActiveSubsegment 所指向的_HEAP_SUBSEGMENT，BlockSize 为堆块大小，正好为  0x30 &#x2F; 8 &#x3D; 6，ActiveSubsegment.SizeIndex 与<br>SegmentInfo[5].BucketIndex意义相同。ActiveSubsegment.UserBlocks就是要管理的堆空间了，通过’dd’命令，可看到对应的内存内容。前0x10 字节为UserBlocks的结构内容，之后就是相邻的各个堆块了。</p>
+<p>了解整个索引过程后，我们再来观察内容部分。UserBlocks中的第一个堆块地址为0x063c0608，通过!heap -p -a  命令可观察到该堆块的具体信息，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/9.png" alt="img"></p>
+<p>该堆块的大小为  6 * 8 &#x3D; 0x30（6是Size的值），用户区地址为 0x063c0608 + 8 &#x3D; 0x063c0610，该公式的8为_HEAP_ENTRY结构大小。然后状态为Busy，这些信息与我们之前的分析一致。</p>
+<p>了解了基本的前端堆的布局，现在来描述前端堆的分配和释放操作。这里的分配和释放与后端堆中有很大的不同，且之后的测试也会涉及这里的内容，为理解测试的原理，这一部分需要理解清楚。</p>
+<p>首先，前端堆中有一个相当重要的结构，它是_INTERLOCK_SEQ，这里看下ActiveSubsegment.AggregateExchg 的内容，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/10.png" alt="img" title="_INTERLOCK_SEQ"></p>
+<p>Depth 为0x272，表示该_HEAP_SUBSEGMENT还有0x272 个空闲的堆块。FreeEntryOffset为0x2C，表示下一个即将被分配出去的堆块是 UserBlocks + FreeEntryOffset * 8 &#x3D; 0x063c05f8 + 0x2C * 8 &#x3D; 0x063c0758。再观察 0x063c0758 处的内容，如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/11.png" alt="img"></p>
+<p>0x0x063c0758处的堆块是空闲的，从内存中的0x80(_HEAP_ENTRY.UnusedBytes)也可知晓，而0x063c0728处的堆块是繁忙的。由此可知，按顺序分配，0x0x063c0758就是下一个即将被分配的堆块。注意0x063c0728处的堆块，其用户大小为0x27，由于堆分配以8字节为单位，所以不足8字节的自动补齐。 </p>
+<p>再观察上图，可能会注意到一个奇怪点，下图标红了这部分区域。 </p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/12.png" alt="img"></p>
+<p>0x32, 0x38, 0x3E, 0x44这四个数都相差6，而6代表的就是堆块大小 0x30 &#x2F; 8 &#x3D; 6，也就是说每个空闲堆块用户区的前两字节存储着 ActiveSubsegment.AggregateExchg.FreeEntryOffset，这个值是紧接自己被分配出去后的下一个堆块的FreeEntryOffset，以0x063c0758 这个堆块为例，当它被分配出去后，0x063c0788 就是下一个被分配出去的堆块，而0x32 就是<br>0x063c0788 这个堆块的的FreeEntryOffset( UserBlocks + FreeEntryOffset * 8 &#x3D; 0x063c05f8 + 0x32 * 8 &#x3D; 0x063c0788 )，如果这里没明白FreeEntryOffset，可根据下面的图文解释深入理解。</p>
+<h4 id="前端堆分配和释放"><a href="#前端堆分配和释放" class="headerlink" title="前端堆分配和释放"></a>前端堆分配和释放</h4><ul>
+<li><p>分配</p>
+<p>当分配大小为0x30 的堆块（堆块A）时，由于大小为0x30 的堆块的LFH已开启，因此从前端堆中分配。由图”_INTERLOCK_SEQ”，因为SegmentInfo[5].ActiveSubsegment.AggregateExchg.FreeEntryOffset &#x3D; 0x2C，所以分配ActiveSubsegment.UserBlocks + 0x2C * 8 &#x3D; 0x063c05f8 + 0x2C * 8 &#x3D; 0x063c0758 处的堆块，并将该堆块的用户区的前两字节赋给<br>ActiveSubsegment.AggregateExchg.FreeEntryOffset，即原来为0x2C 的<br>AggregateExchg.FreeEntryOffset 被赋值为  *(unsigned short *)(0x063c0758 + 8) &#x3D; 0x0032。由此类推，再分配大小为0x30 的堆块时（堆块B），<br>ActiveSubsegment.UserBlocks + 0x32 * 8  地址处的堆块被分配出去，<br>之后AggregateExchg.FreeEntryOffset 被赋值为0x38，即堆块B的用户区的前两字节。</p>
+</li>
+<li><p>释放</p>
+<p>承接上面分配的例子，当释放刚刚分配的的堆块（堆块B）时，由于大小为<br>0x30 所对应的堆块的LFH 已开启，所以释放的堆块会返回到前端堆中。释放是分配的逆过程，因此AggregateExchg.FreeEntryOffset(0x38)会被写入堆块B 的用户区的前两字节，然后AggregateExchg.FreeEntryOffset 被赋值为堆块B 所对应的FreeEntryOffset，即0x32。再释放堆块A，AggregateExchg.FreeEntryOffset 被赋值为0x2C，堆块A的用户区的前两字节被赋为0x32，这时ActiveSubsegment.AggregateExchg的数据和图”_INTERLOCK_SEQ”的数据是一样的。</p>
+</li>
+</ul>
+<p>以上的逻辑可能有点绕，这里用图的形式再来展现分配和释放过程，首先是分配：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/13.png" alt="img"></p>
+<p>根据windbg的输出信息，初始状态如上图。 当分配一个大小为0x30 的堆块时，操作如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/14.png" alt="img"></p>
+<p>紧接着，释放掉刚刚分配的堆块，操作如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/15.png" alt="img"></p>
+<h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h4><p>前端堆有一个_HEAP_LOCAL_SEGMENT_INFO 数组，128 个元素，每个元素都代表着特定大小的堆块，具体的堆空间存在于<br>_HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.UserBlocks 或_HEAP_LOCAL_SEGMENT_INFO.Hint.UserBlocks，在这片堆空间中，每个堆块都是彼此相邻的，因此这为堆溢出等漏洞提供了良好的利用环境。</p>
+<h2 id="激活LFH"><a href="#激活LFH" class="headerlink" title="激活LFH"></a>激活LFH</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>在讲述后端堆时，讲到Blink为奇数，其指向的不是一个空闲堆块，因为堆块都是以8 字节对齐的。那Blink指向的是什么呢？答案是_HEAP_BUCKET，在分配堆块时，该结构是前端堆和后端堆的桥梁。</p>
+<p>当某个特定大小的堆块分配超过0x10 次，即第0x11 次时，_HEAP.CompatibilityFlags 会被修改为0x20000000，提示下一次再分配相同大小的堆块时，开启LFH。因此在第0x12 次分配时，对应大小的堆块的LFH启动，但启动之后仍会用后端堆来分配这个堆块，直到第0x13次才开始使用前端堆开始分配。在启动LFH（第0x12 次分配）时，ListHints数组中对应大小的_LIST_ENTRY.Blink会被修改为_HEAP_BUCKET + 1。等第0x13次分配时，因为检测到  Blink - 1  指向_HEAP_BUCKET 结构，所以使用前端堆分配这个堆块。 _HEAP_BUCKET结构的大小为4 字节，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ntdll!_HEAP_BUCKET </span><br><span class="line">   <span class="number">+0x000</span> BlockUnits       : Uint2B </span><br><span class="line">   <span class="number">+0x002</span> SizeIndex        : UChar </span><br><span class="line">   <span class="number">+0x003</span> UseAffinity      : Pos <span class="number">0</span>, <span class="number">1</span> Bit </span><br><span class="line">   <span class="number">+0x003</span> DebugFlags       : Pos <span class="number">1</span>, <span class="number">2</span> Bits</span><br></pre></td></tr></table></figure>
+
+<p>其中的SizeIndex成员和_HEAP_LOCAL_SEGMENT_INFO.BlockIndex意义相同，是_RtlpBucketBlockSizes数组的索引，同时它也是<br>_HEAP.FrontEndHeap.Buckets数组的索引，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ntdll!_LFH_HEAP </span><br><span class="line">... </span><br><span class="line">   <span class="number">+0x110</span> Buckets          : [<span class="number">128</span>] _HEAP_BUCKET </span><br><span class="line">   <span class="number">+0x310</span> LocalData        : [<span class="number">1</span>] _HEAP_LOCAL_DATA </span><br></pre></td></tr></table></figure>
+
+<p>这里的Buckets 是_HEAP_BUCKET数组，其中的元素与_RtlpBucketBlockSizes 的元素一一对应。</p>
+<p>_HEAP_BUCKET.BlockUnits 为堆块大小，以8字节为单位，其计算式为Buckets[s] &#x3D; (_RtlpBucketBlockSizes[s] &gt;&gt; 3) + 1。以LFH 刚被启动时，Buckets 数组的前两个元素为例，Bucket 的第一个元素为0x00000001，即 </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Buckets[<span class="number">0</span>].SizeIndex = index into the Buckets[] = <span class="number">0</span></span><br><span class="line">Buckets[<span class="number">0</span>].BlockUnits = (_RtlpBucketBlockSizes[s] &gt;&gt; <span class="number">3</span>) + <span class="number">1</span> = (<span class="number">0</span> &gt;&gt; <span class="number">3</span>) + <span class="number">1</span> = <span class="number">1</span> </span><br></pre></td></tr></table></figure>
+
+<p> 第二个元素为0x00010002，即</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Buckets[<span class="number">1</span>].BlockUnits = (_RtlpBucketBlockSizes[s] &gt;&gt; <span class="number">3</span>) + <span class="number">1</span> = (<span class="number">8</span> &gt;&gt; <span class="number">3</span>) + <span class="number">1</span> = <span class="number">2</span> </span><br><span class="line">Buckets[<span class="number">1</span>].SizeIndex = index into the Buckets[] = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>以上为Blink的讲解，稍微总结一下，在分配堆块时，堆管理器会判断ListHints[s].Blink - 1 是否指向一个_HEAP_BUCKET，如果是，就使用前端堆分配，否则用后端堆分配，所以说_HEAP_BUCKET是分配堆块时前端堆与后端堆的桥梁。补充一点，那释放时是怎么判断该放进后端堆还是前端堆的呢？显然，从哪分配的就回哪里去，这个判断是检测堆块的头结构_HEAP_ENTRY.UnusedBytes，如下。 </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (_heapEntry.UnusedBytes &amp; <span class="number">0x80</span>) </span><br><span class="line">  use front end heap manager; </span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">  use back end heap manager; </span><br></pre></td></tr></table></figure>
+
+<p>因为前端堆在分配UserBlocks堆空间时，会把其中所有堆块的_HEAP_ENTRY.UnusedBytes设为0x80，表示空闲。等到分配出去时，与UnusedBytes 的修改也是用或运算符，因此前端堆中的_HEAP_ENTRY.UnusedBytes的第7位(从第0位开始数)始终为1。</p>
+<h3 id="windbg实践"><a href="#windbg实践" class="headerlink" title="windbg实践"></a>windbg实践</h3><p>为了能够用windbg复现LFH的激活过程，这里创建一个私有堆进行演示，顺便补充启动LFH的剩余细节，代码如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/16.png" alt="img" title="ActivateLFH"></p>
+<h4 id="创建私有堆"><a href="#创建私有堆" class="headerlink" title="创建私有堆"></a>创建私有堆</h4><p>进程中除进程默认堆，其他创建的堆都叫私有堆。上图的代码使用了私有堆。观察代码，创建堆的方式有点奇怪，其没有用CreateHeap，而是用了稍底层一点的RtlCreateHeap。为了说明这个原因，先从写这段代码时说起。我最开始是用如下语句来创建私有堆的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">HeapCreate</span>(<span class="number">0</span>, <span class="number">0x1000</span>, <span class="number">0x10000</span>); </span><br></pre></td></tr></table></figure>
+
+<p>但循环分配0x12 次堆块后，对应大小的堆块的LFH 却没有开启，查找原因之后，发现RtlpActivateLowFragmentationHeap调用RtlpCreateLowFragHeap启动LFH前，会对_HEAP.Flags做检查，若Flags的第2个bit不为1，则直接返回，返回值是0xC000000D，即函数参数无效。既然要设Flags的第2个bit为1，那我就这样创建堆：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">HeapCreate</span>(<span class="number">2</span>, <span class="number">0x1000</span>, <span class="number">0x10000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在HeapCreate 调用完成后，用windbg观察Flags，结果是0x1000，第2个bit还是0。用IDA反汇编HeapCreate函数，发现只有HeapCreate的第三个参数为0，即该堆是可增长的情况下才能开启LFH。结果证实，我没有充分了解LFH的必要条件，导致绕了一个大圈。顺带说一下，LFH被创建的必要条件有三个，可增长、没有被调试、没有设置HEAP_NO_SERIALIZE（即操作堆时，如果没有同步，则不允许LFH 启动），资料链接为<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvd2luZG93cy93aW4zMi9hcGkvaGVhcGFwaS9uZi1oZWFwYXBpLWhlYXBzZXRpbmZvcm1hdGlvbg==">HeapSetInformation</span>，内容如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/17.png" alt="img"></p>
+<p>有了以上基础后，我用了一种迂回的方式，直接获取RtlCreateHeap的地址，定义LFH_HEAP宏为2，跳过CreateHeap的检查。当然，这不是好方法，正如图”ActivateLFH”所示，method 1 可以使得Flags的第2个bit为2，从而能够启动LFH。method 3<br>是直接启动LFH，连之后的循环分配堆块都不需要了。</p>
+<h4 id="循环分配0x12次相同大小的堆块"><a href="#循环分配0x12次相同大小的堆块" class="headerlink" title="循环分配0x12次相同大小的堆块"></a>循环分配0x12次相同大小的堆块</h4><p>为了看到启动LFH的大概过程，这里用windbg跟踪一次。不过开始跟踪之前有两点要注意。一是在LFH 启动之前，都是后端堆来分配这些堆块的，因此windbg 中可看到ListHints[s].Blink 的变化；二是LFH启动的必要条件中包括程序不能处于调试状态，因此我们不能用<br>windbg直接打开测试程序，需要用另一种方式，图”ActivateLFH”中第二条语句如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__asm <span class="type">int</span> <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这条语句是让程序产生一个异常，然后走SEH，当程序无法处理这个异常时，就会弹窗，提示是否要调试该程序，这时就是windbg调试该程序的较好时机了。但为了方便，可以启动命令行，输入windbg -I（注意大写），使得windbg成为默认的JIT调试器，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/18.png" alt="img"></p>
+<p>这样，当打开测试程序时，windbg 就会自动启动，并指示到__asm int 3 这条语句上，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/19.png" alt="img"></p>
+<p>那么开始跟踪。当循环体分配第一个堆块后，来看看ListHints[7].Blink 的值，注意这里分配的堆块大小为0x38，用户大小为0x30，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/20.png" alt="img"></p>
+<p>观察上图，Blink为0x10002，这里只留意前两字节，即0x0002。第二次分配后，ListHints[7].Blink 如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/21.png" alt="img"></p>
+<p>Blink的前两字节为0x0004，当分配0x10 次之后，ListHints[7].Blink如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/22.png" alt="img"></p>
+<p>Blink的前两字节为0x0020，由此可知，每分配一次，Blink 的前两字节加2。同时还注意到此时LFH 还未被开启。CompatibilityFlags 为0，再分配一个堆块，结果如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/23.png" alt="img"></p>
+<p>Blink的前两字节为0x0022，超过了0x20。同时CompatibilityFlags被修改为0x20000000，LFH 未开启。由此可知，当Blink的前两字节超过0x20 时，CompatibilityFlags 被修改。再分配一次堆块，即第0x12次，结果如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/24.png" alt="img"></p>
+<p>Blink变成了一个奇怪的值，还是奇数，BLink - 1 &#x3D; 0x00540171 - 1 &#x3D; 0x00540170，指向了_HEAP_BUCKET结构，其SizeIndex 为6，_RtlpBucketBlockSizes[6] &#x3D; 0x30  为该堆块的用户区大小，和分配的堆块用户区大小一致。接着，FrontEndHeap为非NULL，表示LFH 开启，CompatibilityFlags 被重置为0。如果再分配一个相同大小的堆块，那么这次分配就会由前端堆完成。OK，基础部分讲完了，接下来开始本文的重点。</p>
+<h2 id="检测方法"><a href="#检测方法" class="headerlink" title="检测方法"></a>检测方法</h2><p>检测方法的分析过程其实就是用IDA阅读反编译的代码，分析整个分配和释放逻辑，然后进行总结。因此这里直接列出分配和释放对应的检测方法。由于代码阅读中可能有疏漏，所以检测的方法不一定举例完全，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/25.png" alt="img"></p>
+<h3 id="前端堆-1"><a href="#前端堆-1" class="headerlink" title="前端堆"></a>前端堆</h3><p>win7中的前端堆基本没有任何检查操作，原因可以猜想一下。首先，前端堆和后端堆的管理方式完全不同，因此不存在Unlink和Link-in 这样的检查操作；其次，因为win7的前端堆还没有经过“历练”，所以开发团队并没有检查前端堆中的堆块的重要内容，比如每个堆块的_HEAP_ENTRY 头结构。在win8 中，可以发现前端堆中加了这些检查，比如用_HEAPA_ENTRY.Size作为运算的一部分，如果运算结果不对就返回错误。结果不对便代表Size被修改了，这往往是上溢或者下溢导致的，因此win8中的检查可有效防止堆溢出这类漏洞。</p>
+<h3 id="后端堆-1"><a href="#后端堆-1" class="headerlink" title="后端堆"></a>后端堆</h3><p>win7没有沿用winXP的FreeLists的管理方式，像winXP覆盖FreeLists数组这样的方法在win7 中很难实现，因为ListHints数组更难定位到，而且ListHints中的_LIST_ENTRY.Blink和winXP的Blink不是同一个概念，无法作为双向链表攻击的利用点。再者，win7 没有所谓的Lookaside List，因此传统的Lookaside List 攻击也不会起作用。进一步观察win7中后端堆的检查点，可以发现两个有趣的，一个是Randomization check，一个是Safe link-in。前者是检查_HEAP_ENTRY结构的内容，因为每个堆块中_HEAP_ENTRY的前四个字节会被加密，所以只要这4个字节的数据变化了，那么可能就是堆溢出，因此该检测可看作是winXP中checksum的升级版。后者是safe link-in，当要链入一个堆块时，会使用如下语句：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">freedChunk-&gt;blink = nextChunk-&gt;blink </span><br><span class="line">freedChunk-&gt;flink = nextChunk </span><br><span class="line">nextChunk-&gt;blink-&gt;flink = freedChunk </span><br><span class="line">nextChunk-&gt;blink = freedChunk</span><br></pre></td></tr></table></figure>
+
+<p>如果攻击者控制了nextChunk-&gt;blink，那么就可实现任意地址写。而Safe link-in的操作如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(nextChunk-&gt;Blink-&gt;Flink != nextChunk) </span><br><span class="line">   <span class="keyword">return</span> <span class="literal">false</span>;      </span><br></pre></td></tr></table></figure>
+
+<p>这样就可有效防止以上的问题了。</p>
+<p>根据前面的分析，后端堆“戒备森严”，而前端堆“有机可乘”，只要根据前端堆的分配释放逻辑找利用点即可，因为没有任何相关的检查。</p>
+<h2 id="对-HEAP-ENTRY-SegmentOffset-的利用"><a href="#对-HEAP-ENTRY-SegmentOffset-的利用" class="headerlink" title="对_HEAP_ENTRY.SegmentOffset 的利用"></a>对_HEAP_ENTRY.SegmentOffset 的利用</h2><p>这是第一个例子，在讲测试内容前，需要补充一个释放堆块时的小知识，代码如下： </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(freedChunk-&gt;UnusedBytes == <span class="number">0x05</span>) </span><br><span class="line">  freedChunk = (_HEAP_ENTRY *)((<span class="type">char</span> *)freedChunk - freedChunk-&gt;SegmentOffset * <span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如果UnusedBytes为5，那么freedChunk就需要微调一下。如果攻击者能控制UnusedBytes和SegmentOffset，使得freedChunk微调后，指向另外一个堆块，那么前端堆会释放掉本不该被释放的堆块，这便是SegmentOffset overwrite test。示例代码如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/26.png" alt="img" title="SegmentOffsetAttack"></p>
+<p>这段代码做了分六部描述。</p>
+<h3 id="激活对应大小的堆块的LFH"><a href="#激活对应大小的堆块的LFH" class="headerlink" title="激活对应大小的堆块的LFH"></a>激活对应大小的堆块的LFH</h3><p>这里没有使用ActivateLFH函数，而是用的activateAttackSizeHeapChunk，该函数的实现如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/27.png" alt="img"></p>
+<p>这段代码和ActivateLFH 一样，都是循环分配相同大小的堆块，但有一个不同的地方是循环的次数。为什么这个次数会不同呢？说明原因前，首先回看下图”SegmentOffsetAttack”中的第二条语句。 </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test_class *pc = <span class="keyword">new</span> <span class="built_in">test_class</span>();  </span><br></pre></td></tr></table></figure>
+
+<p>这条语句用new运算符创建了一个类实例，new运算符在内部会调用HeapAlloc分配堆块，但是它是从进程默认堆中分配的。因此，在实验中我们也需要使用进程默认堆，其中main调用SegmentOffsetAttack的语句如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/28.png" alt="img"></p>
+<p>由上图可知hHeap参数是由GetProcessHeap传来的。因为在程序初始化的过程中也会使用默认堆，所以无法判断堆块大小为0x38（用户区大小为0x30）的LFH 是否开启，因此为了保证通用性，需要在循环中多分配一些堆块，保证之后的堆块分配都是连续的，这也是分配次数为0x20次的原因。</p>
+<p>为何需要连续分配的原因之后会探讨，这里先补充另一点，即为何多分配一些堆块，就可以使得空闲堆块连续。如果LFH没有开启，那么分配0x12次堆块肯定会得到连续的、空闲的堆块；如果LFH 开启了，那么程序很可能在分配堆块之后又释放了一部分，因此使得UserBlocks的堆空间中零散分布着繁忙和空闲的堆块，所以在循环中多分配很多次，可以填满繁忙堆块之间的空闲堆块，使得剩余的空闲堆块都是连续的，以上解释如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/29.png" alt="img"></p>
+<p>测试程序中只是演示性地把分配次数增加到了0x20，在实际应用中，一般会分配0x300,0x400 多次，使得LFH再分配一片新的堆空间，这片堆空间的空闲堆块就会是全部连续的。</p>
+<h3 id="用new运算符创建一个类实例"><a href="#用new运算符创建一个类实例" class="headerlink" title="用new运算符创建一个类实例"></a>用new运算符创建一个类实例</h3><p>test_class类的实现如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/30.png" alt="img"></p>
+<p>这个类很简单，一个虚函数，两个int类型的变量。如果该类的实例是局部变量，其大小是 sizeof(ptr) + sizeof(int) * 2 &#x3D; 0x0C。但是用new运算符时，其为该类实例分配的用户区大小为 0x0C + 0x24 &#x3D; 0x30。那这0x24 字节的数据是什么呢？用windbg 观察如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/31.png" alt="img"></p>
+<p>首先，’pc’变量的值为0x007ae0c0，而用户区真正的地址是0x007ae0a0，这个区间 0x007ae0c0 - 0x007ae0a0 &#x3D; 0x20 便是0x24 的一部分，位于类实例的前面，剩下的一部分位于类实例的后面。注意到类实例的前后四字节都是0xFDFDFDFD，这明显是canary value(和GS 检查是一样的概念)，如果检查到该值改变了，那么就意味着溢出的发生。不过测试中覆盖类实例是在类实例被释放后，所以这个不用担心。顺便说一句，new运算符内部调用的是malloc，而malloc都是在指定的大小上再加0x24，并用做加法后的参数传给HeapAlloc。由于测试中使用的是HeapAlloc分配堆块，而不是malloc，所以需要注意这个区别。另外，LFH paper中使用的是malloc来分配堆块，所以在LFH paper的实验中不用在意此区别。</p>
+<h3 id="连续分配两个与类实例大小相同的堆块"><a href="#连续分配两个与类实例大小相同的堆块" class="headerlink" title="连续分配两个与类实例大小相同的堆块"></a>连续分配两个与类实例大小相同的堆块</h3><p>为和类实例的堆块相邻，需要分配与类实例大小相同的堆块。使得当分配的堆块溢出后，释放堆块时会释放掉’pc’所指向的堆块，分配结果如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/32.png" alt="img"></p>
+<p>这三个变量指向的都是堆块的用户区，可看到它们之间的差值都是0x38，即一个堆块的大小。’pc’后是’c1’，’c1’后是’c2’。需要注意的一点是，虽然’pc’的值为0x0035e0c0，但其堆块的用户区首地址是0x0035e0a0，因为new运算符在堆块的头结构_HEAP_ENTRY和类实例之间加入了0x20字节的数据。</p>
+<h3 id="实施堆溢出"><a href="#实施堆溢出" class="headerlink" title="实施堆溢出"></a>实施堆溢出</h3><p>观察图”SegmentOffsetAttack”，分配’c1’和’c2’堆块后，会向’c1’堆块复制内容，代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> overwriteSize = <span class="number">8</span>;</span><br><span class="line"><span class="built_in">memcpy_s</span>(c1, size + overwriteSize, </span><br><span class="line">    segment_arr, size + overwriteSize);</span><br></pre></td></tr></table></figure>
+
+<p>‘c1’指向的堆块的用户区大小是’size’变量的值，而写入的字节数是’size’ + 8，这个8是_HEAP_ENTRY，即堆块头结构的大小，因此这个复制会覆盖’c2’所指向的_HEAP_ENTRY。接下来查看复制的内容，segment_arr的数据如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/33.png" alt="img"></p>
+<p>segment_arr数组每行有8个字节，当溢出发生时，其中的某一行正好会覆盖掉’c2’所指向的_HEAP_ENTRY 头结构。</p>
+<p>这8个字节中，有三点需要注意：</p>
+<ul>
+<li><p>最后1个字节，即_HEAP_ENTRY.UnusedBytes，为了成功微调freedChunk指针，需要设其为0x05。</p>
+</li>
+<li><p>第7个字节，即_HEAP_ENTRY.SegmentOffset，用于控制微调的距离。0xE 表示  0x38 * 2 &#x2F; 8 &#x3D; 0xE，即微调时跳过两个堆块，这两个堆块就是’c1’和’c2’，在’c1’前面的堆块便是类实例了。</p>
+</li>
+<li><p>前4个字节，其值为0x00000002，这个值的作用很重要，为了说明原因，先看如下判断，如下图：</p>
+<p> <img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/34.png" alt="img" title="释放堆块时的判断"></p>
+<p>上半部分是freedChunk指针的微调，下半部分是微调后的判断。下半部分的判断如下：</p>
+<ul>
+<li>检测堆块的指针是否为NULL，如果为NULL，返回错误</li>
+<li>检测_HEAP_ENTRY.UnusedBytes是否为0x05，如果是，则继续判断。因为覆盖时UnusedBytes的值被修改为<br>0x05，所以继续判断。</li>
+<li>检测标志，该标志是RtlHeapFree的Flags参数，而该参数是从HeapFree传来的，由于真实情况下这个Flags一般是被写死的，其值为0，所以该检测一般会通过</li>
+</ul>
+<p>这些判断结束后，会调用v9函数，我们看下v9 是怎么来的。首先，v6被修改的语句如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v6 = *((_DWORD *)Address - <span class="number">2</span>);<span class="comment">// v6 = (char*)Address - 8; 堆块头_HEAP_ENTRY的前四字节</span></span><br></pre></td></tr></table></figure>
+
+<p>如果v6，即_HEAP_ENTRY 的前四字节为0，那么设v9为0，调用v9；如果v6不为0，往后看，v8 &#x3D; v6 - 1，然后判断v8和RtlpInterceptorsCount（值为3），如果大于等于3，则设v9为0，否则设v9为RtlpInterceptorRoutines[v8]。</p>
+<p>根据以上陈述，如果覆盖’c2’的_HEAP_ENTRY时，其前4 字节是0 或者大于3，那么v9为0。v9为0 的后果就是访问异常，因为 call 0  就是去执行  0x00000000  这个地址的指令。因此，这里需要将_HEAP_ENTRY前4 字节的值改成1、2 或3。如果是1、2 或3，那v9的值是什么呢？看下RtlpInterceptorRoutines数组，如下图：</p>
+<p> <img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/35.png" alt="img"></p>
+<p>这个数组的元素都是函数地址，从名字能知道这三个函数与追踪并记录堆块有关。看下三个函数的实现，这三个函数没有敏感的操作，因此可推测即使执行了这些函数，对本次实验也不会有影响。结果证实确实如此，由于调用RtlpStackTraceDatabaseLogPrefix时，其返回0，使得图”释放堆块时的判断”中的if 判断不成立，从而避免返回错误。从以上分析可看出，覆盖的_HEAP_ENTRY 的前四字节很重要，其值决定了本次测试是否成功。溢出完成后，结果如下图：</p>
+</li>
+</ul>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/36.png" alt="img"></p>
+<h3 id="释放堆块-‘c2’"><a href="#释放堆块-‘c2’" class="headerlink" title="释放堆块 ‘c2’"></a>释放堆块 ‘c2’</h3><p>因为之前覆盖了’c2’的_HEAP_ENTRY，所以HeapFree真正释放的堆块所在地址如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">freedChunk = freedChunk - _HEAP_ENTRY.SegmentOffset * <span class="number">8</span> = <span class="number">0x0035e108</span> - <span class="number">0xE</span> * <span class="number">8</span> = <span class="number">0x0035e098</span></span><br></pre></td></tr></table></figure>
+
+<p>因此，即将被释放的是’pc’指向的堆块，即类实例’pc’。</p>
+<h3 id="再分配一个与类实例大小相同的堆块"><a href="#再分配一个与类实例大小相同的堆块" class="headerlink" title="再分配一个与类实例大小相同的堆块"></a>再分配一个与类实例大小相同的堆块</h3><p>再分配一个堆块，并将堆块用户区的第0x20-0x23 字节设为0x41414141。回想一下，因为new运算符会在类实例前加0x20个字节，因此这里覆盖的不是用户区的前4 字节，而是距用户区偏移0x20 处的4个字节。这样，类实例的虚表就被覆盖了。</p>
+<p>最后，当调用类实例的虚函数时，eip 就被控制了。</p>
+<h2 id="对FreeEntryOffset的利用"><a href="#对FreeEntryOffset的利用" class="headerlink" title="对FreeEntryOffset的利用"></a>对FreeEntryOffset的利用</h2><p>该测试与前端堆的分配逻辑密切相关，根据前端堆的描述，在UserBlocks的堆空间中，每一个空闲堆块的用户区的前两字节都保存着下一个空闲堆块的FreeEntryOffset，如果能覆盖这两字节，那么就能够控制<br>_HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset，从而控制接下来第二次被分配的堆块。如果能把接下来第二次分配的堆块调整为类实例所在的堆块，那么就能够覆盖其虚表，从而控制eip，以上思路的图解如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/37.png" alt="img" title="分配堆块C后的布局"></p>
+<p>在堆溢出之前，堆的布局如上半部分所示，当第二个堆块溢出后，第三个即将被分配的堆块的FreeEntryOffset被覆盖，如下半部分。</p>
+<p>当再分配一次与类实例相同大小的堆块后，其结果如下图的下半部分（下图的上半部分与上图的下半部分一样）：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/38.png" alt="img"></p>
+<p>现在_HEAP_LOCAL_SEGMENT_INFO.ActiveSubsegment.AggregateExchg.FreeEntryOffset指向的是类实例的堆块，因此再分配一次与类实例相同大小的堆块，那么’pc’指向的堆块，即类实例所在的堆块就会被返回给调用者。</p>
+<p>以上为理论部分，接下来来看测试代码，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/39.png" alt="img"></p>
+<p>第三条语句是分配一个堆块，当分配完该堆块后，观察windbg的调试信息，此时下一个即将被分配的堆块，其用户区的前两个字节为0x0095，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/40.png" alt="img"></p>
+<p>之后是进行溢出，FreeEntryOffset的计算公式如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*(<span class="type">unsigned</span> <span class="type">short</span> *)((<span class="type">char</span> *)c + size + overwriteSize) -= (<span class="type">unsigned</span> <span class="type">short</span>)((size + <span class="number">8</span>) * <span class="number">3</span> / <span class="number">8</span>);</span><br></pre></td></tr></table></figure>
+
+<p>其中 ‘size + 8’ 为堆块的大小，3 表示越过三个堆块，为什么是3 呢？回顾一下图”分配堆块C后的布局”，0x00??指向了第四个堆块，而类实例所在堆块是第一个，中间相差3 个。最后除以8 是堆管理中大小以8 为单位。溢出后的结果如下图，FreeEntryOffset<br>为0x95 - ((0x30 + 8) * 3 &#x2F; 8) &#x3D; 0x0080：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/41.png" alt="img"></p>
+<p>之后再分配一个堆块，此堆块的分配使得AggregateExchg.FreeEntryOffset被修改为堆溢出后的值，即上面做过减法的值0x0080。由于AggregateExchg.FreeEntryOffset指示着下一个即将被分配的堆块，因此紧接下一次的分配会把类实例所在的堆块返回给调用者，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/42.png" alt="img"></p>
+<p>获得类实例所在的堆块后，覆盖其虚表指针。最后，调用类实例的虚函数，获得eip 的控制权，其结果如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/LFH/43.png" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然讲了两个测试，不过大家可能还是会有些疑惑，比如上面的两个测试怎么能应用在真实场景中呢？几个堆块分配都要求大小相等，而且还要求类实例和能够溢出的堆块相邻，这条件不会太苛刻了吗？还有后端堆就没有可以利用的地方吗？</p>
+<p>这两个问题都是相关联的，都牵扯到漏洞利用难度的话题。在Corelan Team的“<span class="exturl" data-url="aHR0cHM6Ly93d3cuY29yZWxhbi5iZS9pbmRleC5waHAvMjAxMy8wMi8yNi9yb290LWNhdXNlLWFuYWx5c2lzLW1lbW9yeS1jb3JydXB0aW9uLXZ1bG5lcmFiaWxpdGllcy8=">Root Cause Analysis – Memory Corruption Vulnerabilities</span>”和“<span class="exturl" data-url="aHR0cHM6Ly93d3cuY29yZWxhbi5iZS9pbmRleC5waHAvMjAxMy8wNy8wMi9yb290LWNhdXNlLWFuYWx5c2lzLWludGVnZXItb3ZlcmZsb3dzLw==">Root Cause Analysis – Integer Overflows</span>”文章中，有关堆漏洞的利用技巧非常精彩，都是通过修改输入文件的数据来控制堆的分配与释放，从而控制进程中堆的布局。因此即使条件苛刻，也是有可能成功利用这些漏洞的。此外，根据之前堆的研究者的总结，Corelan Team也强调随着攻击和防守的较量进展，在堆的管理机制上找堆漏洞的利用点将越来越难，甚至成为不可能的事。因此最终的重心都会放在“Application Specefic Exploit”，即根据应用程序使用堆的逻辑来探索利用点，判断该漏洞是否是可利用的(exploitable)。<br>本文描述的是win7下的堆管理，虽然win8也沿用了LFH，但检查力度加大了，只要_HEAP_ENTRY被修改（溢出)，就会检查到错误，因此本文讲到的两个测试在win8 都会失效。除了加大检查力度，win8对前端堆也加入了一些新的管理逻辑，相应的结构也进行了修改，win10同样如此，也进行了结构上和管理逻辑上的修改。通过探索win7和win8的检查点，确实与堆相关的漏洞越来越难利用，但不一定是不可利用的。要想在未来的堆漏洞利用中理解利用点并精确实施攻击，深入理解windows的堆管理是必要的。现在也有win7、win8 和win10 的堆管理paper，这些都是非常值得借鉴的。</p>
+
+      <div class="tags">
+          <a href="/tags/LFH/" rel="tag"><i class="ic i-tag"></i> LFH</a>
+          <a href="/tags/heap/" rel="tag"><i class="ic i-tag"></i> heap</a>
+          <a href="/tags/vulnerability/" rel="tag"><i class="ic i-tag"></i> vulnerability</a>
+          <a href="/tags/Win7/" rel="tag"><i class="ic i-tag"></i> Win7</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Reverse/Mechanism-of-LFH/" class="item leancloud_visitors" data-flag-title="Mechanism_of_LFH" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Reverse/Mechanism-of-LFH/" title="Mechanism_of_LFH">https://conecoy.cn/Technology/Reverse/Mechanism-of-LFH/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;31.jpg" title="runtime运行时库在MT与MD之间的差别">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>runtime运行时库在MT与MD之间的差别</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;32.jpg" title="c++编程错误锦囊">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>c++编程错误锦囊</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LFH%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">LFH原理解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E4%B8%BB%E6%97%A8"><span class="toc-number">1.1.</span> <span class="toc-text">本文主旨</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E7%94%B1%E6%9D%A5"><span class="toc-number">1.2.</span> <span class="toc-text">本文由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prerequisite%EF%BC%88%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">Prerequisite（知识储备）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#heap-manager%EF%BC%88%E5%A0%86%E7%AE%A1%E7%90%86%E5%99%A8%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">heap manager（堆管理器）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E5%A0%86"><span class="toc-number">1.4.1.</span> <span class="toc-text">后端堆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">结构介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E5%A0%86%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">后端堆实践</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E5%A0%86%E5%88%86%E9%85%8D%E5%92%8C%E9%87%8A%E6%94%BE"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">后端堆分配和释放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E5%A0%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">前端堆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BB%8B%E7%BB%8D-1"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">结构介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E5%A0%86%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">前端堆实践</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E5%A0%86%E5%88%86%E9%85%8D%E5%92%8C%E9%87%8A%E6%94%BE"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">前端堆分配和释放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="toc-number">1.4.2.4.</span> <span class="toc-text">小结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BF%80%E6%B4%BBLFH"><span class="toc-number">1.5.</span> <span class="toc-text">激活LFH</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.5.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windbg%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.5.2.</span> <span class="toc-text">windbg实践</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%A7%81%E6%9C%89%E5%A0%86"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">创建私有堆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%88%86%E9%85%8D0x12%E6%AC%A1%E7%9B%B8%E5%90%8C%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%A0%86%E5%9D%97"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">循环分配0x12次相同大小的堆块</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B%E6%96%B9%E6%B3%95"><span class="toc-number">1.6.</span> <span class="toc-text">检测方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E5%A0%86-1"><span class="toc-number">1.6.1.</span> <span class="toc-text">前端堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E5%A0%86-1"><span class="toc-number">1.6.2.</span> <span class="toc-text">后端堆</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9-HEAP-ENTRY-SegmentOffset-%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">1.7.</span> <span class="toc-text">对_HEAP_ENTRY.SegmentOffset 的利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BF%80%E6%B4%BB%E5%AF%B9%E5%BA%94%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%A0%86%E5%9D%97%E7%9A%84LFH"><span class="toc-number">1.7.1.</span> <span class="toc-text">激活对应大小的堆块的LFH</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8new%E8%BF%90%E7%AE%97%E7%AC%A6%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.7.2.</span> <span class="toc-text">用new运算符创建一个类实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E7%BB%AD%E5%88%86%E9%85%8D%E4%B8%A4%E4%B8%AA%E4%B8%8E%E7%B1%BB%E5%AE%9E%E4%BE%8B%E5%A4%A7%E5%B0%8F%E7%9B%B8%E5%90%8C%E7%9A%84%E5%A0%86%E5%9D%97"><span class="toc-number">1.7.3.</span> <span class="toc-text">连续分配两个与类实例大小相同的堆块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E5%A0%86%E6%BA%A2%E5%87%BA"><span class="toc-number">1.7.4.</span> <span class="toc-text">实施堆溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8A%E6%94%BE%E5%A0%86%E5%9D%97-%E2%80%98c2%E2%80%99"><span class="toc-number">1.7.5.</span> <span class="toc-text">释放堆块 ‘c2’</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%8D%E5%88%86%E9%85%8D%E4%B8%80%E4%B8%AA%E4%B8%8E%E7%B1%BB%E5%AE%9E%E4%BE%8B%E5%A4%A7%E5%B0%8F%E7%9B%B8%E5%90%8C%E7%9A%84%E5%A0%86%E5%9D%97"><span class="toc-number">1.7.6.</span> <span class="toc-text">再分配一个与类实例大小相同的堆块</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9FreeEntryOffset%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">1.8.</span> <span class="toc-text">对FreeEntryOffset的利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.9.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Reverse/StackUnwind/" rel="bookmark" title="StackUnwind">StackUnwind</a></li><li><a href="/Technology/Reverse/VMP-anti-vmware/" rel="bookmark" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></li><li class="active"><a href="/Technology/Reverse/Mechanism-of-LFH/" rel="bookmark" title="Mechanism_of_LFH">Mechanism_of_LFH</a></li><li><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" rel="bookmark" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></li><li><a href="/Technology/Reverse/Process-Injection/" rel="bookmark" title="Process_Injection">Process_Injection</a></li><li><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" rel="bookmark" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></li><li><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="bookmark" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" title="C++安全编程规范笔记">C++安全编程规范笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/" title="分类于 新年計画">新年計画</a>
+</div>
+
+    <span><a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" title="新年の始まり">新年の始まり</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Obfuscation/" title="分类于 Obfuscation">Obfuscation</a>
+</div>
+
+    <span><a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" title="混淆简介">混淆简介</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Process-Injection/" title="Process_Injection">Process_Injection</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Mechanism-of-LFH/" title="Mechanism_of_LFH">Mechanism_of_LFH</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Reverse/Mechanism-of-LFH/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

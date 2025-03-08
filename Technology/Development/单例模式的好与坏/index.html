@@ -1,0 +1,640 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="design pattern,singleton" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/">
+
+
+
+  <title>
+单例模式的好与坏 - Development - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">单例模式的好与坏
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2023-06-29 22:10:35">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2023-06-29T22:10:35+08:00">2023-06-29</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/11.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/48.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/57.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/56.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/36.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/50.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Development/" itemprop="item" rel="index" title="分类于 Development"><span itemprop="name">Development</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>单例模式是设计模式的一种，是开发实践中经常用到的一个概念。大意是在一个生命周期内（大多数情况是一个进程），只有一个实例。比如一个进程应该只有一个日志管理器(LogManager)实例。</p>
+<p>这里给出一个单例模式的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">   <span class="type">static</span> Singleton *instance;</span><br><span class="line">   <span class="type">int</span> data;</span><br><span class="line"> </span><br><span class="line">   <span class="comment">// Private constructor so that no objects can be created.</span></span><br><span class="line">   <span class="built_in">Singleton</span>() &#123;</span><br><span class="line">      data = <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span>:</span><br><span class="line">   <span class="function"><span class="type">static</span> Singleton *<span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (!instance)</span><br><span class="line">      instance = <span class="keyword">new</span> Singleton;</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="type">int</span> <span class="title">getData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span> -&gt; data;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="type">void</span> <span class="title">setData</span><span class="params">(<span class="type">int</span> data)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span> -&gt; data = data;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Initialize pointer to zero so that it can be initialized in first call to getInstance</span></span><br><span class="line">Singleton *Singleton::instance = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">   Singleton *s = s-&gt;<span class="built_in">getInstance</span>();</span><br><span class="line">   cout &lt;&lt; s-&gt;<span class="built_in">getData</span>() &lt;&lt; endl;</span><br><span class="line">   s-&gt;<span class="built_in">setData</span>(<span class="number">100</span>);</span><br><span class="line">   cout &lt;&lt; s-&gt;<span class="built_in">getData</span>() &lt;&lt; endl;</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中Singleton类不能从外部实例化，只能调用getInstance静态方法生成Singleton的实例。</p>
+<h2 id="单例模式进阶"><a href="#单例模式进阶" class="headerlink" title="单例模式进阶"></a>单例模式进阶</h2><p>上面的例子可以精简一下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">   <span class="type">static</span> Singleton *instance;</span><br><span class="line">   <span class="type">int</span> data;</span><br><span class="line"> </span><br><span class="line">   <span class="built_in">Singleton</span>() &#123;</span><br><span class="line">      data = <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">//...</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">   <span class="function"><span class="type">static</span> Singleton *<span class="title">getInstance</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的instance静态成员变量不会被释放，导致可能存在泄漏。这里的泄漏大多是文件泄漏等，因为可能有未保存的文件内容等。</p>
+<p>所以这里的instance可以使用智能指针：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">   <span class="type">static</span> std::unique_ptr&lt;Singleton&gt; instance;</span><br><span class="line">   <span class="type">int</span> data;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">   <span class="built_in">Singleton</span>() &#123;</span><br><span class="line">      data = <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">//...</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">   <span class="function"><span class="type">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// initialization of &#x27;instance&#x27; variable</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="function">Singleton* <span class="title">Singleton::getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!instance)</span><br><span class="line">        instance = std::<span class="built_in">unique_ptr</span>&lt;Singleton&gt;(<span class="keyword">new</span> Singleton); <span class="comment">// you can use std::make_unique</span></span><br><span class="line">    <span class="keyword">return</span> instance.<span class="built_in">get</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于这里能保证单例是肯定可以分配成功的，因为new大多数情况下不会失败，所以getInstance的返回类型可以改为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> Singleton&amp; <span class="title">getInstance</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>然后，这个版本不是多线程安全的，因此需要加锁。但比较便捷的方式是如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">   <span class="type">int</span> data;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>= (<span class="type">const</span> Singleton) = <span class="keyword">delete</span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">   <span class="built_in">Singleton</span>() &#123;</span><br><span class="line">      data = <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">//...</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">   <span class="function"><span class="type">static</span> Singleton&amp; <span class="title">getInstance</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Singleton&amp; <span class="title">Singleton::getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="type">static</span> Singleton instance;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在c++11中，静态局部变量的初始化是多线程安全的。</p>
+<blockquote>
+<p>这里禁止了复制构造函数，因为单例类只需要一个实例。</p>
+</blockquote>
+<h2 id="单例模式模板进阶"><a href="#单例模式模板进阶" class="headerlink" title="单例模式模板进阶"></a>单例模式模板进阶</h2><p>每个类都写一个getInstance是比较麻烦的，我们可以使用模板来更方便的完成单例模式：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> T&amp; <span class="title">instance</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="type">const</span> Singleton&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>= (<span class="type">const</span> Singleton) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">token</span> &#123;&#125;; <span class="comment">//without needing to be a friend.</span></span><br><span class="line">    <span class="built_in">Singleton</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">T&amp; Singleton&lt;T&gt;::<span class="built_in">instance</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">static</span> T instance&#123;token&#123;&#125;&#125;;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>模板的详情可参考<span class="exturl" data-url="aHR0cHM6Ly9jb2RlcmV2aWV3LnN0YWNrZXhjaGFuZ2UuY29tL2EvMTczOTQy">这个</span>。</p>
+</blockquote>
+<h2 id="单例模式引入的问题（针对传统的使用方式）"><a href="#单例模式引入的问题（针对传统的使用方式）" class="headerlink" title="单例模式引入的问题（针对传统的使用方式）"></a>单例模式引入的问题（针对传统的使用方式）</h2><p>单例模式可以带来很多好处，因为我们不需要频繁的创建单例类的实例，在需要单例类的实例时，调用getInstance获取即可。</p>
+<p>然而，单例模式也会带来一些问题，比如这个<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMTM3OTc1L3doYXQtYXJlLWRyYXdiYWNrcy1vci1kaXNhZHZhbnRhZ2VzLW9mLXNpbmdsZXRvbi1wYXR0ZXJu">讨论</span>和<span class="exturl" data-url="aHR0cDovL21pc2tvLmhldmVyeS5jb20vMjAwOC8wOC8yNS9yb290LWNhdXNlLW9mLXNpbmdsZXRvbnMv">这篇文章</span>。</p>
+<p>如果空泛的解释这个问题，似乎有点没有头绪，那么接下来描述几个例子。</p>
+<h3 id="Singletons-are-Pathological-Liars"><a href="#Singletons-are-Pathological-Liars" class="headerlink" title="Singletons are Pathological Liars"></a>Singletons are Pathological Liars</h3><p>eg：<span class="exturl" data-url="aHR0cDovL21pc2tvLmhldmVyeS5jb20vMjAwOC8wOC8xNy9zaW5nbGV0b25zLWFyZS1wYXRob2xvZ2ljYWwtbGlhcnMv">Singletons are Pathological Liars</span></p>
+<h3 id="单例类之间的依赖引发崩溃"><a href="#单例类之间的依赖引发崩溃" class="headerlink" title="单例类之间的依赖引发崩溃"></a>单例类之间的依赖引发崩溃</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> a = SingletonA::<span class="built_in">Intance</span>();</span><br><span class="line">a.<span class="built_in">func1</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// func1 implementation</span></span><br><span class="line">SingletonA::<span class="built_in">func1</span>()&#123;</span><br><span class="line">	<span class="comment">//... some work</span></span><br><span class="line">    single_b = SingletonB::<span class="built_in">Intance</span>();</span><br><span class="line">    single_b.<span class="built_in">func2</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果SingletonA和SingletonB的Instance都是第一次被调用，那么SingletonA先被构造，之后是SingletonB，在进程退出时，SingletonB会先被析构，如果此时进程的某个线程调用了a.func1，那么由于SingletonB的实例被析构了，所以可能出现访问异常，导致崩溃。</p>
+<h3 id="静态全局变量和单例类之间的依赖引发崩溃"><a href="#静态全局变量和单例类之间的依赖引发崩溃" class="headerlink" title="静态全局变量和单例类之间的依赖引发崩溃"></a>静态全局变量和单例类之间的依赖引发崩溃</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> a = SingletonA::<span class="built_in">Intance</span>();</span><br><span class="line">a.<span class="built_in">func1</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// func1 implementation</span></span><br><span class="line">SingletonA::<span class="built_in">func1</span>()&#123;</span><br><span class="line">	<span class="comment">//... some work</span></span><br><span class="line">    <span class="type">static</span> classB b;</span><br><span class="line">    b.<span class="built_in">func2</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该崩溃情况和上一小节的原理是一致的。</p>
+<h3 id="上述单例类的实现不是多线程安全的"><a href="#上述单例类的实现不是多线程安全的" class="headerlink" title="上述单例类的实现不是多线程安全的"></a>上述单例类的实现不是多线程安全的</h3><p>在进程退出时，单例类的实例会被析构，如果此时有一个线程在使用这个单例类的实例，那么也可能会引发崩溃，但这种的情况概率一般比较低。</p>
+<h2 id="这些问题的原因"><a href="#这些问题的原因" class="headerlink" title="这些问题的原因"></a>这些问题的原因</h2><p>以上问题有三个点：</p>
+<ul>
+<li><p>依赖关系隐藏，导致新接手工程的开发者不清楚依赖关系。</p>
+</li>
+<li><p>单例类在上述的实现方式中，是使用时初始化(调用构造函数)，那么多个单例类之间的初始化顺序是不可预测的，这会导致彼此的依赖不确定性。</p>
+</li>
+<li><p>单例类在某种意义上，可以理解成是一个全局变量，全局变量不是多线程安全的，因此单例类也同样如此。</p>
+</li>
+</ul>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><ul>
+<li>在进程的<code>main</code>方法中，显示的定义多个单例类之间的初始化顺序，保证在进程退出后，这些单例类的实例按照初始化的逆顺序进行析构。</li>
+<li>在需要的场景下，对单例类的析构函数和其他函数加锁。</li>
+</ul>
+<blockquote>
+<p>之前想过在main方法的最后显示调用单例模式的析构函数，发现代码不知道怎么写。换一个角度思考，显示调用析构函数从设计上是不好的，另外，既然运行时做了单例类实例的初始化，那么相应的析构也应该由运行时来做。因此在main方法中调用析构函数是不合理的。</p>
+</blockquote>
+<h2 id="使用单例模式的原因"><a href="#使用单例模式的原因" class="headerlink" title="使用单例模式的原因"></a>使用单例模式的原因</h2><p>既然单例模式有上述问题，那为什么还要使用单例模式呢？</p>
+<p>回到单例模式的初衷：保证一种资源在一个特定的环境下只有一个实例。</p>
+<h2 id="理想的解决办法"><a href="#理想的解决办法" class="headerlink" title="理想的解决办法"></a>理想的解决办法</h2><p>回顾单例模式的问题，可发现单例模式本身是没有问题的，错在单例模式的使用方法上。</p>
+<p>那么如何更好的解决以上问题，以下是一个可行的办法：</p>
+<ul>
+<li><p>使用单例模式创建实例（保证唯一实例）</p>
+</li>
+<li><p>给每个需要单例类实例的组件传一个单例类实例的参数（暴露依赖）</p>
+<blockquote>
+<ul>
+<li>这里和全局使用单例类实例的区别在于依赖被显式声明，同时依赖的顺序将会被固定，不存在不确定性。</li>
+<li>单元测试中，多线程情况下需要等待任务执行结束(wait method)，再退出单元测试。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>在以上情况都不适用的情况下，可使用传统使用方式。</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>单例模式有它的使用场景，其概念是好的，没有问题的。之所以被大家诟病的原因，其实是部分开发者对于单例模式的不当使用（因为全局状态(global state)的传递变得没有条理）。</p>
+<p>另外，单例模式的使用中，需要注意单例类之间的初始化顺序，当然也要尽量避免单例类之间的依赖（不过这往往不太好避免）。</p>
+<p>单例模式不易使用的场景是包含重要状态的一些类，这些类最好使用依赖传递。因为使用单例模式的话，会隐藏依赖关系，这样对于状态的改变就难以跟踪和分析。这时使用上一节提出的方法就会更好一点。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly9zb2Z0d2FyZWVuZ2luZWVyaW5nLnN0YWNrZXhjaGFuZ2UuY29tL3F1ZXN0aW9ucy8xNDc2OTgvYWx0ZXJuYXRpdmVzLXRvLXRoZS1zaW5nbGV0b24tcGF0dGVybg==">Alternatives to the singleton pattern</span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMTM3OTc1L3doYXQtYXJlLWRyYXdiYWNrcy1vci1kaXNhZHZhbnRhZ2VzLW9mLXNpbmdsZXRvbi1wYXR0ZXJu">What are drawbacks or disadvantages of singleton pattern?</span></li>
+<li><span class="exturl" data-url="aHR0cDovL21pc2tvLmhldmVyeS5jb20vMjAwOC8wOC8yNS9yb290LWNhdXNlLW9mLXNpbmdsZXRvbnMv">Root Cause of Singletons</span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9jb2RlcmV2aWV3LnN0YWNrZXhjaGFuZ2UuY29tL3F1ZXN0aW9ucy8xNzM5MjkvbW9kZXJuLWMtc2luZ2xldG9uLXRlbXBsYXRl">Modern C++ Singleton Template</span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMjczNzIwL3NpbmdsZXRvbi1kZXN0cnVjdG9ycw==">Singleton Destructors</span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly93ZWIuYXJjaGl2ZS5vcmcvd2ViLzIwMTIwNjAzMjMzNjU4L2h0dHA6Ly90ZWNoLnB1cmVkYW5nZXIuY29tLzIwMDcvMDcvMDMvcGF0dGVybi1oYXRlLXNpbmdsZXRvbg==">Patterns I Hate #1: Singleton</span></li>
+</ul>
+
+      <div class="tags">
+          <a href="/tags/design-pattern/" rel="tag"><i class="ic i-tag"></i> design pattern</a>
+          <a href="/tags/singleton/" rel="tag"><i class="ic i-tag"></i> singleton</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Development/单例模式的好与坏/" class="item leancloud_visitors" data-flag-title="单例模式的好与坏" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">https://conecoy.cn/Technology/Development/单例模式的好与坏/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;15.jpg" title="C++工程预编译笔记.md">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>C++工程预编译笔记.md</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;65.jpg" title="C++安全编程规范笔记">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>C++安全编程规范笔记</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">单例模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E8%BF%9B%E9%98%B6"><span class="toc-number">2.</span> <span class="toc-text">单例模式进阶</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E6%A8%A1%E6%9D%BF%E8%BF%9B%E9%98%B6"><span class="toc-number">3.</span> <span class="toc-text">单例模式模板进阶</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E5%BC%95%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E9%92%88%E5%AF%B9%E4%BC%A0%E7%BB%9F%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">单例模式引入的问题（针对传统的使用方式）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Singletons-are-Pathological-Liars"><span class="toc-number">4.1.</span> <span class="toc-text">Singletons are Pathological Liars</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BE%9D%E8%B5%96%E5%BC%95%E5%8F%91%E5%B4%A9%E6%BA%83"><span class="toc-number">4.2.</span> <span class="toc-text">单例类之间的依赖引发崩溃</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E5%92%8C%E5%8D%95%E4%BE%8B%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BE%9D%E8%B5%96%E5%BC%95%E5%8F%91%E5%B4%A9%E6%BA%83"><span class="toc-number">4.3.</span> <span class="toc-text">静态全局变量和单例类之间的依赖引发崩溃</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E8%BF%B0%E5%8D%95%E4%BE%8B%E7%B1%BB%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8D%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84"><span class="toc-number">4.4.</span> <span class="toc-text">上述单例类的实现不是多线程安全的</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-number">5.</span> <span class="toc-text">这些问题的原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-number">7.</span> <span class="toc-text">使用单例模式的原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E6%83%B3%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">理想的解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">9.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">10.</span> <span class="toc-text">参考链接</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="bookmark" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></li><li><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="bookmark" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></li><li><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="bookmark" title="c++编程错误锦囊">c++编程错误锦囊</a></li><li><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="bookmark" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></li><li><a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="bookmark" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></li><li><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="COM学习笔记">COM学习笔记</a></li><li><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" rel="bookmark" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></li><li><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></li><li class="active"><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" rel="bookmark" title="单例模式的好与坏">单例模式的好与坏</a></li><li><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++安全编程规范笔记">C++安全编程规范笔记</a></li><li><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="COM学习笔记">COM学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Process-Injection/" title="Process_Injection">Process_Injection</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">单例模式的好与坏</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Obfuscation/" title="分类于 Obfuscation">Obfuscation</a>
+</div>
+
+    <span><a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" title="混淆简介">混淆简介</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/" title="分类于 新年計画">新年計画</a>
+</div>
+
+    <span><a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" title="新年の始まり">新年の始まり</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Development/单例模式的好与坏/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

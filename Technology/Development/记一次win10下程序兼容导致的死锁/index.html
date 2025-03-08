@@ -1,0 +1,614 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="deadlock" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/">
+
+
+
+  <title>
+记一次win10下程序以兼容方式启动导致的死锁 - Development - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">记一次win10下程序以兼容方式启动导致的死锁
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-10-25 19:42:40">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-10-25T19:42:40+08:00">2021-10-25</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/52.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/54.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/57.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/64.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/48.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/24.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Development/" itemprop="item" rel="index" title="分类于 Development"><span itemprop="name">Development</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>某一天开发完做测试的时候，发现测试程序没有输出日志。确定与新功能没关系后，决定上windbg一探究竟，最后定位的结果是垫片引擎和ntdll模块的锁之间形成了死锁关系。</p>
+<p>接下来记录一下死锁的形成经历。</p>
+<h2 id="观察主线程状态"><a href="#观察主线程状态" class="headerlink" title="观察主线程状态"></a>观察主线程状态</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> # ChildEBP RetAddr  Args to Child              </span><br><span class="line"><span class="number">00</span> <span class="number">00</span>8fe<span class="number">8e0</span> <span class="number">775</span>f57da <span class="number">6</span>be0c9ac <span class="number">00000000</span> <span class="number">02</span>c78f58 ntdll!NtWaitForAlertByThreadId<span class="number">+0xc</span> (FPO: [<span class="number">2</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">01</span> <span class="number">00</span>8fe944 <span class="number">6</span>bdddaa3 <span class="number">6</span>be0c9ac <span class="number">00000000</span> <span class="number">02</span>c78f28 ntdll!RtlAcquireSRWLockShared<span class="number">+0x1ca</span> (FPO: [<span class="number">1</span>,<span class="number">17</span>,<span class="number">4</span>])</span><br><span class="line"><span class="number">02</span> <span class="number">00</span>8fe980 <span class="number">6</span>bddd0b3 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">0000000</span>9 AcLayers!NS_FaultTolerantHeap::FthDelayFreeQueueInsert<span class="number">+0x7b</span> (FPO: [<span class="number">1</span>,<span class="number">9</span>,<span class="number">4</span>])</span><br><span class="line"><span class="number">03</span> <span class="number">00</span>8feabc <span class="number">74e9</span>be65 <span class="number">00</span>d30000 <span class="number">0014000</span>9 <span class="number">02</span>c78f28 AcLayers!NS_FaultTolerantHeap::APIHook_RtlReAllocateHeap<span class="number">+0x843</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">04</span> <span class="number">00</span>8feb14 <span class="number">77455486</span> KERNELBASE!LocalReAlloc<span class="number">+0x135</span></span><br><span class="line"><span class="number">05</span> <span class="number">00</span>8feb74 <span class="number">77476827</span> MSCTF!CCategoryMgr::s_RegisterGUID<span class="number">+0x286</span></span><br><span class="line">...</span><br><span class="line"><span class="number">0</span>a <span class="number">00</span>8fec7c <span class="number">762</span>c38dc MSCTF!CtfImeCreateInputContext<span class="number">+0x30</span></span><br><span class="line">...</span><br><span class="line"><span class="number">0</span>e <span class="number">00</span>8fed1c <span class="number">764e0f</span>92 IMM32!ImmSetActiveContext<span class="number">+0x34f</span></span><br><span class="line">...</span><br><span class="line"><span class="number">15</span> <span class="number">00</span>8ff154 <span class="number">764</span>ee4cf USER32!DispatchClientMessage<span class="number">+0xea</span></span><br><span class="line"><span class="number">16</span> <span class="number">00</span>8ff190 <span class="number">7763537</span>d USER32!__fnDWORD<span class="number">+0x3f</span></span><br><span class="line"><span class="number">17</span> <span class="number">00</span>8ff1c8 <span class="number">764</span>a30ac ntdll!KiUserCallbackDispatcher<span class="number">+0x4d</span></span><br><span class="line"><span class="number">18</span> <span class="number">00</span>8ff1cc <span class="number">76540</span>ad9 win32u!NtUserSetFocus<span class="number">+0xc</span></span><br><span class="line">...</span><br><span class="line"><span class="number">26</span> <span class="number">00</span>8ff8ec <span class="number">00</span>9c9d6d USER32!MessageBoxW<span class="number">+0x45</span></span><br><span class="line">WARNING: Stack unwind information <span class="keyword">not</span> available. Following frames may be wrong.</span><br><span class="line"><span class="number">27</span> <span class="number">00</span>8ffab8 <span class="number">00</span>a1157e xx_tester<span class="number">+0xa9d6d</span></span><br><span class="line">...</span><br><span class="line"><span class="number">2</span>c <span class="number">00</span>8ffb48 <span class="number">77628944</span> KERNEL32!BaseThreadInitThunk<span class="number">+0x19</span></span><br><span class="line"><span class="number">2</span>d <span class="number">00</span>8ffba4 <span class="number">77628914</span> ntdll!__RtlUserThreadStart<span class="number">+0x2f</span></span><br><span class="line"><span class="number">2</span>e <span class="number">00</span>8ffbb4 <span class="number">00000000</span> ntdll!_RtlUserThreadStart<span class="number">+0x1b</span></span><br></pre></td></tr></table></figure>
+
+<p>观察windbg打印的栈，可看出主线程调用MessageBox就没有返回了。</p>
+<blockquote>
+<p>注：调用MessageBox之前，xx_tester创建了一个线程，用于关掉该消息框。不过主线程还没有创建好消息框就卡住了。另外，主线程弹出消息框只是用于测试windows的全局钩子，所以请大家不要模仿。</p>
+</blockquote>
+<p>看02~03的调用，通过LocalReAlloc进入了AcLayers模块的堆管理部分。AcLayers是windows在winXP引入的垫片机制的一个垫片（apphelp.dll是垫片引擎）。为了兼容可能出现的堆错误，这里使用了AcLayers垫片的容错堆功能。</p>
+<blockquote>
+<p>注：堆有一些调试支持，比如堆尾检查（Heap Tail Check&#x2F;HTC）、释放检查（Heap Free Check&#x2F;HFC）等，和FTH名字很像，不过FTH是一个自win7以来提供的子系统，用于监控应用程序的崩溃，并在之后的启动中，提供缓解方法来避免崩溃。</p>
+</blockquote>
+<p>看00~01的调用，发现AcLayers调用了ntdll的RtlAcquireSRWLockShared，这个函数是在等一个SRWLock，然后就一去不复返了。windbg没有srwlock相关的扩展命令，不过可以通过_RTL_SRWLOCK来观察结构体的内容，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; dt ntdll!_RTL_SRWLOCK <span class="number">6</span>be0c9ac </span><br><span class="line">   <span class="number">+0x000</span> Locked           : <span class="number">0</span>y1</span><br><span class="line">   <span class="number">+0x000</span> Waiting          : <span class="number">0</span>y1</span><br><span class="line">   <span class="number">+0x000</span> Waking           : <span class="number">0</span>y0</span><br><span class="line">   <span class="number">+0x000</span> MultipleShared   : <span class="number">0</span>y0</span><br><span class="line">   <span class="number">+0x000</span> Shared           : <span class="number">0</span>y0000000010001111111010010010 (<span class="number">0x8fe92</span>)</span><br><span class="line">   <span class="number">+0x000</span> Value            : <span class="number">0x8fe923</span></span><br><span class="line">   <span class="number">+0x000</span> Ptr              : <span class="number">0x008fe923</span> Void</span><br></pre></td></tr></table></figure>
+
+<p>从这个结构体的内容可看出，另外一个线程持有这个锁。因为SRWLock是微软内部使用的，没有公开文档，所以从该结构体，我们暂且还不知是哪个线程持有这个锁。</p>
+<blockquote>
+<p>注：SRWLock不能看出谁持有锁，但CRITICAL_SECTION可以看出。</p>
+</blockquote>
+<h2 id="windbg的附加线程"><a href="#windbg的附加线程" class="headerlink" title="windbg的附加线程"></a>windbg的附加线程</h2><p>用windbg附加的时候，发现无法立刻中断下来，弹出如下内容：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Break-in sent, waiting <span class="number">30</span> seconds...</span><br><span class="line">WARNING: Break-in timed out, suspending.</span><br><span class="line">         <span class="function">This is usually caused by another thread holding the loader <span class="title">lock</span></span></span><br><span class="line"><span class="function"><span class="params">(<span class="number">5874.4</span>b38)</span>: Wake debugger - code <span class="number">80000007</span> (first chance)</span></span><br><span class="line"><span class="function">eax=</span><span class="number">00004</span>b38 ebx=<span class="number">6</span>be0c9ac ecx=<span class="number">00000000</span> edx=<span class="number">00000000</span> esi=<span class="number">00000001</span> edi=<span class="number">6</span>be0c9ac</span><br><span class="line">eip=<span class="number">77634</span>bbc esp=<span class="number">00</span>8fe<span class="number">8e4</span> ebp=<span class="number">00</span>8fe944 iopl=<span class="number">0</span>         nv up ei pl nz na pe nc</span><br><span class="line">cs=<span class="number">0023</span>  ss=<span class="number">002</span>b  ds=<span class="number">002</span>b  es=<span class="number">002</span>b  fs=<span class="number">0053</span>  gs=<span class="number">002</span>b             efl=<span class="number">00000206</span></span><br><span class="line">ntdll!NtWaitForAlertByThreadId<span class="number">+0xc</span>:</span><br><span class="line"><span class="number">77634</span>bbc c20800          ret     <span class="number">8</span></span><br></pre></td></tr></table></figure>
+
+<p>因为windbg附加时，是通过远线程的方式调用被调试进程的DbgUiRemoteBreakin函数，那为何附加线程无法中断呢？观察这个线程的栈如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">013</span>&gt; kv</span><br><span class="line"> # ChildEBP RetAddr </span><br><span class="line"><span class="number">00</span> <span class="number">0</span>97ef<span class="number">0e8</span> <span class="number">7761</span>b79b <span class="number">7</span>b55f2a4 <span class="number">00000000</span> <span class="number">7</span>b55f2a0 ntdll!NtWaitForAlertByThreadId<span class="number">+0xc</span> (FPO: [<span class="number">2</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">01</span> <span class="number">0</span>97ef120 <span class="number">7761</span>b46d <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">7</span>b55f2a4 ntdll!RtlpWaitOnAddressWithTimeout<span class="number">+0xc0</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">02</span> <span class="number">0</span>97ef1c0 <span class="number">7760</span>d681 <span class="number">0</span>97ef3a0 <span class="number">0</span>97efa48 <span class="number">00000000</span> ntdll!RtlpWaitOnCriticalSection<span class="number">+0x18d</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">03</span> <span class="number">0</span>97ef1f8 <span class="number">7760</span>ae09 <span class="number">0</span>97ef20c <span class="number">7</span>b328b95 <span class="number">7</span>b55f2a0 ntdll!RtlpEnterCriticalSectionContended<span class="number">+0x261</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">04</span> <span class="number">0</span>97ef200 <span class="number">7</span>b328b95 <span class="number">7</span>b55f2a0 <span class="number">0</span>97ef264 <span class="number">7</span>b<span class="number">2e17f</span>3 ntdll!RtlEnterCriticalSection<span class="number">+0x49</span> (FPO: [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">05</span> <span class="number">0</span>97ef20c <span class="number">7</span>b<span class="number">2e17f</span>3 xx!__acrt_lock<span class="number">+0x15</span></span><br><span class="line"><span class="number">06</span> <span class="number">0</span>97ef264 <span class="number">7</span>b<span class="number">2e1746</span> xx!heap_alloc_dbg_internal<span class="number">+0x43</span></span><br><span class="line"><span class="number">07</span> <span class="number">0</span>97ef288 <span class="number">7</span>b<span class="number">2e476</span>a xx!heap_alloc_dbg<span class="number">+0x36</span></span><br><span class="line"><span class="number">0</span>8 <span class="number">0</span>97ef2a0 <span class="number">7</span>b323124 xx!_malloc_dbg<span class="number">+0x1a</span></span><br><span class="line"><span class="number">0</span>9 <span class="number">0</span>97ef2b8 <span class="number">7</span>b0a672d xx!malloc<span class="number">+0x14</span></span><br><span class="line">...</span><br><span class="line"><span class="number">13</span> <span class="number">0</span>97efb20 <span class="number">775</span>f2ee9 xx!NtContinueDetour<span class="number">+0x46</span></span><br><span class="line"><span class="number">14</span> <span class="number">0</span>97efb34 <span class="number">00000000</span> ntdll!LdrInitializeThunk<span class="number">+0x29</span></span><br></pre></td></tr></table></figure>
+
+<p>观察13~14的调用，发现在切换到DbgUiRemoteBreakin之前，就已经卡住了。</p>
+<blockquote>
+<p>注：当创建新的线程时，都会先调用LdrInitializeThunk，做一些线程的初始化，然后调用NtContinue函数。NtContinue会将CONTEXT结构体的eip设置为线程真正的起始执行入口。</p>
+</blockquote>
+<p>观察05~09的调用，在测试时，我对NtContinue做了inlinehook，NtContinueDetour就是inlinehook的中间函数。NtContinueDetour在检查的途中，分配了堆块，最后调用了微软的C运行时库函数__acrt_lock。</p>
+<p>观察04的调用，发现附加线程卡住的原因是在等待一个CRITICAL_SECTION，观察这个锁：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">013</span>&gt; !cs <span class="number">7</span>b55f2a0 </span><br><span class="line">-----------------------------------------</span><br><span class="line">Critical section   = <span class="number">0x7b55f2a0</span> (JJDPS!__acrt_lock_table<span class="number">+0x0</span>)</span><br><span class="line">DebugInfo          = <span class="number">0x00d6b4b8</span></span><br><span class="line">LOCKED</span><br><span class="line">LockCount          = <span class="number">0x3</span></span><br><span class="line">WaiterWoken        = No</span><br><span class="line">OwningThread       = <span class="number">0x000047b8</span></span><br><span class="line">RecursionCount     = <span class="number">0x1</span></span><br><span class="line">LockSemaphore      = <span class="number">0xFFFFFFFF</span></span><br><span class="line">SpinCount          = <span class="number">0x00000fa0</span></span><br></pre></td></tr></table></figure>
+
+<p>OwningThread指明了线程ID为0x000047b8的线程持有这个锁，那我们切换到这个线程，观察它的栈：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">007</span>&gt; kv</span><br><span class="line"># ChildEBP RetAddr  Args to Child  </span><br><span class="line"><span class="number">00</span> <span class="number">0</span>96ee580 <span class="number">7761</span>b79b <span class="number">00</span>d3025c <span class="number">00000000</span> <span class="number">00</span>d30258 ntdll!NtWaitForAlertByThreadId<span class="number">+0xc</span> (FPO: [<span class="number">2</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">01</span> <span class="number">0</span>96ee5b8 <span class="number">7761</span>b46d <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00</span>d3025c ntdll!RtlpWaitOnAddressWithTimeout<span class="number">+0xc0</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">02</span> <span class="number">0</span>96ee658 <span class="number">7760</span>d681 <span class="number">00000000</span> <span class="number">00</span>d30000 <span class="number">00000000</span> ntdll!RtlpWaitOnCriticalSection<span class="number">+0x18d</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">03</span> <span class="number">0</span>96ee690 <span class="number">7760</span>ae09 <span class="number">00000000</span> <span class="number">0</span>96ee6fc <span class="number">776</span>a9b5c ntdll!RtlpEnterCriticalSectionContended<span class="number">+0x261</span> (FPO: [Non-Fpo])</span><br><span class="line"><span class="number">04</span> <span class="number">0</span>96ee69c <span class="number">776</span>a9b5c <span class="number">00</span>d30258 <span class="number">46</span>b3037b <span class="number">00</span>d30000 ntdll!RtlEnterCriticalSection<span class="number">+0x49</span> (FPO: [<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>])</span><br><span class="line"><span class="number">05</span> <span class="number">0</span>96ee6fc <span class="number">7760</span>d8c6 ntdll!RtlDebugFreeHeap<span class="number">+0x87</span></span><br><span class="line"><span class="number">06</span> <span class="number">0</span>96ee858 <span class="number">77647e9</span>b ntdll!RtlpFreeHeap<span class="number">+0xd6</span></span><br><span class="line"><span class="number">07</span> <span class="number">0</span>96ee8b4 <span class="number">7760</span>d796 ntdll!RtlpFreeHeapInternal<span class="number">+0x783</span></span><br><span class="line"><span class="number">0</span>8 <span class="number">0</span>96ee8d4 <span class="number">6</span>bddd9d4 ntdll!RtlFreeHeap<span class="number">+0x46</span></span><br><span class="line"><span class="number">0</span>9 <span class="number">0</span>96ee90c <span class="number">6</span>bddea9a AcLayers!NS_FaultTolerantHeap::FthDelayFreeQueueFlush<span class="number">+0x125</span></span><br><span class="line"><span class="number">0</span>a <span class="number">0</span>96ee91c <span class="number">6</span>bddd1a3 AcLayers!NS_FaultTolerantHeap::FthValidateHeap<span class="number">+0x55</span></span><br><span class="line"><span class="number">0</span>b <span class="number">0</span>96ee928 <span class="number">74</span>eccbf4 AcLayers!NS_FaultTolerantHeap::APIHook_RtlValidateHeap<span class="number">+0x13</span></span><br><span class="line"><span class="number">0</span>c <span class="number">0</span>96ee93c <span class="number">7</span>b<span class="number">2e2</span>e4b KERNELBASE!HeapValidate<span class="number">+0x14</span></span><br><span class="line"><span class="number">0</span>d <span class="number">0</span>96ee950 <span class="number">7</span>b<span class="number">2e11</span>de xx!_CrtIsValidHeapPointer<span class="number">+0x2b</span> </span><br><span class="line"><span class="number">0</span>e <span class="number">0</span>96ee968 <span class="number">7</span>b<span class="number">2e46</span>ec xx!free_dbg_nolock<span class="number">+0xce</span> </span><br><span class="line"><span class="number">0</span>f <span class="number">0</span>96ee9a8 <span class="number">7</span>b0a7d1e xx!_free_dbg<span class="number">+0x7c</span> </span><br><span class="line"><span class="number">10</span> <span class="number">0</span>96ee9b8 <span class="number">7</span>b0a678c xx!<span class="keyword">operator</span> <span class="keyword">delete</span><span class="number">+0xe</span> </span><br><span class="line"><span class="number">11</span> <span class="number">0</span>96ee9c4 <span class="number">7</span>af6223e xx!<span class="keyword">operator</span> <span class="keyword">delete</span><span class="number">+0xc</span></span><br><span class="line">...</span><br><span class="line"><span class="number">17</span> <span class="number">0</span>96eef4c <span class="number">7</span>af5fe72 xx!std::shared_ptr</span><br><span class="line"><span class="number">18</span> <span class="number">0</span>96ef03c <span class="number">7</span>af67c35 xx!nlohmann::detail::serializer</span><br><span class="line"><span class="number">19</span> <span class="number">0</span>96ef4c0 <span class="number">7</span>af62ee6 xx!nlohmann::basic_json</span><br><span class="line">...</span><br><span class="line"><span class="number">20</span> <span class="number">0</span>96efcec <span class="number">775</span>f869b ntdll!TppTimerpExecuteCallback<span class="number">+0x98</span></span><br><span class="line"><span class="number">21</span> <span class="number">0</span>96efe9c <span class="number">76676359</span> ntdll!TppWorkerThread<span class="number">+0x73b</span></span><br><span class="line"><span class="number">22</span> <span class="number">0</span>96efeac <span class="number">77628944</span> KERNEL32!BaseThreadInitThunk<span class="number">+0x19</span></span><br><span class="line"><span class="number">23</span> <span class="number">0</span>96eff08 <span class="number">77628914</span> ntdll!__RtlUserThreadStart<span class="number">+0x2f</span></span><br><span class="line"><span class="number">24</span> <span class="number">0</span>96eff18 <span class="number">00000000</span> ntdll!_RtlUserThreadStart<span class="number">+0x1b</span></span><br></pre></td></tr></table></figure>
+
+<p>观察20~24的调用，这是一个线程池里的线程，然后周期性地调用着一个回调。</p>
+<p>观察17~19的调用，发现是nlohmann的json类在调用构造函数。</p>
+<p>观察05~11的调用，发现也调用了AcLayers垫片的FTH。</p>
+<p>观察04的调用，可知7号线程也在等待一个CS锁，观察这个锁如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">007</span>&gt; !cs <span class="number">00</span>d30258 </span><br><span class="line">-----------------------------------------</span><br><span class="line">Critical section   = <span class="number">0x00d30258</span> (<span class="number">+0xD30258</span>)</span><br><span class="line">DebugInfo          = <span class="number">0x776dc920</span></span><br><span class="line">LOCKED</span><br><span class="line">LockCount          = <span class="number">0x3</span></span><br><span class="line">WaiterWoken        = No</span><br><span class="line">OwningThread       = <span class="number">0x00004b38</span></span><br><span class="line">RecursionCount     = <span class="number">0x1</span></span><br><span class="line">LockSemaphore      = <span class="number">0xFFFFFFFF</span></span><br><span class="line">SpinCount          = <span class="number">0x020007cf</span></span><br></pre></td></tr></table></figure>
+
+<p>这个cs锁的持有者是线程0x00004b38，这个线程就是主线程。</p>
+<p>通过以上的分析，可以猜想是主线程和7号线程发生了死锁，然后其他线程也因执行堆的相关操作而全都卡住。</p>
+<h2 id="定位死锁的原因"><a href="#定位死锁的原因" class="headerlink" title="定位死锁的原因"></a>定位死锁的原因</h2><p>回想主线程等待的SRWLock，通过它的地址，我们可以知道这个锁的具体名字：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ln <span class="number">6</span><span class="function">be0c9ac </span></span><br><span class="line"><span class="function">Browse <span class="keyword">module</span></span></span><br><span class="line"><span class="function">Set bu <span class="title">breakpoint</span></span></span><br><span class="line"><span class="function"><span class="params">(<span class="number">6</span>be0c9ac)</span>   AcLayers!NS_FaultTolerantHeap::FthDelayFreeQueueFlushLock</span></span><br></pre></td></tr></table></figure>
+
+<p>这个SRWLock的名字叫FthDelayFreeQueueFlushLock。在IDA中，我们可以看到AcLayers垫片的FthDelayFreeQueueInsert函数是如何尝试获取SRWLock的：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/development/image-20211025214331561.png" alt="image-20211025214331561"></p>
+<p>交叉引用FthDelayFreeQueueFlushLock，发现有多个函数会获取这个锁：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/development/image-20211025214725855.png" alt="image-20211025214725855"></p>
+<p>再观察7号线程，发现7号线程在获取CS锁之前，调用了FthDelayFreeQueueFlush函数，通过IDA观察如下：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/development/image-20211025220130896.png" alt="image-20211025220130896"></p>
+<p>FthDelayFreeQueueFlush函数做的第一件事就是以独占的方式获取FthDelayFreeQueueFlushLock。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>主线程获取了CS锁后，因为进入了AcLayers垫片的FTH，所以尝试获取共享的FthDelayFreeQueueFlushLock；</p>
+<p>而7号线程在获取了独占的FthDelayFreeQueueFlushLock后，又希望获取主线程持有的CS锁；</p>
+<p>其他线程也因为处理堆时，进入了AcLayers垫片，进而尝试获取堆相关的CS锁，导致暂停，最后整个进程都死锁了。</p>
+<p>这个问题是win10下，在调试器中启动程序的调试版本+兼容模式出现的，程序正常启动是不会造成此问题的（因为不会启用调试堆）。如果不以兼容模式运行程序，那也不会造成此问题（因为不会启用垫片引擎）。</p>
+
+      <div class="tags">
+          <a href="/tags/deadlock/" rel="tag"><i class="ic i-tag"></i> deadlock</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Development/记一次win10下程序兼容导致的死锁/" class="item leancloud_visitors" data-flag-title="记一次win10下程序以兼容方式启动导致的死锁" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">https://conecoy.cn/Technology/Development/记一次win10下程序兼容导致的死锁/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;47.jpg" title="c++编程错误锦囊">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>c++编程错误锦囊</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Development/Study-of-C-Coding-Standards/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;4.jpg" title="Study of C++ Coding Standards">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>Study of C++ Coding Standards</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%9B%A0"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E4%B8%BB%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-number">2.</span> <span class="toc-text">观察主线程状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#windbg%E7%9A%84%E9%99%84%E5%8A%A0%E7%BA%BF%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">windbg的附加线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E6%AD%BB%E9%94%81%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-number">4.</span> <span class="toc-text">定位死锁的原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">5.</span> <span class="toc-text">结论</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="bookmark" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></li><li><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="bookmark" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></li><li><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="bookmark" title="c++编程错误锦囊">c++编程错误锦囊</a></li><li class="active"><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="bookmark" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></li><li><a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="bookmark" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></li><li><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="COM学习笔记">COM学习笔记</a></li><li><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" rel="bookmark" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></li><li><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></li><li><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" rel="bookmark" title="单例模式的好与坏">单例模式的好与坏</a></li><li><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++安全编程规范笔记">C++安全编程规范笔记</a></li><li><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/StackUnwind/" title="StackUnwind">StackUnwind</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="COM学习笔记">COM学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/Study-of-C-Coding-Standards/" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Development/记一次win10下程序兼容导致的死锁/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

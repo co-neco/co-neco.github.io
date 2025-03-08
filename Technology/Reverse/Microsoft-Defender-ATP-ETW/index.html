@@ -1,0 +1,634 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Translation,Microsoft Defender,ETW,Privilege Escalation" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/">
+
+
+
+  <title>
+[翻译] Microsoft Defender ATP ETW - Reverse - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">[翻译] Microsoft Defender ATP ETW
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-11-09 12:56:25">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-11-09T12:56:25+08:00">2021-11-09</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/36.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/66.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/60.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/10.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/62.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/34.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Reverse/" itemprop="item" rel="index" title="分类于 Reverse"><span itemprop="name">Reverse</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="翻译-从接到告警到发现驱动漏洞：Microsoft-Defender-ATP-检测出提权漏洞"><a href="#翻译-从接到告警到发现驱动漏洞：Microsoft-Defender-ATP-检测出提权漏洞" class="headerlink" title="[翻译]从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞"></a>[翻译]从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞</h1><blockquote>
+<p>-&gt; <span class="exturl" data-url="aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbS9zZWN1cml0eS9ibG9nLzIwMTkvMDMvMjUvZnJvbS1hbGVydC10by1kcml2ZXItdnVsbmVyYWJpbGl0eS1taWNyb3NvZnQtZGVmZW5kZXItYXRwLWludmVzdGlnYXRpb24tdW5lYXJ0aHMtcHJpdmlsZWdlLWVzY2FsYXRpb24tZmxhdy8=">原文链接</span></p>
+</blockquote>
+<p>随着Microsoft团队不断增强内核层的安全性、以及提升内核组件被利用的门槛，第三方开发的驱动渐渐成为了攻击者青睐的目标，同时第三方驱动也成为了漏洞分析的一个重要试验地。</p>
+<p>一个签名的第三方驱动如果有一个漏洞，那么它可能会带来严重的影响：这个漏洞可能被攻击者利用，用来权限提升，或者用来过掉驱动签名验证。相对于用一个操作系统自身的0day漏洞来进行攻击，签名的第三方驱动的漏洞更容易被利用。</p>
+<p>计算机厂商通常会为设备配备一些软件和工具，用来辅助设备的管理。这些软件和工具（包括驱动）通常都包含一些模块，这些模块工作在R0层。这些每一个默认被安装的组件都应该和内核组件一样安全，即使一个存在风险的组件都可能让整个内核安全设计崩坍。</p>
+<p>在调查<span class="exturl" data-url="aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbS9lbi11cy93aW5kb3dzZm9yYnVzaW5lc3Mvd2luZG93cy1hdHA/b2NpZD1jeC1ibG9nLW1tcGM=">Microsoft Defender Advanced Threat Protection</span>内核探测器发现的告警时，我们就发现了这样一个有风险的驱动。我们分析了一个华为开发的设备管理驱动，这个驱动存在一些异常行为。更进一步分析之后，我们发现了一个设计缺陷，这个缺陷可以引发本地提权。</p>
+<p>我们把这个漏洞（CVE-2019-5241）报告给华为之后，华为立刻回复我们，并积极与我们确认了漏洞信息。2019年1月9日，华为修复了这个漏洞：<span class="exturl" data-url="aHR0cHM6Ly93d3cuaHVhd2VpLmNvbS9lbi9wc2lydC9zZWN1cml0eS1hZHZpc29yaWVzL2h1YXdlaS1zYS0yMDE5MDEwOS0wMS1wY21hbmFnZXItZW4=">https://www.huawei.com/en/psirt/security-advisories/huawei-sa-20190109-01-pcmanager-en</span>.</p>
+<p>在这篇文章里，我们将分享这一过程：从调查Microsoft Defender ATP的告警到发现上述漏洞，再到与驱动开发厂商合作，最后共同保护用户。</p>
+<h2 id="Microsoft-Defender-ATP监测到内核发起的代码注入"><a href="#Microsoft-Defender-ATP监测到内核发起的代码注入" class="headerlink" title="Microsoft Defender ATP监测到内核发起的代码注入"></a>Microsoft Defender ATP监测到内核发起的代码注入</h2><p>从Windows 10, version 1809开始，内核新添了一些新的监测器（基于事件追踪–ETW），用于追踪从内核发起的UserAPC代码注入。这种方式使得一些内核攻击更容易被监测到。正如我们之前深入分析的<span class="exturl" data-url="aHR0cHM6Ly9jbG91ZGJsb2dzLm1pY3Jvc29mdC5jb20vbWljcm9zb2Z0c2VjdXJlLzIwMTcvMDYvMzAvZXhwbG9yaW5nLXRoZS1jcnlwdC1hbmFseXNpcy1vZi10aGUtd2FubmFjcnlwdC1yYW5zb213YXJlLXNtYi1leHBsb2l0LXByb3BhZ2F0aW9uLw==">一篇文章</span>，WannaCry利用DOUBLEPULSAR这个内核后门，向用户空间注入了代码（payload）。其原理是DOUBLEPULSAR从内核复制了一段代码到lsass.exe的用户空间。随后，DOUBLEPULSAR又向lsass.exe插入了一个UserAPC，去执行这段代码。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-01-WannaCry-user-APC-injection-technique-schematic-diagram-768x384.png"></p>
+<p>虽然UserAPC代码注入不是新知识了 (看 <span class="exturl" data-url="aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbS9lbi11cy93ZHNpL3RocmVhdHMvbWFsd2FyZS1lbmN5Y2xvcGVkaWEtZGVzY3JpcHRpb24/TmFtZT1XaW4zMi9Db25maWNrZXI=">Conficker</span> 或者 <span class="exturl" data-url="aHR0cHM6Ly9jb21tdW5pdHkub3NyLmNvbS9kaXNjdXNzaW9uLzg4ODUy">Valerino’s earliest proof-of-concept</span>)，但检测内核的恶意行为还是很难的。自从PatchGuard引入之后，对NTOSKRNL模块进行挂钩已经不允许了，驱动也因此没有官方方法去获取那些挂钩操作对应的通知了。因此，没有合适的方法，剩下的唯一可持续迭代的策略就是做内存分析，但内存分析很复杂。</p>
+<p>最近新加入的一些内核监测器就是为了解决这类内核分析问题。</p>
+<p>Microsoft Defender ATP使用这些监测器去监测可疑的内核行为，比如说注入代码到用户空间。通过新监测器发现的一个可疑行为帮我们定位到了一个漏洞，不过这个可疑行为与WannaCry、DOUBLEPULSAR或者其他内核攻击是不一样的。</p>
+<h2 id="分析由内核模块发起的一个可疑代码注入"><a href="#分析由内核模块发起的一个可疑代码注入" class="headerlink" title="分析由内核模块发起的一个可疑代码注入"></a>分析由内核模块发起的一个可疑代码注入</h2><p>当监测与内核攻击相关的告警时，一个告警引起了我们的注意：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-02-2-Microsoft-Defender-ATP-kernel-initiating-code-injection-alert.png"></p>
+<p>这个告警处理树展示了在services.exe的进程空间，异常内存的分配和代码执行。当进一步分析之后，我们发现在另一台机器上，几乎是相同的时间，一个相同的告警被触发了。</p>
+<p>为了进一步理解这个异常行为，我们观察了内核监测器检测到的原始信号。这次观察中我们发现：</p>
+<ul>
+<li>一个系统线程调用<em>nt!NtAllocateVirtualMemory</em>在<em>services.exe</em>进程空间分配了一个页（大小为0x1000），页属性是<em>PAGE_EXECUTE_READWRITE</em> </li>
+<li>这个系统线程然后调用<em>nt!KeInsertQueueApc</em>向<em>services.exe</em>插入了一个UserAPC，APC的NormalRoutine指向刚分配的页的起始地址，NormalContext指向该页偏移0x800处。</li>
+</ul>
+<p>从内核拷贝的这段代码被分为两个部分：一个shellcode（NormalRoutine）和一个参数块（NormalContext）。分析到这里，上述行为的可疑程度值得我们继续分析下去。我们的目标是探究插入UserAPC的内核代码为何要这么做。</p>
+<h2 id="追根溯源"><a href="#追根溯源" class="headerlink" title="追根溯源"></a>追根溯源</h2><p>在用户层的恶意行为中，通过进程的执行环境，我们可以分析恶意代码的行为和攻击链的其他阶段。但内核的恶意行为就更复杂了。内核本身的设计是异步的，回调函数可能在任何一个进程空间被执行，这使得进程空间信息对于恶意分析没有多大用。</p>
+<p>因此，我们尝试去找一些间接证据，关于加载进内核的第三方代码的证据。通过观察计算机的时间线，我们发现几个第三方驱动比平常要提前一点加载。</p>
+<p>根据这些驱动的路径，我们发现它们都与华为的PC Manager应用有关，PC Manager是一个用于Huawei MateBook平板的设备管理软件。PC Manager的安装包在华为官网可获取，于是我们下载了PC Manager并开始进一步分析。对于每一个华为驱动，我们用<em>dumpbin.exe</em>去观察它导入的函数。</p>
+<p>然后我们发现了一个相关函数：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-03-dumpbin-utility-used-to-detect-user-APC-injection-primitives.png"></p>
+<h2 id="HwOs2Ec10x64-sys：驱动的反常行为"><a href="#HwOs2Ec10x64-sys：驱动的反常行为" class="headerlink" title="HwOs2Ec10x64.sys：驱动的反常行为"></a><em>HwOs2Ec10x64.sys</em>：驱动的反常行为</h2><p>最后我们追踪到了触发告警的内核代码，以下是分析过程。</p>
+<p>一般一个设备管理软件几乎只执行与硬件相关的任务。设备管理软件与配备的驱动合作管理具体的OEM硬件。那么为什么这个驱动会执行反常的行为呢？为了回答这个问题，我们逆向了<em>HwOs2Ec10x64.sys</em>驱动。</p>
+<p>我们的出发点是实现UserAPC注入的函数。我们发现了这样一条代码流程：</p>
+<ul>
+<li>在某个进程分配RWX页</li>
+<li>在目标进程获取CreateProcessW* 和 <em>CloseHandle</em>的函数地址</li>
+<li>从驱动拷贝一段代码和疑似参数的数据块到分配的页中</li>
+<li>对目标进程执行UserAPC注入</li>
+</ul>
+<p>参数块包含获取的函数地址和一个字符串，通过分析，该字符串判定是一个命令行：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-04-User-APC-injection-code.png"></p>
+<p>这个APC的NormalRoutine是一段shellcode，其调用<em>CreateProcessW</em>，用刚提到的命令行创建了一个进程。这意味着通过APC向<em>services.exe</em>实施的代码注入的目的是生成一个子进程。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-05-User-shellcode-performing-process-creation.png"></p>
+<p>观察交叉索引，我们发现代码注入是由一个创建进程的通知回调引起的，这个回调的Create参数是FALSE，意味着这个回调指的是某进程的结束。</p>
+<p>但这个命令行的具体内容是什么呢？我们附加了一个内核调试器，并在<em>memcpy_s</em>下了一个断点，<em>memcpy_s</em>用于从内核拷贝参数到用户空间。观察内存，我们发现创建的子进程是华为已安装的服务<em>MateBookService.exe</em>，创建子进程时带了*“&#x2F;startup”*参数。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-06-2-Breakpoint-hit-on-the-call-to-memcpy_s-copying-shellcode-parameters.png"></p>
+<p>为什么一个合法的服务要通过这种方式启动呢？观察<em>MateBookService.exe!main</em>函数，该函数会检测启动该进程时是否有*“&#x2F;startup”*参数，如果有，就判断该服务是否被停止了。这意味着有一个看门狗，用于保证PC Manager的主服务正常运行。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-07-MateBookService-exe-startup-code-path.png"></p>
+<p>分析到这里，最后需要确定的是退出的进程，同时也是引发代码注入的这个进程是否就是<em>MateBookService.exe</em>。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-08-Validating-terminated-process-identity.png"></p>
+<p>观察用于决定是否注入代码到<em>services.exe</em>的代码片段，该代码片段用了一个全局列表，这个全局列表包含了需要监控的进程名。通过在这个循环里设置一个断点，我们发现这个全局列表只有一个元素，是<em>MateBookService.exe</em>。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-09-Breakpoint-hit-during-process-name-comparison-against-global-list.png"></p>
+<p><em>HwOs2Ec10x64.sys</em> 驱动也有进程保护，防止自身被恶意攻击。任务终止<em>MateBookService.exe</em>进程的行为都会失败，失败原因是<em>Access Denied</em>（拒绝访问）。</p>
+<h2 id="利用HwOs2Ec10x64-sys的看门狗机制"><a href="#利用HwOs2Ec10x64-sys的看门狗机制" class="headerlink" title="利用HwOs2Ec10x64.sys的看门狗机制"></a>利用<em>HwOs2Ec10x64.sys</em>的看门狗机制</h2><p>接下来我们的分析是确定攻击者是否可以修改这个全局列表。我们发现了一个IOCTL处理函数，这个函数可以向全局列表添加元素。当MateBookService.exe服务启动时，它似乎会通过这个IOCTL来注册自己。这个IOCTL会发向驱动控制设备，这个设备通过它对应的驱动入口函数（<em>DriverEntry</em>）创建。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-10-HwOs2Ec10x64.sys-control-device-creation-with-IoCreateDevice.png"></p>
+<p>因为设备对象是通过<em>IoCreateDevice</em>创建的，所以每个人对这个设备都有读写权限。另外一个重要的发现是这个设备没有禁止同时访问，所以可以同时打开多个这个设备的句柄。</p>
+<p>然而，当我们尝试获取*\.\HwOs2EcX64<em>的句柄时，我们失败了，错误码是537，代表</em>“应用程序验证器在当前进程发现一个错误”<em>。这个驱动拒绝了我们获取设备句柄的请求。我们是如何获取设备句柄的呢？它肯定是通过CreateFile获取的。也就是说，获取句柄必会走到</em>HwOs2Ec10x64.sys* 的<em>IRP_MJ_CREATE</em>分发函数。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-11-IRP_MJ_CREATE-dispatch-routine.png"></p>
+<p>这个函数通过进程的路径名来验证当前进程是否在白名单（比如：<em>C:\Program Files\Huawei\PCManager\MateBookService.exe</em>）。简单地检测程序的进程名不能保证进程的身份不变。一个被攻击者控制的<em>MateBookService.exe</em>进程实例仍然有打开*\.\HwOs2EcX64<em>设备的权限，也能够调用对应的一些IRP函数。攻击者可利用这种方式向</em>\.\HwOs2EcX64<em>设备的全局列表注册一个自己设置的元素，也就是一个程序路径。因为一个父进程有子进程的所有权限，即使一个低权限的代码也可以创建被感染的</em>MateBookService.exe*进程，然后想这个感染的进程注入代码。在我们的POC中，我们使用了进程傀儡技术。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-12-Procmon-utility-results-showing-POC-process-start-exit-IL.png"></p>
+<p>因为被“照顾”的进程退出时，它们会被看门狗盲目地重启，所以攻击者控制的程序也会被services.exe重启，这意味着攻击者控制的进程的权限是LocalSystem用户和权限一样，也就是得到了提权。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-13-Procexp-utility-process-tree-view-showing-LPE_POC-running-as-LocalSystem.png"></p>
+<h2 id="漏洞的及时响应和保护用户"><a href="#漏洞的及时响应和保护用户" class="headerlink" title="漏洞的及时响应和保护用户"></a>漏洞的及时响应和保护用户</h2><p>我们有一个能利用的POC，用来将攻击者控制的进程提权之后，我们及时将这个bug通过Microsoft Security Vulnerability Research (<span class="exturl" data-url="aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbS9lbi11cy9tc3JjL21zdnI=">MSVR</span>) 程序通知了华为。这个漏洞被取名CVE-2019-5241。同时，我们通过建立能产生告警的监测机制，保护了我们的用户，避免受到<em>HwOs2Ec10x64.sys</em>看门狗漏洞的攻击。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/translation/ATP_ETW/figure-14-2-Microsoft-Defender-ATP-alerting-on-the-privilege-escalation-POC-code.png"></p>
+<h2 id="利用另一个IOCTL处理函数"><a href="#利用另一个IOCTL处理函数" class="headerlink" title="利用另一个IOCTL处理函数"></a>利用另一个IOCTL处理函数</h2><p>现在，我们可以轻松地从用户空间调用<em>HwOs2Ec10x64.sys</em>驱动的IOCTL处理函数了。根据这一点，我们又寻找了是否可以被利用的点，结果是又找到了一个。这个驱动提供了映射任何具有读写属性的物理页到用户空间。通过执行IOCTL的处理函数，我们可以运行一个低权限的进程，去读写其他进程、甚至内核空间的内存，这意味着整个机器的数据都被泄漏了。</p>
+<p>我们也和华为解决了第二个漏洞。这个漏洞被取名为CVE-2019-5242。华为在相同的安全警告通知里也公示了这个漏洞：</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuaHVhd2VpLmNvbS9lbi9wc2lydC9zZWN1cml0eS1hZHZpc29yaWVzL2h1YXdlaS1zYS0yMDE5MDEwOS0wMS1wY21hbmFnZXItZW4lRTMlODAlODI=">https://www.huawei.com/en/psirt/security-advisories/huawei-sa-20190109-01-pcmanager-en。</span></p>
+<p>我们在二月的<em>Blue Hat IL</em>会议中发表了我们的研究成果，可以从<span class="exturl" data-url="aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1MdHp5ZTBDajlHOCZmZWF0dXJlPXlvdXR1LmJl">这里</span>获取视频，从<span class="exturl" data-url="aHR0cHM6Ly9tc3JuZC1jZG4tc3Rvci5henVyZWVkZ2UubmV0L2JsdWVoYXQvYmx1ZWhhdGlsLzIwMTkvYXNzZXRzL2RvYy9XaG8lMjBpcyUyMFdhdGNoaW5nJTIwdGhlJTIwV2F0Y2hkb2clMjBVbmNvdmVyaW5nJTIwYSUyMFByaXZpbGVnZSUyMEVzY2FsYXRpb24lMjBWdWxuZXJhYmlsaXR5JTIwaW4lMjBPRU0lMjBEcml2ZXIucGRm">这里</span>获取演讲稿。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然原始的告警看起来不是太有用，因为没有检测到类似DOUBLEPULSAR的内核威胁。但这个告警确实引起了我们的注意，并让我们发现了两个漏洞。我们发现的这两个驱动漏洞证明了我们在设计软件和产品时，应把安全考虑在内。安全的底线是必须坚守的，攻击面应该尽可能的被缩小。在上述的例子里，如果我们足够小心，我们是可以避免这些错误的：</p>
+<ul>
+<li>被驱动创建的设备对象应该被赋予一个系统读写权限的DACL（因为只有生产厂商的服务才会直接与对应的驱动交互）</li>
+<li>如果一个服务需要一直保持运行，开发者应该先确认操作系统是否有对应的功能，如果没有，再自己实现对应的机制</li>
+<li>用户模式不应该执行特权操作，比如写如何物理页。如果确实需要，那也应该在约定好的、与硬件相关的场景下由驱动来完成对应的写操作</li>
+</ul>
+<p>微软的 <span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvd2luZG93cy1oYXJkd2FyZS9kcml2ZXJzL2RyaXZlcnNlY3VyaXR5L2RyaXZlci1zZWN1cml0eS1jaGVja2xpc3Q=">driver security checklist</span>（驱动安全检测名单）给驱动开发者提供了一些指南，以减少驱动被恶意利用的风险。</p>
+<p>驱动漏洞的发现也说明了 <span class="exturl" data-url="aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbS9lbi11cy93aW5kb3dzZm9yYnVzaW5lc3Mvd2luZG93cy1hdHA/b2NpZD1jeC1ibG9nLW1tcGM=">Microsoft Defender ATP</span>监测器的强大。这些监测器会通知可疑的行为，并给安全分析团队提供相应的信息，和一些相关的分析工具。</p>
+<p>可疑行为一般都表明一些不怀好意的攻击手段。在这个例子中，它们代表了一个可以被利用的错误设计。</p>
+<p>而Microsoft Defender ATP提示了这个安全错误，并保护用户免受可能的真实攻击。</p>
+<p><strong><em>Amit Rapaport*</em>* *(</strong><span class="exturl" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9yZWFsQW1pdFJhcA==">@realAmitRap</span>)*<br><em>Microsoft Defender Research team</em></p>
+
+      <div class="tags">
+          <a href="/tags/Translation/" rel="tag"><i class="ic i-tag"></i> Translation</a>
+          <a href="/tags/Microsoft-Defender/" rel="tag"><i class="ic i-tag"></i> Microsoft Defender</a>
+          <a href="/tags/ETW/" rel="tag"><i class="ic i-tag"></i> ETW</a>
+          <a href="/tags/Privilege-Escalation/" rel="tag"><i class="ic i-tag"></i> Privilege Escalation</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Reverse/Microsoft-Defender-ATP-ETW/" class="item leancloud_visitors" data-flag-title="[翻译] Microsoft Defender ATP ETW" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/" title="[翻译] Microsoft Defender ATP ETW">https://conecoy.cn/Technology/Reverse/Microsoft-Defender-ATP-ETW/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Development/Study-of-C-Coding-Standards/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;22.jpg" title="Study of C++ Coding Standards">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>Study of C++ Coding Standards</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;1.jpg" title="新年の始まり">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 新年計画</span>
+  <h3>新年の始まり</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BF%BB%E8%AF%91-%E4%BB%8E%E6%8E%A5%E5%88%B0%E5%91%8A%E8%AD%A6%E5%88%B0%E5%8F%91%E7%8E%B0%E9%A9%B1%E5%8A%A8%E6%BC%8F%E6%B4%9E%EF%BC%9AMicrosoft-Defender-ATP-%E6%A3%80%E6%B5%8B%E5%87%BA%E6%8F%90%E6%9D%83%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">[翻译]从接到告警到发现驱动漏洞：Microsoft Defender ATP 检测出提权漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Defender-ATP%E7%9B%91%E6%B5%8B%E5%88%B0%E5%86%85%E6%A0%B8%E5%8F%91%E8%B5%B7%E7%9A%84%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">Microsoft Defender ATP监测到内核发起的代码注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E7%94%B1%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E5%8F%91%E8%B5%B7%E7%9A%84%E4%B8%80%E4%B8%AA%E5%8F%AF%E7%96%91%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">分析由内核模块发起的一个可疑代码注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%BD%E6%A0%B9%E6%BA%AF%E6%BA%90"><span class="toc-number">1.3.</span> <span class="toc-text">追根溯源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HwOs2Ec10x64-sys%EF%BC%9A%E9%A9%B1%E5%8A%A8%E7%9A%84%E5%8F%8D%E5%B8%B8%E8%A1%8C%E4%B8%BA"><span class="toc-number">1.4.</span> <span class="toc-text">HwOs2Ec10x64.sys：驱动的反常行为</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8HwOs2Ec10x64-sys%E7%9A%84%E7%9C%8B%E9%97%A8%E7%8B%97%E6%9C%BA%E5%88%B6"><span class="toc-number">1.5.</span> <span class="toc-text">利用HwOs2Ec10x64.sys的看门狗机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%9A%84%E5%8F%8A%E6%97%B6%E5%93%8D%E5%BA%94%E5%92%8C%E4%BF%9D%E6%8A%A4%E7%94%A8%E6%88%B7"><span class="toc-number">1.6.</span> <span class="toc-text">漏洞的及时响应和保护用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%8F%A6%E4%B8%80%E4%B8%AAIOCTL%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0"><span class="toc-number">1.7.</span> <span class="toc-text">利用另一个IOCTL处理函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Reverse/StackUnwind/" rel="bookmark" title="StackUnwind">StackUnwind</a></li><li><a href="/Technology/Reverse/VMP-anti-vmware/" rel="bookmark" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></li><li><a href="/Technology/Reverse/Mechanism-of-LFH/" rel="bookmark" title="Mechanism_of_LFH">Mechanism_of_LFH</a></li><li class="active"><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" rel="bookmark" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></li><li><a href="/Technology/Reverse/Process-Injection/" rel="bookmark" title="Process_Injection">Process_Injection</a></li><li><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" rel="bookmark" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></li><li><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="bookmark" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Mechanism-of-LFH/" title="Mechanism_of_LFH">Mechanism_of_LFH</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" title="C++安全编程规范笔记">C++安全编程规范笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">单例模式的好与坏</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="COM学习笔记">COM学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/StackUnwind/" title="StackUnwind">StackUnwind</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/" title="分类于 新年計画">新年計画</a>
+</div>
+
+    <span><a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" title="新年の始まり">新年の始まり</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Reverse/Microsoft-Defender-ATP-ETW/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

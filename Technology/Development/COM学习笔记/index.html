@@ -1,0 +1,638 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="COM,tutorial" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+
+
+  <title>
+COM学习笔记 - Development - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">COM学习笔记
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-02-13 23:06:16">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-02-13T23:06:16+08:00">2022-02-13</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/56.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/72.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/31.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/1.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/43.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/21.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Development/" itemprop="item" rel="index" title="分类于 Development"><span itemprop="name">Development</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>这是一篇关于COM基础开发的笔记，主要讲<code>in-process dll</code>和<code>out-of-process server</code>开发时，值得注意的一些细节，完整的代码请参考<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28vQ09NX3N0dWR5">github</span>。</p>
+<blockquote>
+<p>注：</p>
+<ul>
+<li>该工程目前只配置了Debug x64位。</li>
+<li>建议读者看本文前，先阅读<code>Windows 10 System Programming_part2</code>的第二十一章，学习开发COM的基础知识。本文可当做开发COM的细节指导。</li>
+</ul>
+</blockquote>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近看了<code>Pavel Yosisofich</code>的<code>Windows 10 System Programming_part2</code>这本书，并实践了第二十一章：COM，于是有了本文。</p>
+<h2 id="COM简述"><a href="#COM简述" class="headerlink" title="COM简述"></a>COM简述</h2><p>COM是<code>Component Object Model</code>的缩写，它提供了二进制级别的接口，而c&#x2F;c++提供的是源代码级别的接口。</p>
+<p>COM的诞生是为了解决c&#x2F;c++接口存在的诸多不便，以下举一个简单的例子。</p>
+<p>我们使用一个DLL时（如果是我们开发的），会导入它的lib，加上dll的头文件（包含导出函数）。比如这个DLL有一个导出函数GetOneString，用户端调用如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//dll.h</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;c&quot;</span> __declspec(dllimport) <span class="function">std::string <span class="title">GetOneString</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// client&#x27;s main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;dll.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;dll.lib&quot;</span>)</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    std::string a = <span class="built_in">GetOneString</span>();</span><br><span class="line">    std::cout &lt;&lt; a &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们从DLL获取了一个std::string类型的变量，当main函数退出时，<code>a</code>这个变量会被释放，如果这个变量表示的字符串足够长，那么<code>a</code>变量持有的堆块指针也会被释放。这时你的程序可能就崩了。因为DLL可能管理着自己的堆分配，然后用户端也管理着自己的堆分配。<code>a</code>变量析构时会用用户端的运行时库来释放DLL管理的堆块。详细的描述可参考<a href="https://conecoy.cn/Technology/reverse/development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/">runtime运行时库在MT与MD之间的差别</a>。</p>
+<p><code>Windows 10 System Programming_part2</code>书中也有一个例子，其大意是在更新DLL二进制文件时，用户端无感知，在栈上分配的类实例大小与以前的不匹配，从而可能导致崩溃。</p>
+<blockquote>
+<p>详情可参考书中的第二十一章。</p>
+</blockquote>
+<p>而COM是二进制级别的接口，用户端是看不到DLL的实现的，只能看到DLL的接口，因此以上的问题都可以规避。比如第一个例子，COM规定客户端与服务端使用字符串时，必须使用HSTRING类型。因为不使用std::string了，自然第一个例子的问题就不存在了。关于第二个例子，因为客户端看不到服务端代码的实现，所以从服务端返回类实例时，客户端只能获取到一个指针，这样就不存在类实例在客户端栈上分配的情况了。</p>
+<h2 id="In-process-DLL-服务端的细节"><a href="#In-process-DLL-服务端的细节" class="headerlink" title="In-process DLL 服务端的细节"></a>In-process DLL 服务端的细节</h2><h3 id="In-process-DLL的实现"><a href="#In-process-DLL的实现" class="headerlink" title="In-process DLL的实现"></a>In-process DLL的实现</h3><p>关于COM开发的详细流程指导，读者可参考<code>Windows 10 System Programming_part2</code>的第二十一章，本文重点记录了书中未提到的一些细节部分。</p>
+<p>通过DLL方式提供功能的服务端是比较简单，容易理解的，它包含两个类和一个接口（结构体）：</p>
+<ul>
+<li>RPNCalculator.h:：实现接口的类</li>
+<li>RPNCalculatorInterfaces.h：定义导出的方法</li>
+<li>RPNCalculatorFactory.h：工厂类</li>
+</ul>
+<p>为了注册DLL，DLL需要自己实现以下三个函数（详情参考dllmain.cpp）：</p>
+<ul>
+<li>DllGetClassObject</li>
+<li>DllRegisterServer</li>
+<li>DllUnregisterServer</li>
+</ul>
+<h3 id="客户端对DLL服务的调用"><a href="#客户端对DLL服务的调用" class="headerlink" title="客户端对DLL服务的调用"></a>客户端对DLL服务的调用</h3><p>客户端的大致代码框架如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> hr = <span class="built_in">CoInitialize</span>(<span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">CComPtr&lt;IRPNCalculator&gt; spCalc;</span><br><span class="line">spCalc.<span class="built_in">CoCreateInstace</span>(...);</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="built_in">CoUninitialize</span>();</span><br></pre></td></tr></table></figure>
+
+<p>指定实现接口的类的CLSID时，一般有两种方法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CComPtr&lt;IRPNCalculator&gt; spCalc;</span><br><span class="line"><span class="comment">//hr = spCalc.CoCreateInstance(__uuidof(RPNCalculator));</span></span><br><span class="line">hr = spCalc.<span class="built_in">CoCreateInstance</span>(CLSID_RPNCalculator);</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">FAILED</span>(hr)) &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;last error&quot;</span> &lt;&lt; (LPVOID)hr &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>通过__uuidof的方式</p>
+<p>这种方式需要在DLL接口的头文件中声明类的CLSID：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">__declspec</span>(<span class="built_in">uuid</span>(<span class="string">&quot;D4B830A5-7DFC-4C81-9268-8BB0BEA7CACE&quot;</span>)) RPNCalculator;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过定义CLSID_RPNCalculator变量的方式（类型是GUID）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">DEFINE_GUID</span>(CLSID_RPNCalculator,</span><br><span class="line">	<span class="number">0xd4b830a5</span>, <span class="number">0x7dfc</span>, <span class="number">0x4c81</span>, <span class="number">0x92</span>, <span class="number">0x68</span>, <span class="number">0x8b</span>, <span class="number">0xb0</span>, <span class="number">0xbe</span>, <span class="number">0xa7</span>, <span class="number">0xca</span>, <span class="number">0xce</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这种方式需要注意的是，客户端在包含文件时，应该如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Come first, initguid.h has a INITGUID macro, which assigns </span></span><br><span class="line"><span class="comment">// DEFINE_GUID a command to define CLSID_RPNCalculator variable</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initguid.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// cguid.h comes before any atl*.h header to get rid of no difinition error of GUID_NULL</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cguid.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atlcomcli.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Out-of-process-EXE-server（local-server）的细节"><a href="#Out-of-process-EXE-server（local-server）的细节" class="headerlink" title="Out-of-process EXE server（local server）的细节"></a>Out-of-process EXE server（local server）的细节</h2><p>关于如何写EXE Server，<code>Windows 10 System Programming_part2</code>书中并没有阐述，于是我在网上搜索，不过相关的资料是出奇的少。。。。最后几经周折，我参考了<code>COM技术内幕———微软组件对象模型</code> 书中的描述，完成了EXE Server的实验。</p>
+<p>因为客户端和服务端在不同的进程里，因此存在跨进程的交互。为了统一地、标准地、简洁地处理这个场景，COM使用了proxy and stub（代理和残根）。由于<code>out-of-process</code>和<code>in-process</code>在代码上没有多大变化，这里会重点描述新增的操作。</p>
+<h3 id="1-添加IDL文件"><a href="#1-添加IDL文件" class="headerlink" title="1 添加IDL文件"></a>1 添加IDL文件</h3><p>IDL是<code>Interface Deginition Language</code>的缩写，其作用是通过微软的MIDL编译器生成接口类，便于跨平台（比如生成类型库，在c++、C#等不同的平台运行）、简化接口编写（比如代理和残根代码的自动化生成，在out-of-process EXE server的情况下，代理&#x2F;残根的DLL是必需的），例子如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;unknwn.idl&quot;</span>;</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">	object,</span><br><span class="line">	<span class="built_in">uuid</span>(<span class="string">&quot;F24C4FC4-3667-421D-A144-0AC0DF90D0AF&quot;</span>),</span><br><span class="line">	<span class="built_in">helpstring</span>(<span class="string">&quot;Calculator interface&quot;</span>),</span><br><span class="line">	<span class="built_in">pointer_default</span>(unique)</span><br><span class="line">]</span><br><span class="line">interface IRPNCalculator : IUnknown</span><br><span class="line">&#123;</span><br><span class="line">	<span class="function">HRESULT <span class="title">push</span><span class="params">([in] <span class="type">double</span> value)</span></span>;</span><br><span class="line">	<span class="function">HRESULT <span class="title">pop</span><span class="params">([out] <span class="type">double</span>* value)</span></span>;</span><br><span class="line">	<span class="function">HRESULT <span class="title">add</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function">HRESULT <span class="title">subtract</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果没有proxy&#x2F;stub的DLL，那么在客户端调用CoCreateInstance时，由于参数在跨进程的传输中没有定义传输方式（比如变量是输出参数还是输入参数），服务端收到的接口类GUID会是错误的，即不是CoCreateInstance指定的GUID（在win10上测试是这样的）。</p>
+</blockquote>
+<blockquote>
+<p>关于IDL的语法请参考MSDN或<code>COM技术内幕</code>一书。</p>
+</blockquote>
+<h3 id="2-用MIDL编译IDL文件"><a href="#2-用MIDL编译IDL文件" class="headerlink" title="2 用MIDL编译IDL文件"></a>2 用MIDL编译IDL文件</h3><p>运行VS的命令行，执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">midl idl-file-name.idl</span><br></pre></td></tr></table></figure>
+
+<p>以上命令会生成代理&#x2F;残根需要的所有代码（代理和残根可以自己实现，MIDL提供默认的实现）。生成的文件包括：</p>
+<ul>
+<li>XX.h: 包含接口的定义</li>
+<li>XX_i.c: 包含接口的GUID变量</li>
+<li>XX_p.c: 包含代理和残根的代码实现</li>
+<li>dlldata.c: 提供DLL所必需的导出函数（代理和残根的DLL所需要的，用于在注册表注册自己，注意只会生成一个DLL，这个DLL包含了代理和残根的实现）</li>
+</ul>
+<h3 id="3-编写Makefile，生成DLL"><a href="#3-编写Makefile，生成DLL" class="headerlink" title="3 编写Makefile，生成DLL"></a>3 编写Makefile，生成DLL</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">all: midl app</span></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: all</span></span><br><span class="line"></span><br><span class="line">PROXYSTUBOBJS = dlldata.obj \</span><br><span class="line">				CalculatorTypeInfo_p.obj \</span><br><span class="line">				CalculatorTypeInfo_i.obj</span><br><span class="line"></span><br><span class="line">PROXYSTUBLIBS = kernel32.lib \</span><br><span class="line">				rpcns4.lib \</span><br><span class="line">				rpcrt4.lib \</span><br><span class="line">				uuid.lib</span><br><span class="line"><span class="comment"># rpcndr.lib   -&gt; rpcndr.lib is deprecated</span></span><br><span class="line"></span><br><span class="line"><span class="section">midl:</span></span><br><span class="line"><span class="comment"># generate all parts(headers and source files) that our proxy dll need</span></span><br><span class="line">	midl CalculatorTypeInfo.idl</span><br><span class="line"></span><br><span class="line"><span class="section">app: <span class="variable">$(PROXYSTUBOBJS)</span> proxy_stub.def </span></span><br><span class="line"><span class="comment"># generate proxy.dll used for proxy and stub.</span></span><br><span class="line">	link /dll /out:proxy.dll /def:proxy_stub.def \</span><br><span class="line">		<span class="variable">$(PROXYSTUBOBJS)</span> <span class="variable">$(PROXYSTUBLIBS)</span></span><br><span class="line"><span class="comment"># regsvr32 by default writes registry configurations to HKLM/Software/CLSID</span></span><br><span class="line"><span class="comment"># , and the operation need administrator privilege.</span></span><br><span class="line"><span class="comment"># Therefore, you should run a cmd with administrator privilege.</span></span><br><span class="line">	regsvr32 /s proxy.dll </span><br><span class="line"></span><br><span class="line"><span class="section">dlldata.obj: dlldata.c</span></span><br><span class="line">	cl /c /DWIN32 /DREGISTER_PROXY_DLL dlldata.c</span><br><span class="line"></span><br><span class="line"><span class="section">CalculatorTypeInfo_p.obj: CalculatorTypeInfo_p.c</span></span><br><span class="line">	cl /c /DWIN32 /DREGISTER_PROXY_DLL CalculatorTypeInfo_p.c</span><br><span class="line"></span><br><span class="line"><span class="section">CalculatorTypeInfo_i.obj: CalculatorTypeInfo_i.c</span></span><br><span class="line">	cl /c /DWIN32 /DREGISTER_PROXY_DLL CalculatorTypeInfo_i.c</span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	del *.obj *.exp *.lib</span><br></pre></td></tr></table></figure>
+
+<p>注意<code>REGISTER_PROXY_DLL</code>这个宏，这个宏会自动生成DLL必需的导出函数。另外，makefile里有一行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regsvr32 /s proxy.dll </span><br></pre></td></tr></table></figure>
+
+<p>这行命令会将代理&#x2F;残根的DLL(proxy.dll)注册到注册表中，这样客户端就可以像<code>in-process DLL</code>正常使用服务了。</p>
+<h3 id="4-客户端对服务的调用"><a href="#4-客户端对服务的调用" class="headerlink" title="4 客户端对服务的调用"></a>4 客户端对服务的调用</h3><p>包含MIDL生成的XX.h和XX_i.c文件，由于客户端还需要实现接口的类的CLSID，因此我们需要在XX_i.c文件中加入对应的CLSID，如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">MIDL_DEFINE_GUID</span>(IID, CLSID_RPNCalculator,<span class="number">0xd4b830a5</span>, <span class="number">0x7dfc</span>, <span class="number">0x4c81</span>, <span class="number">0x92</span>, <span class="number">0x68</span>, <span class="number">0x8b</span>, <span class="number">0xb0</span>, <span class="number">0xbe</span>, <span class="number">0xa7</span>, <span class="number">0xca</span>, <span class="number">0xce</span>);</span><br></pre></td></tr></table></figure>
+
+<p>另外，因为MIDL生成的文件已包含了一些关于GUID的头，之前在<code>in-process DLL</code>添加的<code>initguid.h</code>和<code>cguid.h</code>头文件就不需要包含了。</p>
+
+      <div class="tags">
+          <a href="/tags/COM/" rel="tag"><i class="ic i-tag"></i> COM</a>
+          <a href="/tags/tutorial/" rel="tag"><i class="ic i-tag"></i> tutorial</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Development/COM学习笔记/" class="item leancloud_visitors" data-flag-title="COM学习笔记" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="COM学习笔记">https://conecoy.cn/Technology/Development/COM学习笔记/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;2.jpg" title="新年の始まり">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 新年計画</span>
+  <h3>新年の始まり</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Reverse/Process-Injection/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;28.jpg" title="Process_Injection">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Reverse</span>
+  <h3>Process_Injection</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#COM%E7%AE%80%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">COM简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#In-process-DLL-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E7%BB%86%E8%8A%82"><span class="toc-number">3.</span> <span class="toc-text">In-process DLL 服务端的细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#In-process-DLL%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.1.</span> <span class="toc-text">In-process DLL的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AF%B9DLL%E6%9C%8D%E5%8A%A1%E7%9A%84%E8%B0%83%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">客户端对DLL服务的调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Out-of-process-EXE-server%EF%BC%88local-server%EF%BC%89%E7%9A%84%E7%BB%86%E8%8A%82"><span class="toc-number">4.</span> <span class="toc-text">Out-of-process EXE server（local server）的细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B7%BB%E5%8A%A0IDL%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.</span> <span class="toc-text">1 添加IDL文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%94%A8MIDL%E7%BC%96%E8%AF%91IDL%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">2 用MIDL编译IDL文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BC%96%E5%86%99Makefile%EF%BC%8C%E7%94%9F%E6%88%90DLL"><span class="toc-number">4.3.</span> <span class="toc-text">3 编写Makefile，生成DLL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AF%B9%E6%9C%8D%E5%8A%A1%E7%9A%84%E8%B0%83%E7%94%A8"><span class="toc-number">4.4.</span> <span class="toc-text">4 客户端对服务的调用</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="bookmark" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></li><li><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="bookmark" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></li><li><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="bookmark" title="c++编程错误锦囊">c++编程错误锦囊</a></li><li><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="bookmark" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></li><li><a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="bookmark" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></li><li class="active"><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="COM学习笔记">COM学习笔记</a></li><li><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" rel="bookmark" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></li><li><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></li><li><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" rel="bookmark" title="单例模式的好与坏">单例模式的好与坏</a></li><li><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++安全编程规范笔记">C++安全编程规范笔记</a></li><li><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Reverse/Process-Injection/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/StackUnwind/" title="StackUnwind">StackUnwind</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">单例模式的好与坏</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" title="C++安全编程规范笔记">C++安全编程规范笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Mechanism-of-LFH/" title="Mechanism_of_LFH">Mechanism_of_LFH</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Obfuscation/" title="分类于 Obfuscation">Obfuscation</a>
+</div>
+
+    <span><a href="/Technology/Obfuscation/%E6%B7%B7%E6%B7%86%E7%AE%80%E4%BB%8B/" title="混淆简介">混淆简介</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Development/COM学习笔记/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

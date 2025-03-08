@@ -1,0 +1,769 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="C++,Coding Standards" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Development/Study-of-C-Coding-Standards/">
+
+
+
+  <title>
+Study of C++ Coding Standards - Development - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Study of C++ Coding Standards
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-11-03 20:32:18">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-11-03T20:32:18+08:00">2021-11-03</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/53.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/29.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/12.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/46.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/56.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/36.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Development/" itemprop="item" rel="index" title="分类于 Development"><span itemprop="name">Development</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Development/Study-of-C-Coding-Standards/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>In this article, I would write my own comprehension of the book, C++ Coding Standards, for following aims:</p>
+<ul>
+<li>Continuous study about design pattern, refactoring</li>
+<li>Give me some hints about software development when coming across difficulties</li>
+<li>Review what I wrote for Reminding what I should take care of</li>
+</ul>
+<h1 id="Project-organization"><a href="#Project-organization" class="headerlink" title="Project organization"></a>Project organization</h1><h2 id="Use-an-automated-build-system"><a href="#Use-an-automated-build-system" class="headerlink" title="Use an automated build system"></a>Use an automated build system</h2><p>When you develop a large project, you should always do following two things:</p>
+<ul>
+<li><p>Write a corresponding configuration project to automatically configure what you would configure manually otherwise.</p>
+<blockquote>
+<p>As time goes by, you may need add some configurations, such as an addition of a new task. You may do so by adding following sentences:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Configuration file A</span></span><br><span class="line"><span class="keyword">auto</span> taskB = <span class="keyword">new</span> <span class="built_in">TaskB</span>(some parameters);</span><br><span class="line">sm_allTasks.<span class="built_in">push_back</span>(taskB);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Configuration file B</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;taskA&quot;</span>:&#123;</span><br><span class="line">        <span class="string">&quot;attribute1&quot;</span>: <span class="number">123</span>,</span><br><span class="line">        <span class="string">&quot;attribute2&quot;</span>: <span class="number">456</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;taskB&quot;</span>:&#123;</span><br><span class="line">        <span class="string">&quot;attribute1&quot;</span>: <span class="number">789</span>,</span><br><span class="line">        <span class="string">&quot;attribute2&quot;</span>: <span class="number">111</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If we write a  corresponding configuration project, we could just run it without any manual operations. Besides, there may be many places need to be modified when adding a new task, which is error-prone. Whereas, the configuration project can take all situations into account.</p>
+</blockquote>
+</li>
+<li><p>Use an automated build system</p>
+<blockquote>
+<p>Like the first tip, as projects grow over time, so does the cost of not having an automated build. Therefore, You should not do whatever configuration projects can do for you.</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="Design-style"><a href="#Design-style" class="headerlink" title="Design style"></a>Design style</h1><h2 id="Correctness-simplicity-and-clarity-come-first"><a href="#Correctness-simplicity-and-clarity-come-first" class="headerlink" title="Correctness, simplicity, and clarity come first"></a>Correctness, simplicity, and clarity come first</h2><p>In this Item, I like what Steve McConnell said:</p>
+<blockquote>
+<p>Write programs for people first, computers second. –Steve McConnell</p>
+</blockquote>
+<h2 id="Don’t-optimize-prematurely"><a href="#Don’t-optimize-prematurely" class="headerlink" title="Don’t optimize prematurely"></a>Don’t optimize prematurely</h2><p>Always remember:</p>
+<blockquote>
+<p>It it far, far easier to make a correct program fast than it is to make a fast program correct.</p>
+<p>When developing a large project, we should first guarantee projects’ readability and clarity. We should include optimizations later when all things are in place–and only if necessary.</p>
+</blockquote>
+<h2 id="Be-careful-when-using-RAII"><a href="#Be-careful-when-using-RAII" class="headerlink" title="Be careful when using RAII"></a>Be careful when using RAII</h2><p>Perform every explicit resource allocation(e.g., new) in its own statement that immediately gives the allocated resource to a manager object(e.g., shared_ptr).</p>
+<p>If you define a function and use it like following example:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Func</span><span class="params">(shared_ptr&lt;Widget&gt; sp1, shared_ptr&lt;Widget&gt; sp2)</span></span>;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="built_in">Func</span>(<span class="built_in">shared_ptr</span>&lt;Widget&gt;(<span class="keyword">new</span> Widget), <span class="built_in">shared_ptr</span>&lt;Widget&gt;(<span class="keyword">new</span> Widget));</span><br></pre></td></tr></table></figure>
+
+<p>Such usage is unsafe. Some compiler may allocate two widgets at first, and then call their constructors sequentially. If the first constructor throws an exception, the second allocated widget can not be caught by shared_ptr, and thus cause a memory leak.</p>
+<p>There is a workaround for it:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">shared_ptr&lt;Widget&gt; <span class="title">sp1</span><span class="params">(<span class="keyword">new</span> Widget)</span>, <span class="title">sp2</span><span class="params">(<span class="keyword">new</span> Widget)</span></span>;</span><br><span class="line"><span class="built_in">Func</span>(sp1, sp2);</span><br></pre></td></tr></table></figure>
+
+<p>There is one another example that I picked up from PVS SAST tool <span class="exturl" data-url="aHR0cHM6Ly9wdnMtc3R1ZGlvLmNvbS9lbi9ibG9nL3Bvc3RzL2NwcC8wODczLw==">blog</span>:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::unique_ptr&lt;Modifier&gt;&gt; Modifiers;</span><br><span class="line">Modifiers.<span class="built_in">emplace_back</span>(<span class="keyword">new</span> <span class="built_in">LoadModifier</span>(BB, &amp;PT, &amp;R));</span><br><span class="line">Modifiers.<span class="built_in">emplace_back</span>(<span class="keyword">new</span> <span class="built_in">StoreModifier</span>(BB, &amp;PT, &amp;R));</span><br></pre></td></tr></table></figure>
+
+<p>As you know, vector is a template. If you pass a class instance address allocated by ‘new’ like above second line, std::unique_ptr will manage that class instance after emplace_back is called.</p>
+<p>What if emplace_back throws an exception?  oops!!! That class instance would hang forever.</p>
+<p>There is a workaround  for it:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::unique_ptr&lt;Modifier&gt;&gt; Modifiers;</span><br><span class="line">Modifiers.<span class="built_in">emplace_back</span>( std::<span class="built_in">unique_ptr</span>&lt;LoadModifier&gt;(<span class="keyword">new</span> <span class="built_in">LoadModifier</span>(BB, &amp;PT, &amp;R)));</span><br></pre></td></tr></table></figure>
+
+<p>So the best practice is that never allocate more than one resource in a single statement, and perform every explicit resource allocation in its own code statement that <strong>immediately</strong> gives the resource to an owning object(e.g., shared_ptr).</p>
+<h1 id="Coding-style"><a href="#Coding-style" class="headerlink" title="Coding style"></a>Coding style</h1><h2 id="Minimize-definitional-dependencies"><a href="#Minimize-definitional-dependencies" class="headerlink" title="Minimize definitional dependencies"></a>Minimize definitional dependencies</h2><p>Last year, I began to develop a large project(I thought ^_^). I met a cyclic dependencies, which two compilation units depend each other. After some search, I found a term called ‘forward declarations’. ‘Forward declarations’ means to just declare a class, whereas not to use ‘#include’ to include a class’ full definition. In this way, we can avoid cyclic dependencies.</p>
+<p>There is one another example: Visitor design pattern, which has a cyclic dependencise problem. If you want to use visitor design pattern, you can it’s workaround design pattern named <span class="exturl" data-url="aHR0cHM6Ly9jb25kb3IuZGVwYXVsLmVkdS9kbXVtYXVnaC9PT1QvRGVzaWduLVByaW5jaXBsZXMvYWN2LnBkZg==">acyclic visitor pattern</span>.</p>
+<h1 id="Functions-and-Operations"><a href="#Functions-and-Operations" class="headerlink" title="Functions and Operations"></a>Functions and Operations</h1><h2 id="Prefer-the-canonical-forms-of-arithmetic-and-assignment-operators"><a href="#Prefer-the-canonical-forms-of-arithmetic-and-assignment-operators" class="headerlink" title="Prefer the canonical forms of arithmetic and assignment operators"></a>Prefer the canonical forms of arithmetic and assignment operators</h2><p>If you define ‘a +b’ operator, you should always define ‘a +&#x3D; b’ operator:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">T&amp; T::<span class="keyword">operator</span>@=(<span class="type">const</span> T&amp;)&#123;</span><br><span class="line"><span class="comment">//... implementation</span></span><br><span class="line"><span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">T <span class="keyword">operator</span>@(<span class="type">const</span> T&amp; lhs, <span class="type">const</span> T&amp; rhs)&#123;</span><br><span class="line">	<span class="function">T <span class="title">temp</span><span class="params">(lhs)</span></span>;</span><br><span class="line">	<span class="keyword">return</span> temp @= rhs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Note that here operator@ is a nonmember function, so that it can accept the same implicit conversions on its left-hand side and right-hand side parameters, like following code snippet:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;Char + String&#x27;</span> <span class="keyword">and</span> <span class="string">&#x27;String + Char&#x27;</span> are both OK.</span><br></pre></td></tr></table></figure>
+
+<p>In any case, put all nonmember operators in the same namespace as T so that they will be conveniently available to callers as well as to avoid name lookup surprises.</p>
+<h2 id="Perfer-calling-the-prefix-forms-of-or-–"><a href="#Perfer-calling-the-prefix-forms-of-or-–" class="headerlink" title="Perfer calling the prefix forms of ++ or –"></a>Perfer calling the prefix forms of ++ or –</h2><p>If you do not need the original value, use the prefix version, which would not create a temporary object.</p>
+<h2 id="Consider-overloading-to-avoid-implicit-type-conversions"><a href="#Consider-overloading-to-avoid-implicit-type-conversions" class="headerlink" title="Consider overloading to avoid implicit type conversions"></a>Consider overloading to avoid implicit type conversions</h2><p>Consider that if you made a string comparison, such as the following example:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (someString == <span class="string">&quot;Hello&quot;</span>) &#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If you just defined following operator&#x3D;&#x3D;</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">String</span>&#123;</span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> String&amp;, <span class="type">const</span> String&amp;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>There is a implicit type conversion from char* to String, which need a copy of “Hello”. As you can see, it would waste cpu and memory resources.</p>
+<p>There is a workaround:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> String&amp;, <span class="type">const</span> String&amp;);</span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> String&amp;, <span class="type">const</span> <span class="type">char</span>*);</span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> <span class="type">char</span>*, <span class="type">const</span> String&amp;);</span><br></pre></td></tr></table></figure>
+
+<p>That seems like a lot of code duplication, but actually it’s just only “signature duplication” because all three typically use the same back-end function.</p>
+<p>Try the rule if you make a library that must meets some performance need. </p>
+<h2 id="Don’t-write-code-that-depends-on-the-order-of-evaluation-of-function-arguments"><a href="#Don’t-write-code-that-depends-on-the-order-of-evaluation-of-function-arguments" class="headerlink" title="Don’t write code that depends on the order of evaluation of function arguments."></a>Don’t write code that depends on the order of evaluation of function arguments.</h2><p>Consider following situation:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Func</span><span class="params">(<span class="type">int</span>, <span class="type">int</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> count = <span class="number">5</span>;</span><br><span class="line"><span class="built_in">Func</span>(++count, ++count);</span><br></pre></td></tr></table></figure>
+
+<p>When the Func is called, you know ‘count’ variable equals to 7, but you don’t know which of the two parameters is 6 and which is 7.</p>
+<h1 id="Class-Design-and-Inheritance"><a href="#Class-Design-and-Inheritance" class="headerlink" title="Class Design and Inheritance"></a>Class Design and Inheritance</h1><h2 id="Be-clear-what-kind-of-class-you’re-writing"><a href="#Be-clear-what-kind-of-class-you’re-writing" class="headerlink" title="Be clear what kind of class you’re writing"></a>Be clear what kind of class you’re writing</h2><p>This is the first rule of current section, and I think it’s indeed the valuest and best rule.</p>
+<p>In short, Know which kind class you are writing. You can get a more detailed description of the rule from the <span class="exturl" data-url="aHR0cDovL2xpYnJhcnkuYmFncmludHNldi5tZS9DUFAvU3V0dGVyLkMlMkIlMkIlMjBDb2RpbmclMjBTdGFuZGFyZHMuMjAwNS5wZGY=">book</span>.</p>
+<h2 id="Avoid-inheriting-from-classes-that-were-not-designed-to-be-base-classes"><a href="#Avoid-inheriting-from-classes-that-were-not-designed-to-be-base-classes" class="headerlink" title="Avoid inheriting from classes that were not designed to be base classes"></a>Avoid inheriting from classes that were not designed to be base classes</h2><p>Bad eg: Inheriting a class with a public nonvirtual destructor.</p>
+<h2 id="Public-inheritance-is-substitutability-Inherit-not-to-reuse-and-to-be-reused"><a href="#Public-inheritance-is-substitutability-Inherit-not-to-reuse-and-to-be-reused" class="headerlink" title="Public inheritance is substitutability. Inherit, not to reuse, and to be reused"></a>Public inheritance is substitutability. Inherit, not to reuse, and to be reused</h2><p>The “is-a” description of public inheritance is misunderstood when people use it to draw irrelevant real-world analogies: </p>
+<p>A Square “is-a” Rectangle(mathematically) but a Sqaure is not a Rectangle(behaviorally). Therfore you should design Square and Rectangle independently.</p>
+<p>Finally, I like following sentence:</p>
+<blockquote>
+<p>The purpose of public inheritance is not for the derived class to reuse base class code to implement itself in terms of the base class’s code. Such an is-implemented-in-terms-of relationship can be entirely proper, but should be modeled by composition–or, in special cases only, by nonpublic inheritance.</p>
+</blockquote>
+<h2 id="Pimpl-judiciously"><a href="#Pimpl-judiciously" class="headerlink" title="Pimpl judiciously"></a>Pimpl judiciously</h2><p>In short, this item means that you can encapsulate all one class’ private variables and private methods into an strcuture. Therefore you can forward-declare the structure within that class and use a pointer pointing to the structure, such as following code snippet:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Map</span>&#123;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">struct</span> <span class="title class_">Impl</span>;</span><br><span class="line">    shared_ptr&lt;Impl&gt; pimpl_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This will produce following benefits:</p>
+<ul>
+<li><p>Shorten compilation time because of forward declaration</p>
+</li>
+<li><p>Git rid of ambiguity of name lookup:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">Twice</span><span class="params">(<span class="type">int</span>)</span></span>; <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Calc</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function">std::string <span class="title">Twice</span><span class="params">(std::string)</span></span>; <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="type">char</span>* <span class="title">Twice</span><span class="params">(<span class="type">char</span>*)</span></span>;  <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">Test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Twice</span>(<span class="number">21</span>); <span class="comment">// error: 2 and 3 are unviable(and 1 is hidden)</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">	Calc c;</span><br><span class="line">	c.<span class="built_in">Twice</span>(<span class="string">&quot;aaa&quot;</span>) <span class="comment">// error: although 2 is right(implicit conversion from char* to std::string)</span></span><br><span class="line">				   <span class="comment">// but its&#x27; private version(3) is more accurate</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Make some operations reversible:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Widget&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Widget&amp;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	T1 t1;</span><br><span class="line">	T2 t2;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Say we call the Widget’s assignment constructor operator, if the assignment of t1 succeeded, but the assignment of t2 failed and throwed an exception, the whole assignment constructor operator failed and couldn’t be reversible.</p>
+<p>If we use Pimpl as following:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>=(<span class="type">const</span> Widget&amp; widget) &#123;</span><br><span class="line">	std::shared_ptr&lt;Impl&gt; <span class="built_in">temp</span>(<span class="keyword">new</span> <span class="built_in">Impl</span>(<span class="comment">/*...*/</span>));</span><br><span class="line">	<span class="comment">// change temp-&gt;t1 and temp-&gt;t2; if it fails then throw, else assigns temp</span></span><br><span class="line"></span><br><span class="line">	pimpl_ = temp;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="Construction-Destruction-and-Copying"><a href="#Construction-Destruction-and-Copying" class="headerlink" title="Construction, Destruction and Copying"></a>Construction, Destruction and Copying</h1><h2 id="Define-and-initialize-member-variables-in-the-same-order"><a href="#Define-and-initialize-member-variables-in-the-same-order" class="headerlink" title="Define and initialize member variables in the same order"></a>Define and initialize member variables in the same order</h2><p>Member variables are always initialized in the order they are declared in the class definition; the order you write them in the constructor initialization list is ignored:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Employee</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	std::string m_email;</span><br><span class="line">	std::string m_firstName;</span><br><span class="line">	std::string m_lastName;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">Employee</span>(<span class="type">const</span> <span class="type">char</span>* firstName, <span class="type">const</span> <span class="type">char</span>* lastName) :</span><br><span class="line">		<span class="built_in">m_firstName</span>(firstName), <span class="built_in">m_lastName</span>(lastName),</span><br><span class="line">		<span class="built_in">m_email</span>(m_firstName + <span class="string">&quot;.&quot;</span> + m_lastName) &#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Employee <span class="title">e</span><span class="params">(<span class="string">&quot;firstName&quot;</span>, <span class="string">&quot;lastName&quot;</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>When I test above example, the compilation of it was successful, with no error and warning using VS. But when I ran it, it crashed. The reason is that the m_email member vairable was initialized firstly, using not-yet-initialized member variables(m_firstName and m_lastName).</p>
+<p>The reason for this language design decision is to ensure there is a unique order to destroy members.</p>
+<h2 id="Copy-and-destroy-consistently-The-Rule-of-the-Big-Three"><a href="#Copy-and-destroy-consistently-The-Rule-of-the-Big-Three" class="headerlink" title="Copy and destroy consistently(The Rule of the Big Three)"></a>Copy and destroy consistently(The Rule of the Big Three)</h2><p>If you define any of the Big Five(copy constructor, copy assginment operator, move constructor, move assignment operator, destructor), you might need to define one or both of the others:</p>
+<ul>
+<li>If you write&#x2F;disable either a copy constructor or the copy assignment operator, you probably need to do the same for the other</li>
+<li>If you explicitly write the copying functions, you probably need to write the destructor.</li>
+<li>If you explicitly write the destructor, you probably need to explicitly write or disable copying: If you define a destructor, which means you may need to deallocate some resources, you should define copying constructors. If you don’t define them, you should disable them so that your defined classes wouldn’t be copied unexpectedly, such as a shallow copy.</li>
+</ul>
+<blockquote>
+<p>See <span class="exturl" data-url="aHR0cHM6Ly9lbi5jcHByZWZlcmVuY2UuY29tL3cvY3BwL2xhbmd1YWdlL3J1bGVfb2ZfdGhyZWU=">The Rule of the BigFive</span> for more details.</p>
+</blockquote>
+<h1 id="Namespace-and-Modules"><a href="#Namespace-and-Modules" class="headerlink" title="Namespace and Modules"></a>Namespace and Modules</h1><h2 id="Don’t-define-entities-with-linkage-in-a-header-file"><a href="#Don’t-define-entities-with-linkage-in-a-header-file" class="headerlink" title="Don’t define entities with linkage in a header file"></a>Don’t define entities with linkage in a header file</h2><p>bad e.g.:</p>
+<ul>
+<li><p>definition with external linkage in a header</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> aa;</span><br><span class="line"><span class="function">string <span class="title">hello</span><span class="params">(<span class="string">&quot;11&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;<span class="comment">/*....*/</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>When you include the header in multiple files, the linker would complain duplication of the same variables and functions. It’s fine because the linker can tell you what’s wrong after all. And you can work around it by only putting declarations in a header. </p>
+</li>
+<li><p>definition with internal linkage in a header</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> aa;</span><br><span class="line"><span class="function"><span class="type">static</span> string <span class="title">hello</span><span class="params">(<span class="string">&quot;11&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;<span class="comment">/*....*/</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>When you include the header in multiple files, linker would copy these variables in every compilation unit, which is wastful. What’s more, every copy of every variable is distinct one. </p>
+<p>If you call ‘foo’ function in another compilation unit, you will get “function ‘xxx’ already has a body” error.</p>
+<blockquote>
+<p>Also, do not define variables within a unnamed namespace in a header, which is as bad as that of internal linkage in a header.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line"><span class="type">int</span> aa;</span><br><span class="line"><span class="function">string <span class="title">hello</span><span class="params">(<span class="string">&quot;11&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;<span class="comment">/*....*/</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>However, you can define variables within a unnamed namespace in a source file.</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="Don’t-allow-exceptions-to-propagete-across-module-boundaries"><a href="#Don’t-allow-exceptions-to-propagete-across-module-boundaries" class="headerlink" title="Don’t allow exceptions to propagete across module boundaries"></a>Don’t allow exceptions to propagete across module boundaries</h2><p>You should make sure following situations would not throw:</p>
+<ul>
+<li>around main</li>
+<li>callbacks you provide to system-provided mechnisms, such as an asynchronous read</li>
+<li>around thread boundaries(throw exceptions to system)</li>
+<li>around module interface boundaries that you expose to outer world</li>
+<li>inside destructors(a destructor should not throw any exception to outer world, because which it might be called in many situations)</li>
+</ul>
+<h2 id="Use-sufficiently-portable-types-in-a-module’s-interface"><a href="#Use-sufficiently-portable-types-in-a-module’s-interface" class="headerlink" title="Use sufficiently portable types in a module’s interface"></a>Use sufficiently portable types in a module’s interface</h2><p>If you build a module, this module should have some external interfaces. You should take care of its parameters, because which the caller and you may use different version of the same types, such as std::string with different memory layout.</p>
+<p>Consider following paramter traceoff of SummarizeFile, which need to read a file:</p>
+<ul>
+<li>char* -&gt; low-level abstraction, but high-level complexity and error-prone</li>
+<li>std::string -&gt; medium-level abstraction …</li>
+<li>istream or File(maybe customed) -&gt; high-level abstraction, but low-level complexity and errorless</li>
+</ul>
+<p>Summay: When developing a module, use low-level abstraction in external interfaces, use the highest-level of abstraction internally.</p>
+<h1 id="Templatese-and-Genericity"><a href="#Templatese-and-Genericity" class="headerlink" title="Templatese and Genericity"></a>Templatese and Genericity</h1><h2 id="Keep-types-and-functions-in-separate-namespaces-unless-they’re-specifically-intended-to-work-together"><a href="#Keep-types-and-functions-in-separate-namespaces-unless-they’re-specifically-intended-to-work-together" class="headerlink" title="Keep types and functions in separate namespaces unless they’re specifically intended to work together"></a>Keep types and functions in separate namespaces unless they’re specifically intended to work together</h2><p>Consider the following example:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> N &#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">X</span> &#123;<span class="type">int</span> aa;&#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    <span class="type">int</span>* <span class="keyword">operator</span>+(T, <span class="type">unsigned</span>)&#123;<span class="comment">/* do something...*/</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">std::vector&lt;N::X&gt; <span class="title">v</span><span class="params">(<span class="number">5</span>)</span></span>;</span><br><span class="line">    v[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If the compiler reaches out into N namespace, it would find N::operator+, and it might think that N::operator++ is a better match than the std::operator+ for vector&lt;T&gt;::iterators, which may result in errrors.</p>
+<p><strong>Workaround</strong>:</p>
+<ul>
+<li>arrange for v.begin()’s type to not to depend in any way on the template paramter, which can disable ADL(argument-dependent lookup)</li>
+<li>rewrite the call to operator+ as a qualified call[std::operator+(v.begin(), n)]</li>
+</ul>
+<p><strong>Conclusion</strong>: Avoid putting nonmember functions that are not part of the interface of a type X into the same namespace as X, and especially never ever put templated functions or operators into the same namespace as a user-defined type, because ADL check would take the templated functions in the same namespace of X as the best match.</p>
+<h2 id="Customize-intentionally-and-explicitly"><a href="#Customize-intentionally-and-explicitly" class="headerlink" title="Customize intentionally and explicitly"></a>Customize intentionally and explicitly</h2><p>C++11 implementation:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Sample</span> &#123;</span><br><span class="line">    <span class="built_in">BOOST_STATIC_ASSERT</span>((is_base_of&lt;List, T&gt;::value)); <span class="comment">//Yes, the double parentheses are needed, otherwise the comma will be seen as macro argument separator</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//==================================</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Sample</span> &#123;</span><br><span class="line">    <span class="built_in">static_assert</span>(std::is_base_of&lt;list, T&gt;::value, <span class="string">&quot;T must inherit from list&quot;</span>);</span><br><span class="line">    <span class="comment">// code here..</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> RealType&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">static_assert</span>(std::is_same&lt;RealType, <span class="type">double</span>&gt;::value || std::is_same&lt;RealType, <span class="type">float</span>&gt;::value,</span><br><span class="line">                <span class="string">&quot;some meaningful error message&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Before C++11</strong></p>
+<p>Option1:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="type">void</span> <span class="title">Sample1</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        t.<span class="built_in">foo</span>();</span><br><span class="line">        <span class="keyword">typename</span> T::value_type x;</span><br><span class="line"></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;in Sample1: &quot;</span> &lt;&lt; <span class="built_in">typeid</span>(T::value_type).<span class="built_in">name</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>The author of Sample1 must:</p>
+<ul>
+<li>Call the function with member notation: Just use the natural member syntax[t.foo()]</li>
+<li>Document the point of customization: The type T must provide an accessible member function foo that can be called with given arguments(here, none)</li>
+</ul>
+</blockquote>
+<p>Option2:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="type">void</span> <span class="title">Sample2</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">foo</span>(t);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>The author of Sample2 must:</p>
+<ul>
+<li>Call the function with unqualified nonmeber notation. Ensure template itself doesn’t have a member function with the same name: It is essential for the template not to qualify the call to foo.</li>
+<li>Document the point of customization: The type T must provide an nonmember function foo that can be called with given arguments.</li>
+</ul>
+</blockquote>
+<p><strong>Note</strong>: avoid providing points of customization unintentionally: put any helper functions your template uses internally into thier own nested namespace, and call them with explicit qualification to disable ADL.</p>
+<h2 id="Don’t-specialize-function-templates"><a href="#Don’t-specialize-function-templates" class="headerlink" title="Don’t specialize function templates."></a>Don’t specialize function templates.</h2><p>Before we talk about override and specialization, let’s talk a little about their difference.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std &#123;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(T&amp; t1, T&amp; t2)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// specialization</span></span><br><span class="line"><span class="keyword">namespace</span> std&#123;</span><br><span class="line">    <span class="keyword">template</span> &lt;&gt;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(Object&amp; o1, Object&amp; o2)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// override</span></span><br><span class="line"><span class="keyword">namespace</span> XXX &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(Object&amp; o1, Object&amp; o2)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Take std::swap as an example: if you specialize std::swap, you must meet some requirements that the parameters of std::swap need obey, such as it’s copiable. Besides, you need add a specialization of std::swap into std namespace. </p>
+<p>If Object class is a template class, above specialization is even impossible, because you has already specialized class T with Object class, And where Object&lt;T&gt; can be placed in? </p>
+<p><strong>Conclusion</strong>: Overload rather than specialize function templates, and the overloaded functions should be placed in the namespace of the type(s) the overload is designed to be used for. </p>
+<h2 id="Write-More-generic-code"><a href="#Write-More-generic-code" class="headerlink" title="Write More generic code"></a>Write More generic code</h2><p>eg:</p>
+<ul>
+<li>Use !&#x3D; instead of <strong>&lt;</strong> to compare iterators, !&#x3D; is more generic and <strong>&lt;</strong> is meaningful only to randome-access iterators.</li>
+<li>Prefer iteration to indexed access, interation is more generic and most containers don’t support indexed access.</li>
+<li>Use empty() instead of <em>size &#x3D;&#x3D; 0</em></li>
+</ul>
+<h1 id="Type-safety"><a href="#Type-safety" class="headerlink" title="Type safety"></a>Type safety</h1><ul>
+<li><p>Avoid type switching; prefer polymorphism</p>
+</li>
+<li><p>Avoid casting away const</p>
+</li>
+<li><p>Dont’t use C-style casts with C++ classes(especially related about inheritance)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Gun</span><span class="params">(Base* pb)</span></span>&#123;</span><br><span class="line">    Derived* pd = (Derived*)pb;</span><br><span class="line">	<span class="comment">// if Gun has access to the definition of Derived class, the </span></span><br><span class="line">    <span class="comment">// compiler will have necessary object layout information to adjust the pointers.</span></span><br><span class="line">    <span class="comment">// Whereas, if Gun has no access to the definition of Derived class, the compiler</span></span><br><span class="line">    <span class="comment">// would do what reinterpreter_cast does which is bad.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>one more example:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123; <span class="type">int</span> a; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> &#123; <span class="type">int</span> b; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span> : A, B &#123; <span class="type">int</span> c; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C c;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;C is at : &quot;</span> &lt;&lt; (<span class="type">void</span>*)(&amp;c) &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;B is at : &quot;</span> &lt;&lt; (<span class="type">void</span>*)<span class="built_in">static_cast</span>&lt;B*&gt;(&amp;c) &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;A is at : &quot;</span> &lt;&lt; (<span class="type">void</span>*)<span class="built_in">static_cast</span>&lt;A*&gt;(&amp;c) &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// C is at : 0x22ccd0</span></span><br><span class="line"><span class="comment">// B is at : 0x22ccd4</span></span><br><span class="line"><span class="comment">// A is at : 0x22ccd0</span></span><br></pre></td></tr></table></figure>
+
+<p>Note that in order to convert correctly to B*, static_cast has to change the pointer value. If the compiler didn’t have the class definition for C, then it wouldn’t know that B was a base class, and it certainly wouldn’t know what offset to apply.</p>
+</li>
+</ul>
+
+      <div class="tags">
+          <a href="/tags/C/" rel="tag"><i class="ic i-tag"></i> C++</a>
+          <a href="/tags/Coding-Standards/" rel="tag"><i class="ic i-tag"></i> Coding Standards</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Development/Study-of-C-Coding-Standards/" class="item leancloud_visitors" data-flag-title="Study of C++ Coding Standards" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Development/Study-of-C-Coding-Standards/" title="Study of C++ Coding Standards">https://conecoy.cn/Technology/Development/Study-of-C-Coding-Standards/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;66.jpg" title="记一次win10下程序以兼容方式启动导致的死锁">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Development</span>
+  <h3>记一次win10下程序以兼容方式启动导致的死锁</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;7.jpg" title="[翻译] Microsoft Defender ATP ETW">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Reverse</span>
+  <h3>[翻译] Microsoft Defender ATP ETW</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Project-organization"><span class="toc-number">1.</span> <span class="toc-text">Project organization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-an-automated-build-system"><span class="toc-number">1.1.</span> <span class="toc-text">Use an automated build system</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Design-style"><span class="toc-number">2.</span> <span class="toc-text">Design style</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Correctness-simplicity-and-clarity-come-first"><span class="toc-number">2.1.</span> <span class="toc-text">Correctness, simplicity, and clarity come first</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Don%E2%80%99t-optimize-prematurely"><span class="toc-number">2.2.</span> <span class="toc-text">Don’t optimize prematurely</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Be-careful-when-using-RAII"><span class="toc-number">2.3.</span> <span class="toc-text">Be careful when using RAII</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Coding-style"><span class="toc-number">3.</span> <span class="toc-text">Coding style</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Minimize-definitional-dependencies"><span class="toc-number">3.1.</span> <span class="toc-text">Minimize definitional dependencies</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Functions-and-Operations"><span class="toc-number">4.</span> <span class="toc-text">Functions and Operations</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Prefer-the-canonical-forms-of-arithmetic-and-assignment-operators"><span class="toc-number">4.1.</span> <span class="toc-text">Prefer the canonical forms of arithmetic and assignment operators</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Perfer-calling-the-prefix-forms-of-or-%E2%80%93"><span class="toc-number">4.2.</span> <span class="toc-text">Perfer calling the prefix forms of ++ or –</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Consider-overloading-to-avoid-implicit-type-conversions"><span class="toc-number">4.3.</span> <span class="toc-text">Consider overloading to avoid implicit type conversions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Don%E2%80%99t-write-code-that-depends-on-the-order-of-evaluation-of-function-arguments"><span class="toc-number">4.4.</span> <span class="toc-text">Don’t write code that depends on the order of evaluation of function arguments.</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Class-Design-and-Inheritance"><span class="toc-number">5.</span> <span class="toc-text">Class Design and Inheritance</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Be-clear-what-kind-of-class-you%E2%80%99re-writing"><span class="toc-number">5.1.</span> <span class="toc-text">Be clear what kind of class you’re writing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Avoid-inheriting-from-classes-that-were-not-designed-to-be-base-classes"><span class="toc-number">5.2.</span> <span class="toc-text">Avoid inheriting from classes that were not designed to be base classes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Public-inheritance-is-substitutability-Inherit-not-to-reuse-and-to-be-reused"><span class="toc-number">5.3.</span> <span class="toc-text">Public inheritance is substitutability. Inherit, not to reuse, and to be reused</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pimpl-judiciously"><span class="toc-number">5.4.</span> <span class="toc-text">Pimpl judiciously</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Construction-Destruction-and-Copying"><span class="toc-number">6.</span> <span class="toc-text">Construction, Destruction and Copying</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Define-and-initialize-member-variables-in-the-same-order"><span class="toc-number">6.1.</span> <span class="toc-text">Define and initialize member variables in the same order</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Copy-and-destroy-consistently-The-Rule-of-the-Big-Three"><span class="toc-number">6.2.</span> <span class="toc-text">Copy and destroy consistently(The Rule of the Big Three)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Namespace-and-Modules"><span class="toc-number">7.</span> <span class="toc-text">Namespace and Modules</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Don%E2%80%99t-define-entities-with-linkage-in-a-header-file"><span class="toc-number">7.1.</span> <span class="toc-text">Don’t define entities with linkage in a header file</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Don%E2%80%99t-allow-exceptions-to-propagete-across-module-boundaries"><span class="toc-number">7.2.</span> <span class="toc-text">Don’t allow exceptions to propagete across module boundaries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-sufficiently-portable-types-in-a-module%E2%80%99s-interface"><span class="toc-number">7.3.</span> <span class="toc-text">Use sufficiently portable types in a module’s interface</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Templatese-and-Genericity"><span class="toc-number">8.</span> <span class="toc-text">Templatese and Genericity</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Keep-types-and-functions-in-separate-namespaces-unless-they%E2%80%99re-specifically-intended-to-work-together"><span class="toc-number">8.1.</span> <span class="toc-text">Keep types and functions in separate namespaces unless they’re specifically intended to work together</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Customize-intentionally-and-explicitly"><span class="toc-number">8.2.</span> <span class="toc-text">Customize intentionally and explicitly</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Don%E2%80%99t-specialize-function-templates"><span class="toc-number">8.3.</span> <span class="toc-text">Don’t specialize function templates.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Write-More-generic-code"><span class="toc-number">8.4.</span> <span class="toc-text">Write More generic code</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Type-safety"><span class="toc-number">9.</span> <span class="toc-text">Type safety</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="bookmark" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></li><li><a href="/Technology/Development/runtime%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93%E5%9C%A8MT%E4%B8%8EMD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="bookmark" title="runtime运行时库在MT与MD之间的差别">runtime运行时库在MT与MD之间的差别</a></li><li><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" rel="bookmark" title="c++编程错误锦囊">c++编程错误锦囊</a></li><li><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="bookmark" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></li><li class="active"><a href="/Technology/Development/Study-of-C-Coding-Standards/" rel="bookmark" title="Study of C++ Coding Standards">Study of C++ Coding Standards</a></li><li><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="COM学习笔记">COM学习笔记</a></li><li><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" rel="bookmark" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></li><li><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></li><li><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" rel="bookmark" title="单例模式的好与坏">单例模式的好与坏</a></li><li><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++安全编程规范笔记">C++安全编程规范笔记</a></li><li><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="bookmark" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/StackUnwind/" title="StackUnwind">StackUnwind</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%B7%A5%E7%A8%8B%E9%A2%84%E7%BC%96%E8%AF%91%E7%AC%94%E8%AE%B0/" title="C++工程预编译笔记.md">C++工程预编译笔记.md</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++Concurrency-In-Action-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="C++ Concurrency In Action 学习笔记">C++ Concurrency In Action 学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/" title="分类于 新年計画">新年計画</a>
+</div>
+
+    <span><a href="/%E6%96%B0%E5%B9%B4%E8%A8%88%E7%94%BB/%E6%96%B0%E5%B9%B4%E3%81%AE%E5%A7%8B%E3%81%BE%E3%82%8A/" title="新年の始まり">新年の始まり</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/COM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="COM学习笔记">COM学习笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Development/Study-of-C-Coding-Standards/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

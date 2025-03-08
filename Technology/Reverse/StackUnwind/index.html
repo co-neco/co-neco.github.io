@@ -1,0 +1,722 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="Welcome to coneco's study room" href="https://conecoy.cn/atom.xml" />
+<link rel="alternate" type="application/json" title="Welcome to coneco's study room" href="https://conecoy.cn/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="StackUnwind" />
+
+
+<link rel="canonical" href="https://conecoy.cn/Technology/Reverse/StackUnwind/">
+
+
+
+  <title>
+StackUnwind - Reverse - Technology |
+Coneco = Welcome to coneco's study room</title>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">StackUnwind
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-07-31 22:42:18">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-07-31T22:42:18+08:00">2021-07-31</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Coneco</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/18.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/13.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/68.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/64.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/67.jpg"></li>
+          <li class="item" data-background-image="https://image-hosts.oss-cn-chengdu.aliyuncs.com/aokana/22.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/" itemprop="item" rel="index" title="分类于 Technology"><span itemprop="name">Technology</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Technology/Reverse/" itemprop="item" rel="index" title="分类于 Reverse"><span itemprop="name">Reverse</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="https://conecoy.cn/Technology/Reverse/StackUnwind/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+    <meta itemprop="name" content="coneco">
+    <meta itemprop="description" content=", hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Welcome to coneco's study room">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="StackWalk64-32位-栈回溯原理"><a href="#StackWalk64-32位-栈回溯原理" class="headerlink" title="StackWalk64(32位)栈回溯原理"></a>StackWalk64(32位)栈回溯原理</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>StackWalk64是用于回溯栈的，32位和64位皆可。本次目标为StackWalk如何回溯32位程序的栈</p>
+<blockquote>
+<p>注：</p>
+<ul>
+<li>本次分析集中于无符号文件，有符号信息的情况将略讲</li>
+<li>64位的栈回溯主要依赖程序的Exception Directory数据节，所以相对32位，64位在栈回溯上不用考虑无符号文件(pdb)的问题，因此也不会出现类似32位的问题，比如跳过某一层的函数（在32位无符号文件的情况下）。</li>
+</ul>
+</blockquote>
+<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>本次分析以dbghelp.dll,版本为10.0.18362.1139 (WinBuild.160101.0800)。</p>
+<h3 id="概要流程"><a href="#概要流程" class="headerlink" title="概要流程"></a>概要流程</h3><p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/stack_unwind/%E6%A0%88%E5%9B%9E%E6%BA%AF%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B.jpg" alt="栈回溯大致流程"></p>
+<p>栈回溯使用StackWalk64函数，根据有无符号文件，会分别处理。无论有无符号，都会判断是否是回溯第一层栈。</p>
+<p>因为一般情况下没有符号文件， 所以这里只重点分析无符号文件的情况，并在合适的时机提出有符号文件的处理流程。</p>
+<h3 id="细节流程"><a href="#细节流程" class="headerlink" title="细节流程"></a>细节流程</h3><p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/stack_unwind/%E6%A0%88%E5%9B%9E%E6%BA%AF%E7%BB%86%E8%8A%82%E6%B5%81%E7%A8%8B.jpg"></p>
+<p>DoDbhUnwind为栈回溯的真正起点，由StackWalk64到DoDbhUnwind的过程都可理解为包装。</p>
+<p>重点如下：</p>
+<ul>
+<li>UnwindAndUpdateInternalContext是X86栈回溯的核心函数</li>
+<li>如果有符号，会交给UnwindInternalContextUsingDiaFrame处理，因为直接有符号了，少了验证等过程，所以该函数就是栈回溯的终点了</li>
+<li>如果没有符号，会根据栈回溯是否是第一层，走以下路线<ul>
+<li>第一层：调用UnwindInternalContextUsingEbp，读取ebp的值返回上一层的ebp和eip</li>
+<li>第二层或以上：调用UnwindUsingPrologueSummary，解析栈</li>
+</ul>
+</li>
+</ul>
+<h4 id="第一层栈回溯（无符号）"><a href="#第一层栈回溯（无符号）" class="headerlink" title="第一层栈回溯（无符号）"></a>第一层栈回溯（无符号）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>:<span class="number">000</span>&gt; k</span><br><span class="line"> # ChildEBP RetAddr  </span><br><span class="line"><span class="number">00</span> <span class="number">0019e98</span>c <span class="number">72f</span>92d16 dbghelp!DbsX86StackUnwinder::UnwindInternalContextUsingEbp</span><br><span class="line"><span class="number">01</span> <span class="number">0019e9</span>ac <span class="number">72f</span>929ee dbghelp!DbsX86StackUnwinder::DoUnwindUsingInternalContext+<span class="number">0x169</span></span><br><span class="line"><span class="number">02</span> <span class="number">0019</span>ea14 <span class="number">72f</span>92925 dbghelp!DbsX86StackUnwinder::UnwindAndUpdateInternalContext+<span class="number">0x7e</span></span><br><span class="line"><span class="number">03</span> <span class="number">0019</span>eb44 <span class="number">72f</span>92e5a dbghelp!DbsStackUnwinder::DoDbhUnwind+<span class="number">0x179</span></span><br><span class="line"><span class="number">04</span> <span class="number">0019</span>eb74 <span class="number">72f</span>925ea dbghelp!DbsStackUnwinder::DbhUnwind+<span class="number">0x59</span></span><br><span class="line"><span class="number">05</span> <span class="number">0019</span>ec90 <span class="number">72f</span>91dd2 dbghelp!PickX86Walk+<span class="number">0x107</span></span><br><span class="line"><span class="number">06</span> <span class="number">0019f</span>94c <span class="number">72f</span>91ba8 dbghelp!DoUnwindStackFrameUsingServices+<span class="number">0xbb</span></span><br><span class="line"><span class="number">07</span> <span class="number">0019f</span>998 <span class="number">730</span>a22c9 dbghelp!StackWalkEx+<span class="number">0x1b8</span></span><br><span class="line"><span class="number">08</span> <span class="number">0019f</span>b04 <span class="number">00404</span>c1e dbghelp!StackWalk64+<span class="number">0x89</span></span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line"><span class="number">09</span> <span class="number">0019f</span>f24 <span class="number">00406865</span> cpp_test_ano+<span class="number">0x4c1e</span></span><br><span class="line"><span class="number">0</span>a <span class="number">0019f</span>f70 <span class="number">76336359</span> cpp_test_ano+<span class="number">0x6865</span></span><br><span class="line"><span class="number">0b</span> <span class="number">0019f</span>f80 <span class="number">76f</span>b8944 KERNEL32!BaseThreadInitThunk+<span class="number">0x19</span></span><br><span class="line"><span class="number">0</span>c <span class="number">0019f</span>fdc <span class="number">76f</span>b8914 ntdll!__RtlUserThreadStart+<span class="number">0x2f</span></span><br><span class="line"><span class="number">0</span>d <span class="number">0019f</span>fec <span class="number">00000000</span> ntdll!_RtlUserThreadStart+<span class="number">0x1b</span></span><br></pre></td></tr></table></figure>
+
+<p>回溯第一层栈使用UnwindInternalContextUsingEbp函数，该函数直接从ebp获取第一层栈的ebp和eip。</p>
+<p>该函数实现如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">DbsX86StackUnwinder::UnwindInternalContextUsingEbp</span><span class="params">()</span></span>&#123;</span><br><span class="line">    BOOL result;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">this</span>[<span class="number">0xE3</span>] = *(PDWORD)((PBYTE)<span class="keyword">this</span>[<span class="number">0xE2</span>] + <span class="number">4</span>); <span class="comment">// 0xE2偏移处保存上一层的ebp，0xE3偏移处保存上一层的eip</span></span><br><span class="line">    <span class="keyword">this</span>[<span class="number">0xE2</span>] = *<span class="keyword">this</span>[<span class="number">0xE2</span>];</span><br><span class="line">    <span class="keyword">if</span> (read memory failed)</span><br><span class="line">        result = TRUE;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        result = FALSE;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>待UnwindInternalContextUsingEbp返回后，DoUnwindUsingInternalContext函数也直接返回，表示第一层栈已回溯完毕。</p>
+<blockquote>
+<p>注：本例只分析ebp回溯的情况，esp回溯的情况（等下周填充）</p>
+</blockquote>
+<h4 id="第二层栈回溯（无符号）"><a href="#第二层栈回溯（无符号）" class="headerlink" title="第二层栈回溯（无符号）"></a>第二层栈回溯（无符号）</h4><p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/stack_unwind/%E7%AC%AC%E4%BA%8C%E5%B1%82%E6%A0%88%E5%9B%9E%E6%BA%AF.jpg"></p>
+<p>从第二层栈回溯开始，都需要走这样的流程。</p>
+<p>SearchForReturnAddress获取ebp和eip是通过评定分数来确认的，分数最高的视为上一层的ebp，并从中获取本层的ebp和eip。</p>
+<p>分数由ComputeScoreForReturnAddress获取（算法请参考下一小节），鉴定方式如下：</p>
+<ul>
+<li>如果返回值为0xFFFF，则视为最高分数，直接返回</li>
+<li>如果返回值不为0xFFFF，则判断返回值与之前的返回值谁大，如果大于，则更新，否则不更新。之后继续循环，直到循环次数超过0x42次（从0开始计数）。</li>
+</ul>
+<blockquote>
+<p>注：前三次base ebp不变，只是传给ComputeScoreForReturnAddress的其中一个参数会变（根据这个参数，获取的分数会不一样）</p>
+</blockquote>
+<h4 id="获取分数的算法"><a href="#获取分数的算法" class="headerlink" title="获取分数的算法"></a>获取分数的算法</h4><ul>
+<li>上层通过call imm16&#x2F;imm32（E8 xxxx&#x2F;E8 xxxxxxxx），根据ComputeScoreForReturnAddress的参数(通常最高为0x9000)</li>
+<li>上层通过call reg16&#x2F;reg32(FF xx)，根据ComputeScoreForReturnAddress的参数，获取分数（通常最高为0xA000）</li>
+<li>上层通过call [mem16&#x2F;mem32]（FF15[xxxxxxxx]&#x2F;FF15[xxxx]）,根据ComputeScoreForReturnAddress的参数，获取分数（通常最高为0xA000）</li>
+</ul>
+<blockquote>
+<p>注：</p>
+<ul>
+<li>如果以上三种情况都不是，那base ebp将持续加4，继续寻找。这样的结果就是跳过调用栈中不规则的调用层。</li>
+<li>算法的详细讲解请参考第五节。</li>
+</ul>
+</blockquote>
+<h4 id="被忽略的不规则调用层"><a href="#被忽略的不规则调用层" class="headerlink" title="被忽略的不规则调用层"></a>被忽略的不规则调用层</h4><ul>
+<li>jmp指令，jmp指令是0xEB or 0xE9 or 0xFF25，所以会被跳过</li>
+<li>通过esp调节堆栈的函数（如果没有符号文件）</li>
+</ul>
+<h3 id="细节讲解"><a href="#细节讲解" class="headerlink" title="细节讲解"></a>细节讲解</h3><h4 id="DbsStackUnwinder-DoDbhUnwind函数"><a href="#DbsStackUnwinder-DoDbhUnwind函数" class="headerlink" title="DbsStackUnwinder::DoDbhUnwind函数"></a>DbsStackUnwinder::DoDbhUnwind函数</h4><p>DoDbhUnwind函数为回溯栈的核心，每执行一次DoDbhUnwind函数，代表回溯完一层栈。</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/stack_unwind/DoDbhUnwind.png"></p>
+<p>上图为DoDbhUnwind的大致流程，重点如下：</p>
+<ul>
+<li><p>nonFirstStackFlag(<strong>*(DWORD *)(a2 + 0x7C)</strong>)的含义：</p>
+<ul>
+<li>第一层栈时，该字段为0，只执行105行的UnwindAndUpdateInternalContext，回溯一次</li>
+<li>第二层或以上时，该字段为1，执行78行和105行的UnwindAndUpdateInternalContext，回溯两次</li>
+</ul>
+<p>根据4.1节和4.2节的描述，我们知道第一层栈回溯是通过UnwindInternalContextUsingEbp实现的，第二层或之后的栈回溯是通过UnwindUsingPrologueSummary实现的，选择执行哪条分支是通过nonFirstStackFlag来判断的，如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/stack_unwind/nonFirstStackFlag.png"></p>
+<blockquote>
+<p>注：第二层或以上，为何要调用两次UnwindAndUpdateInternalContext将在之后下一小节讲解。</p>
+</blockquote>
+</li>
+<li><p>ImportPreviousFrameSummary函数</p>
+<p><strong>说明该函数之前，需要补充一点背景，如下：</strong></p>
+<p>从回溯第二层或以上的栈开始，都会调用UnwindAndUpdateInternalContext两次，每调用一次该函数，都能回溯一层栈。</p>
+<p>可能大家会有疑问了，上文提及“每执行一次DoDbhUnwind函数，代表回溯完一层栈”，这里DoDbhUnwind调用两次UnwindAndUpdateInternalContext，那不应该是回溯了两层栈吗？</p>
+<p>针对这个问题，请查看文末的附录1的实验，观察StackWalk64返回的CONTEXT（上下文）有何变化。</p>
+<p>根据附录1的实验，能得出以下结论：</p>
+<ul>
+<li>在分析第二层或以上的栈时，需要回溯两次才能回溯到真正的函数（context结构体的ebp和eip与待分析的函数差两层）</li>
+</ul>
+<p>根据逆向分析结果，再补充以下结论：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/stack_unwind/%E5%9B%9E%E6%BA%AF%E6%96%B9%E6%B3%95%E7%9B%B8%E5%90%8C.png"></p>
+<ul>
+<li>Round1由FuncB到FuncC的回溯与Round2由FuncB到FuncC的回溯是一样的</li>
+</ul>
+<blockquote>
+<p>在分析第二层或以上的栈时，context结构体的ebp和eip与待分析的函数差两层的目的是为了获取上一层的栈帧信息（比如Round2的FuncC栈层的信息），这些栈帧信息在内部使用，并反映在DbsStackUnwinder类的一些标志变量中。猜测这些变量会根据情况改变函数的分析流程（比如Round2的FuncD的分析流程）。在接下来的分析中，大家会看到栈回溯的整个过程用到了很多标志变量，来改变比如FuncD函数的分析路径。</p>
+</blockquote>
+<p>有以上背景后，我们理解了在分析第二层或以上的栈时，为何会调用两次UnwindAndUpdateInternalContext了，接下来回到对ImportPreviousFrameSummary函数的说明。</p>
+<p>在回溯第二层栈时(Round1)，会像Round0一样先从函数A的ebp获取函数A的返回地址（UnwindInternalContextUsingEbp）。又因为只有nonFirstFlag为FALSE时，才会走UnwindInternalContextUsingEbp分支，所以ImportPreviousFrameSummary的其中一个作用就是在第二层栈回溯中，第一次调用UnwindAndUpdateInternalContext时，将nonFirstFlag置为FALSE（注意在第二层或之后的栈回溯，nonFirstFlag都为TRUE）。第二次调用UnwindAndUpdateInternalContext之前，nonFirstFlag会被恢复为TRUE。</p>
+</li>
+</ul>
+<h4 id="UnwindAndUpdateInternalContext"><a href="#UnwindAndUpdateInternalContext" class="headerlink" title="UnwindAndUpdateInternalContext"></a>UnwindAndUpdateInternalContext</h4><p>回顾第四节的细节流程图，该函数是栈回溯真正功能的起始点。首先执行完初始化之后，会调用UnwindInternalContextUsingDiaFrame，去寻找返回地址（从context.ebp+4地址处获取）的符号文件，如果找到，则直接通过符号文件回溯栈，然后直接从UnwindAndUpdateInternalContext返回，完成该轮的栈回溯。如果没找到，则UnwindInternalContextUsingDiaFrame返回错误0x80004002，之后做无符号的栈回溯（通过ebp），如下图：</p>
+<p><img data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/reverse/stack_unwind/DoUnwindUsingInternalContext.png"></p>
+<h4 id="UnwindUsingPrologueSummary"><a href="#UnwindUsingPrologueSummary" class="headerlink" title="UnwindUsingPrologueSummary"></a>UnwindUsingPrologueSummary</h4><p>回顾4.2节的第二层栈回溯流程图，该函数先调用CollectFullFunctionInformation和FindStackStateOnFunctionEntry获取一些函数状态信息，之后调用SearchForReturnAddress，通过windows自定义的算法去寻找真正符合要求的返回地址。之后再调用SearchForFramePointer寻找framePointer(帧指针)，不过这个过程往往是直接从ebp读取出新的ebp。</p>
+<p>找到ebp和eip之后，将其保存到DbhStackServices类的0x388和0x38C偏移处。到这里，UnwindAndUpdateInternalContext就结束返回了，最后将DbhStackServices类获取到的eip交给STACKFRAME64结构体（StackWalk64提供的参数）。</p>
+<h4 id="ComputeScoreForReturnAddress-获取分数的算法细节"><a href="#ComputeScoreForReturnAddress-获取分数的算法细节" class="headerlink" title="ComputeScoreForReturnAddress(获取分数的算法细节)"></a>ComputeScoreForReturnAddress(获取分数的算法细节)</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// psudo code</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">DbsX86HeuristicTool::SearchForReturnAddress</span><span class="params">(DWORD ebp)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    DWORD dwScore = <span class="number">0</span>;</span><br><span class="line">    BYTE flag[<span class="number">3</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i =<span class="number">0</span> ;i &lt; <span class="number">0x42</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i == <span class="number">1</span>)</span><br><span class="line">            flag[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (i == <span class="number">2</span>) &#123;</span><br><span class="line">            flag[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">            flag[<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (i &gt; <span class="number">2</span>) &#123;</span><br><span class="line">            ebp = ebp + <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        DWORD eip = *(DWORD*)(ebp<span class="number">+4</span>);</span><br><span class="line">        DWORD dwComputedScore = <span class="built_in">ComputeScoreForReturnAddress</span>(eip, &amp;flag);</span><br><span class="line">        <span class="keyword">if</span> (dwScore ==<span class="number">0xFFFF</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (dwComputedScore &gt; dwScore)</span><br><span class="line">            dwScore = dwComputedScore;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> dwScore != <span class="number">0</span> ? <span class="number">1</span> : <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">DbsX86HeuristicTool::ComputeScoreForReturnAddress</span><span class="params">(DWORD eip, PBYTE pFlag)</span></span>&#123;</span><br><span class="line">    DWORD dwScore = <span class="number">0</span>;</span><br><span class="line">    PVOID pImageBase = <span class="literal">NULL</span>;</span><br><span class="line">    DWORD rs = FALSE;</span><br><span class="line">    </span><br><span class="line">    PBYTE content[<span class="number">8</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    DWORD dwbytesRead = <span class="number">0</span>;</span><br><span class="line">    rs = <span class="built_in">ReadMemory</span>(eip - <span class="number">8</span>, content, <span class="number">8</span>, &amp;dwbytesRead);</span><br><span class="line">    <span class="keyword">if</span> (!rs) &#123;</span><br><span class="line">        <span class="comment">// After some search, 0xC4C4 may be a invalid opcode.</span></span><br><span class="line">        <span class="keyword">if</span> (content[<span class="number">0</span>] == <span class="number">0xC4</span> &amp;&amp; content[<span class="number">1</span>] == <span class="number">0xC4</span> &amp;&amp; dwbytesRead==<span class="number">8</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0xFFFF</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    dwBytesRead = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">memset</span>(content, <span class="number">0</span>, <span class="number">7</span>);</span><br><span class="line">    rs = <span class="built_in">ReadMemory</span>(eip - <span class="number">7</span>, content, <span class="number">7</span>, &amp;dwbytesRead);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (content[<span class="number">2</span>]==<span class="number">0xE8</span>) &#123;</span><br><span class="line">        <span class="comment">//call imm16/imm32（E8 xxxx/E8 xxxxxxxx）</span></span><br><span class="line">        rs = <span class="built_in">IsCodeReachableViaDirectCall</span>(...);</span><br><span class="line">        <span class="keyword">if</span> (!rs)</span><br><span class="line">            <span class="comment">// IsCodeReachableViaDirectCall always returns FALSE</span></span><br><span class="line">            <span class="keyword">if</span> (pFlag[<span class="number">2</span>] == <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0x9000</span>;</span><br><span class="line">        	<span class="keyword">else</span></span><br><span class="line">                dwScore = <span class="number">0x3000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (PBYTE pNow = content; pNow - content &lt;<span class="number">7</span>; pNow++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (pNow == <span class="number">0xFF</span> &amp;&amp; (pNow[<span class="number">1</span>] &amp; <span class="number">0x30</span> != <span class="number">0x10</span>)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (pNow - content == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="comment">// call [mem16/mem32] -&gt; FF15[xxxxxxxx]/FF15[xxxx]</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (pNow - content == <span class="number">5</span>) &#123;</span><br><span class="line">                <span class="comment">// call reg16/reg32   -&gt; (FF xx)</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (pFlag[<span class="number">2</span>] &amp;&amp; dwScore &lt;= <span class="number">0x9000</span>)</span><br><span class="line">                dwScore = <span class="number">0x9000</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (pFlag[<span class="number">1</span>] &amp;&amp; dwScore &lt;= <span class="number">0xA000</span>)</span><br><span class="line">                dwScore = <span class="number">0xA000</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (dwScore &lt; <span class="number">0x6000</span>)</span><br><span class="line">                dwScore = <span class="number">0x6000</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">return</span> dwScore;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="winXP和win10的dbghelp-dll在栈回溯的细微区别"><a href="#winXP和win10的dbghelp-dll在栈回溯的细微区别" class="headerlink" title="winXP和win10的dbghelp.dll在栈回溯的细微区别"></a>winXP和win10的dbghelp.dll在栈回溯的细微区别</h4><p>如果在栈回溯时，遇到返回地址不属于任何模块的情况（比如执行的是一段shellcode），winXP和win10的行为如下：</p>
+<ul>
+<li><p>win10：win10会判断一个标志位是否为0，如果为0，则忽略返回地址，ebp继续加4，然后读取ebp指向的内容，继续解析下一个（参考上一节的算法细节）；如果为1，则继续解析该返回地址，即强制认为这个地址是有效的。</p>
+<blockquote>
+<p>注：这个标志位在DbsX86StackUnwinder类的构造函数被置为1(写死的)，初始化路径为StackWalk64-&gt;StackWalkEx-&gt;DoUnwindStackFrameUsingServices-&gt;New_DbsStackUnwinderhan-&gt;DbsX86StackUnwinder。</p>
+</blockquote>
+</li>
+<li><p>winXP：winXP直接视该返回地址无效，ebp继续加4，继续解析下一个。</p>
+</li>
+</ul>
+<h4 id="Debug版和Release版程序在栈回溯的区别"><a href="#Debug版和Release版程序在栈回溯的区别" class="headerlink" title="Debug版和Release版程序在栈回溯的区别"></a>Debug版和Release版程序在栈回溯的区别</h4><p>debug版的函数通常会预留一部分栈空间，并初始化为0xCC，方便栈溢出的检测，而release版本没有。这个区别导致栈回溯会出现以下区别：</p>
+<ul>
+<li>Debug版：因为栈多出了很多0xCC，所以在寻找正确的返回地址时，可能会达到循环次数的上限，导致栈回溯找不到正确的返回地址，这种情况下，dbghelp（winXP和win10一样）会视最初的ebp+4指向的内容为返回地址，即使该返回地址是无效的。</li>
+<li>Release版：因为栈排布很紧密，所以基本上不存在上述问题。</li>
+</ul>
+<h3 id="附录："><a href="#附录：" class="headerlink" title="附录："></a>附录：</h3><h4 id="实验：StackWalk64返回的CONTEXT（上下文）"><a href="#实验：StackWalk64返回的CONTEXT（上下文）" class="headerlink" title="实验：StackWalk64返回的CONTEXT（上下文）"></a>实验：StackWalk64返回的CONTEXT（上下文）</h4><ul>
+<li><p>1.StackWalk64原型（<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm1pY3Jvc29mdC5jb20vZW4tdXMvd2luZG93cy93aW4zMi9hcGkvZGJnaGVscC9uZi1kYmdoZWxwLXN0YWNrd2FsazY0">详情可参考MSDN</span>）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL IMAGEAPI <span class="title">StackWalk64</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">  DWORD                            MachineType,</span></span></span><br><span class="line"><span class="params"><span class="function">  HANDLE                           hProcess,</span></span></span><br><span class="line"><span class="params"><span class="function">  HANDLE                           hThread,</span></span></span><br><span class="line"><span class="params"><span class="function">  LPSTACKFRAME64                   StackFrame,</span></span></span><br><span class="line"><span class="params"><span class="function">  PCONTEXT                         ContextRecord,</span></span></span><br><span class="line"><span class="params"><span class="function">  PREAD_PROCESS_MEMORY_ROUTINE64   ReadMemoryRoutine,</span></span></span><br><span class="line"><span class="params"><span class="function">  PFUNCTION_TABLE_ACCESS_ROUTINE64 FunctionTableAccessRoutine,</span></span></span><br><span class="line"><span class="params"><span class="function">  PGET_MODULE_BASE_ROUTINE64       GetModuleBaseRoutine,</span></span></span><br><span class="line"><span class="params"><span class="function">  PTRANSLATE_ADDRESS_ROUTINE64     TranslateAddress</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>该函数有两个重要参数，StackFrame和ContextRecord，其中ContextRecord代表当前待分析的环境，重要的参数为ContextRecord.eip和ContextRecord.ebp。</p>
+</li>
+<li><p>2.StackWalk64的使用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> GET_CURRENT_THREAD_CONTEXT(c, contextFlags) \</span></span><br><span class="line"><span class="meta">  do                                                              \</span></span><br><span class="line"><span class="meta">  &#123;                                                               \</span></span><br><span class="line"><span class="meta">    c.ContextFlags = contextFlags;                                \</span></span><br><span class="line"><span class="meta">    __asm    call x                                               \</span></span><br><span class="line"><span class="meta">    __asm x: pop eax                                              \</span></span><br><span class="line"><span class="meta">    __asm    mov c.Eip, eax                                       \</span></span><br><span class="line"><span class="meta">    __asm    mov c.Ebp, ebp                                       \</span></span><br><span class="line"><span class="meta">    __asm    mov c.Esp, esp                                       \</span></span><br><span class="line"><span class="meta">  &#125; while (0)</span></span><br><span class="line"></span><br><span class="line">CONTEXT context;</span><br><span class="line"><span class="built_in">memset</span>(&amp;context, <span class="number">0</span>, <span class="built_in">sizeof</span>(context));</span><br><span class="line">context.ContextFlags = CONTEXT_CONTROL;</span><br><span class="line"><span class="built_in">GET_CURRENT_THREAD_CONTEXT</span>(context, CONTEXT_CONTROL);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span>; ++i) &#123;</span><br><span class="line">	<span class="keyword">auto</span> ret = <span class="built_in">StackWalk64</span>(imageType,</span><br><span class="line">		<span class="built_in">GetCurrentProcess</span>(),</span><br><span class="line">		<span class="built_in">GetCurrentThread</span>(),</span><br><span class="line">		&amp;frame64,</span><br><span class="line">		&amp;context,</span><br><span class="line">		<span class="literal">NULL</span>,</span><br><span class="line">		SymFunctionTableAccess64,</span><br><span class="line">		SymGetModuleBase64,</span><br><span class="line">		<span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;Round: &quot;</span> &lt;&lt; i &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(_M_IX86)</span></span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;context ebp: &quot;</span> &lt;&lt; std::hex &lt;&lt; context.Ebp &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;context eip: &quot;</span> &lt;&lt; std::hex &lt;&lt; context.Eip &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> defined(_M_AMD64)</span></span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;context rbp: &quot;</span> &lt;&lt; std::hex &lt;&lt; context.Rbp &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;context rip: &quot;</span> &lt;&lt; std::hex &lt;&lt; context.Rip &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;Frame ebp: &quot;</span> &lt;&lt; std::hex &lt;&lt; frame<span class="number">64.</span>AddrFrame.Offset &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;Frame eip: &quot;</span> &lt;&lt; std::hex &lt;&lt; frame<span class="number">64.</span>AddrReturn.Offset &lt;&lt; <span class="string">&quot;\n\n\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (ret == FALSE || frame<span class="number">64.</span>AddrReturn.Offset == <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可知，一般StackWalk64都是循环使用的，直到frame64.AddrReturn.Offset为0，代表回溯完毕。</p>
+<p>每循环一次，context的值会有对应的更新。</p>
+</li>
+<li><p>3.观察StackWalk64返回的CONTEXT（上下文）：</p>
+<ul>
+<li><p>当前的栈（由windbg打印）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="number">0</span>b <span class="number">00</span>daefa4 <span class="number">00</span>a<span class="number">4e4</span>c5 dbghelp!StackWalk64<span class="number">+0x89</span></span><br><span class="line"><span class="number">0</span>c <span class="number">00</span>daf640 <span class="number">00</span>a69ef3 cpp_test_ano<span class="number">+0xfe4c5</span>     <span class="comment">//函数A</span></span><br><span class="line"><span class="number">0</span>d <span class="number">00</span>daf714 <span class="number">00</span>aab363 cpp_test_ano<span class="number">+0x119ef3</span>    <span class="comment">//函数B</span></span><br><span class="line"><span class="number">0</span>e <span class="number">00</span>daf734 <span class="number">00</span>aab1b7 cpp_test_ano<span class="number">+0x15b363</span>    <span class="comment">//函数C</span></span><br><span class="line"><span class="number">0</span>f <span class="number">00</span>daf790 <span class="number">00</span>aab04d cpp_test_ano<span class="number">+0x15b1b7</span>    <span class="comment">//函数D</span></span><br><span class="line"><span class="number">10</span> <span class="number">00</span>daf798 <span class="number">00</span>aab<span class="number">3e8</span> cpp_test_ano<span class="number">+0x15b04d</span></span><br><span class="line"><span class="number">11</span> <span class="number">00</span>daf7a0 <span class="number">76336359</span> cpp_test_ano<span class="number">+0x15b3e8</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>程序输出结果</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为执行StackWalk64的初始值如下</span></span><br><span class="line"><span class="comment">// context ebp: daf640</span></span><br><span class="line"><span class="comment">// context eip: a4e34d</span></span><br><span class="line"><span class="comment">// Frame ebp: daf640</span></span><br><span class="line"><span class="comment">// Frame eip: a4e34d</span></span><br><span class="line"></span><br><span class="line">Round: <span class="number">0</span></span><br><span class="line">context ebp: daf640</span><br><span class="line">context eip: a<span class="number">4e34</span>d</span><br><span class="line">Frame ebp: daf640</span><br><span class="line">Frame eip: a69ef3</span><br><span class="line"></span><br><span class="line">Round: <span class="number">1</span></span><br><span class="line">context ebp: daf714</span><br><span class="line">context eip: a69ef3</span><br><span class="line">Frame ebp: daf714</span><br><span class="line">Frame eip: aab363</span><br><span class="line"></span><br><span class="line">Round: <span class="number">2</span></span><br><span class="line">context ebp: daf734</span><br><span class="line">context eip: aab363</span><br><span class="line">Frame ebp: daf734</span><br><span class="line">Frame eip: aab1b7</span><br><span class="line"></span><br><span class="line">Round: <span class="number">3</span></span><br><span class="line">context ebp: daf790</span><br><span class="line">context eip: aab1b7</span><br><span class="line">Frame ebp: daf790</span><br><span class="line">Frame eip: aab04d</span><br><span class="line"></span><br><span class="line">Round: <span class="number">4</span></span><br><span class="line">context ebp: daf798</span><br><span class="line">context eip: aab04d</span><br><span class="line">Frame ebp: daf798</span><br><span class="line">Frame eip: aab<span class="number">3e8</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>根据以下数据，有以下结论：</p>
+<ul>
+<li><p>第一轮结束后（Round0）</p>
+<ul>
+<li>frame64.ebp和context.ebp并没有更新，还是0xdaf640</li>
+<li>context.eip并没有更新，还是0xa4e34d</li>
+<li>fram64.eip更新了，为0xa69ef3，该值是第一层栈的地址，即调用函数A的地址，该地址位于函数B中</li>
+</ul>
+<blockquote>
+<p>注：StackWalk64回溯栈时，是根据context.ebp和context.eip来分析的。为了分析第二层栈，context.ebp和context.eip应该对应函数B才对，这样下次调用StackWalk64才能获取函数C是在哪调用函数B的，即fram64.eip。目前context.ebp和context.eip对应的是函数A。</p>
+</blockquote>
+</li>
+<li><p>第二轮结束后（Round1）</p>
+<ul>
+<li>frame64.ebp和context.ebp都更新了，是0xdaf714</li>
+<li>context.eip更新了，是0xa4e34d</li>
+<li>fram64.eip更新了，是0xaab363，该值是第二层栈的地址，即调用函数B的地址，该地址位于函数C中</li>
+</ul>
+<blockquote>
+<p>注：context的ebp和eip对应的是函数B，并不是函数C。与下次要获取的函数D差两层</p>
+</blockquote>
+</li>
+</ul>
+<p>观察之后的层数，其结果与Round1一样。<strong>context的ebp和eip对应的函数与下一次要回溯的函数差两层</strong>。</p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><p>本来由来：在栈回溯时，发现release版本的栈回溯会跳过一层函数，这层函数是jmp XXXXXXXX。为了明确何时会跳过函数，所以做了一系列分析，于是有了这篇文章。</p>
+</li>
+<li><p>winXP和win10在栈回溯的差异不大，大致流程基本一样（函数的封装有所变化，比如win10的DbsStackUnwinder::DoDbhUnwind函数在winXP是DbsStackUnwinder::DbhUnwind）。因此win7、win8各位也可以类推，找到其栈回溯的大致流程。</p>
+</li>
+<li><p>在栈回溯时，有符号与无符号的执行流程是有差别的。有符号的情况下，UnwindInternalContextUsingDiaFrame(win10下)会读取符号，解析符号，直接返回。如果要分析有符号的情况，各位重点查看这个函数即可（winXP下是DbsX86StackUnwinder::ApplyUnwindInfo）。</p>
+</li>
+<li><p>关于ComputeScoreForReturnAddress的算法，这里简化了参数验证等无关代码，流程上也做了简化。同时这里省略了一些不重要的细节，比如检验是否是热更新代码；检验call [addr A]的情况下，call的地址和addr A是否属于同一个模块。类似这些都属于常规检测，在栈回溯时情况基本相同，可暂时忽略。</p>
+</li>
+<li><p>64位栈回溯在无符号的情况下，会根据Exception Directory数据节的函数信息进行回溯。在分析winXP时，发现dbghelp.dll会缓存一份Exception Directory数据节进行分析，所以对分析模块的Exception Directory数据节下硬件断点，可能断不下来，找不到dbghelp.dll回溯的代码。虽然64位的分析流程和32位完全不同，但主流程是一样的，都会调用*Unwind函数，然后做一些基础检测，分析call、jmp这些基础操作。</p>
+</li>
+</ul>
+
+      <div class="tags">
+          <a href="/tags/StackUnwind/" rel="tag"><i class="ic i-tag"></i> StackUnwind</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2025-03-08 12:09:36" itemprop="dateModified" datetime="2025-03-08T12:09:36+08:00">2025-03-08</time>
+  </span>
+  <span id="Technology/Reverse/StackUnwind/" class="item leancloud_visitors" data-flag-title="StackUnwind" title="阅读次数">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">阅读次数</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">次</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>coneco <i class="ic i-at"><em>@</em></i>Welcome to coneco's study room
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="https://conecoy.cn/Technology/Reverse/StackUnwind/" title="StackUnwind">https://conecoy.cn/Technology/Reverse/StackUnwind/</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+    </div>
+    <div class="item right">
+      
+
+  <a href="/Technology/Reverse/VMP-anti-vmware/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;image-hosts.oss-cn-chengdu.aliyuncs.com&#x2F;aokana&#x2F;3.jpg" title="浅谈VMP、SafeEngine、Themida反虚拟机">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Reverse</span>
+  <h3>浅谈VMP、SafeEngine、Themida反虚拟机</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#StackWalk64-32%E4%BD%8D-%E6%A0%88%E5%9B%9E%E6%BA%AF%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">StackWalk64(32位)栈回溯原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">1.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.2.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%A6%81%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">概要流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%86%E8%8A%82%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">细节流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%B1%82%E6%A0%88%E5%9B%9E%E6%BA%AF%EF%BC%88%E6%97%A0%E7%AC%A6%E5%8F%B7%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">第一层栈回溯（无符号）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%B1%82%E6%A0%88%E5%9B%9E%E6%BA%AF%EF%BC%88%E6%97%A0%E7%AC%A6%E5%8F%B7%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">第二层栈回溯（无符号）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%88%86%E6%95%B0%E7%9A%84%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">获取分数的算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A2%AB%E5%BF%BD%E7%95%A5%E7%9A%84%E4%B8%8D%E8%A7%84%E5%88%99%E8%B0%83%E7%94%A8%E5%B1%82"><span class="toc-number">1.4.4.</span> <span class="toc-text">被忽略的不规则调用层</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%86%E8%8A%82%E8%AE%B2%E8%A7%A3"><span class="toc-number">1.5.</span> <span class="toc-text">细节讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DbsStackUnwinder-DoDbhUnwind%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.1.</span> <span class="toc-text">DbsStackUnwinder::DoDbhUnwind函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UnwindAndUpdateInternalContext"><span class="toc-number">1.5.2.</span> <span class="toc-text">UnwindAndUpdateInternalContext</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UnwindUsingPrologueSummary"><span class="toc-number">1.5.3.</span> <span class="toc-text">UnwindUsingPrologueSummary</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ComputeScoreForReturnAddress-%E8%8E%B7%E5%8F%96%E5%88%86%E6%95%B0%E7%9A%84%E7%AE%97%E6%B3%95%E7%BB%86%E8%8A%82"><span class="toc-number">1.5.4.</span> <span class="toc-text">ComputeScoreForReturnAddress(获取分数的算法细节)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#winXP%E5%92%8Cwin10%E7%9A%84dbghelp-dll%E5%9C%A8%E6%A0%88%E5%9B%9E%E6%BA%AF%E7%9A%84%E7%BB%86%E5%BE%AE%E5%8C%BA%E5%88%AB"><span class="toc-number">1.5.5.</span> <span class="toc-text">winXP和win10的dbghelp.dll在栈回溯的细微区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Debug%E7%89%88%E5%92%8CRelease%E7%89%88%E7%A8%8B%E5%BA%8F%E5%9C%A8%E6%A0%88%E5%9B%9E%E6%BA%AF%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.5.6.</span> <span class="toc-text">Debug版和Release版程序在栈回溯的区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A"><span class="toc-number">1.6.</span> <span class="toc-text">附录：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%EF%BC%9AStackWalk64%E8%BF%94%E5%9B%9E%E7%9A%84CONTEXT%EF%BC%88%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%89"><span class="toc-number">1.6.1.</span> <span class="toc-text">实验：StackWalk64返回的CONTEXT（上下文）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li class="active"><a href="/Technology/Reverse/StackUnwind/" rel="bookmark" title="StackUnwind">StackUnwind</a></li><li><a href="/Technology/Reverse/VMP-anti-vmware/" rel="bookmark" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></li><li><a href="/Technology/Reverse/Mechanism-of-LFH/" rel="bookmark" title="Mechanism_of_LFH">Mechanism_of_LFH</a></li><li><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" rel="bookmark" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></li><li><a href="/Technology/Reverse/Process-Injection/" rel="bookmark" title="Process_Injection">Process_Injection</a></li><li><a href="/Technology/Reverse/%E5%85%B3%E4%BA%8EVS%E7%82%B9%E5%87%BB%E5%8D%95%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A1%E6%AD%BB%E7%9A%84%E5%88%86%E6%9E%90/" rel="bookmark" title="关于VS点击单个测试用例卡死的分析">关于VS点击单个测试用例卡死的分析</a></li><li><a href="/Technology/Reverse/aarch64%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9F%90so%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="bookmark" title="aarch64架构的某so模拟执行分析">aarch64架构的某so模拟执行分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="coneco"
+      data-src="https://image-hosts.oss-cn-chengdu.aliyuncs.com/others/megumi.jpg">
+  <p class="name" itemprop="name">coneco</p>
+  <div class="description" itemprop="description">hello, 我是小猫，喜欢逆向、日语、动画、钢琴、羽毛球、乒乓球...。如果有想分享的事，欢迎随便叫上我^_^。</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">5</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">40</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvLW5lY28=" title="https:&#x2F;&#x2F;github.com&#x2F;co-neco"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS8xMDczMzUyMzM0" title="https:&#x2F;&#x2F;twitter.com&#x2F;1073352334"><i class="ic i-twitter"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTE3NDYyMzM5MDg=" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;1746233908"><i class="ic i-cloud-music"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>随机文章</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Process-Injection/" title="Process_Injection">Process_Injection</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/C++%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83%E7%AC%94%E8%AE%B0/" title="C++安全编程规范笔记">C++安全编程规范笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/VMP-anti-vmware/" title="浅谈VMP、SafeEngine、Themida反虚拟机">浅谈VMP、SafeEngine、Themida反虚拟机</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/StackUnwind/" title="StackUnwind">StackUnwind</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Reverse/" title="分类于 Reverse">Reverse</a>
+</div>
+
+    <span><a href="/Technology/Reverse/Microsoft-Defender-ATP-ETW/" title="[翻译] Microsoft Defender ATP ETW">[翻译] Microsoft Defender ATP ETW</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%A5%BD%E4%B8%8E%E5%9D%8F/" title="单例模式的好与坏">单例模式的好与坏</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/VS-MSVC%E5%A4%9A%E4%B8%AA%E7%89%88%E6%9C%AC%E6%97%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E4%B8%8E%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt">VisualStudio MSVC有多个版本时，如何正确使用低版本来编译工程和使用VS Command Prompt</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/%E8%AE%B0%E4%B8%80%E6%AC%A1win10%E4%B8%8B%E7%A8%8B%E5%BA%8F%E5%85%BC%E5%AE%B9%E5%AF%BC%E8%87%B4%E7%9A%84%E6%AD%BB%E9%94%81/" title="记一次win10下程序以兼容方式启动导致的死锁">记一次win10下程序以兼容方式启动导致的死锁</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/linux%E7%9A%84%E4%BF%A1%E5%8F%B7%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%E7%AC%94%E8%AE%B0/" title="linux的信号同步与异步笔记">linux的信号同步与异步笔记</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Technology/" title="分类于 Technology">Technology</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Technology/Development/" title="分类于 Development">Development</a>
+</div>
+
+    <span><a href="/Technology/Development/c++%E7%BC%96%E7%A8%8B%E9%94%99%E8%AF%AF%E9%94%A6%E5%9B%8A/" title="c++编程错误锦囊">c++编程错误锦囊</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>最新评论</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2021 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">coneco </span>
+    <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备2021022030号-1</a> 
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'Technology/Reverse/StackUnwind/',
+    favicon: {
+      show: "（^_^) Coneco's diary",
+      hide: "（^_^) お帰り"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://polyfill.alicdn.com/polyfill.min.js"></script>
+
+<script src="//fastly.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>
