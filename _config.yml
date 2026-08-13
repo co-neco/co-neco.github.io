@@ -184,7 +184,7 @@ minify:
     enable: true
     stamp: false
     mangle:
-      toplevel: true
+      toplevel: false 
     output:
     compress:
     exclude:
