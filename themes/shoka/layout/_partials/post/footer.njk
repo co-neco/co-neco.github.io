@@ -9,13 +9,15 @@
   </span>
   {%- endif %}
 
-  {%- if theme.valine.appId and theme.valine.appKey and theme.valine.visitor %}
-  <span id="{{ page.path | replace('index.html', '') }}" class="item leancloud_visitors" data-flag-title="{{ post.title }}" title="{{ __('post.views') }}">
+  {%- if theme.waline.serverURL and theme.waline.visitor %}
+  {#- Waline's counter finds its target by selector and reads data-path, rather
+      than MiniValine's convention of putting the path in the element id. #}
+  <span class="item" title="{{ __('post.views') }}">
       <span class="icon">
         <i class="ic i-eye"></i>
       </span>
       <span class="text">{{ __('post.views') }}</span>
-      <span class="leancloud-visitors-count"></span>
+      <span class="waline-pageview-count" data-path="/{{ page.path | replace('index.html', '') }}"></span>
       <span class="text">{{ __('symbols_count_time.view') }}</span>
   </span>
   {%- endif %}

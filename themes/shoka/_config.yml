@@ -177,38 +177,28 @@ creative_commons:
   language: deed.zh
 
 # Comments
-# Valine
-# For more information: https://github.com/amehime/MiniValine
-valine:
-  appId: 0PN8lgYA6cq6o1hCj51lm8gI-gzGzoHsz
-  appKey: 9PNRp6NQe1F0o9a0GQoYQM7u
+# Waline
+# Migrated off MiniValine/LeanCloud, which shuts down on 2027-01-12.
+# For more information: https://waline.js.org
+waline:
+  # Your own Waline server. Must be a custom domain rather than *.vercel.app,
+  # which is unreliable from mainland China.
+  serverURL: https://comment.conecoy.cn
   placeholder:  添加昵称和邮箱后，就可以发送评论哦，欢迎畅所欲言ヽ(○´∀`)ﾉ♪ # Comment box placeholder
   avatar: mp # Gravatar style : mp, identicon, monsterid, wavatar, robohash, retro
   pageSize: 10 # Pagination size
   lang: zh-CN
   visitor: true # Article reading statistic
-  NoRecordIP: false # Whether to record the commenter IP
-  serverURLs: # When the custom domain name is enabled, fill it in here (it will be detected automatically by default, no need to fill in)
-  powerMode: true
-  tagMeta:
-    visitor: 新朋友
-    master: 主人
-    friend: 小伙伴
-    investor: 金主粑粑
-  tagColor:
-    visitor: "#855194"
-    master: "var(--color-orange)"
-    friend: "var(--color-aqua)"
-    investor: "var(--color-pink)"
-  tagMember:
-    master:
-      - 0e931722ca3189d2b5d4e851bce1341b
-      # - hash of master2@email.com
-    friend:
-      # - hash of friend@email.com
-      # - hash of friend2@email.com
-    investor:
-      # - hash of investor1@email.com
+  # Fields a visitor must fill in before commenting. Was `requiredFields` in Valine.
+  requiredMeta:
+    - nick
+    - mail
+  # Number of entries in the sidebar "recent comments" widget.
+  recentCount: 10
+  # MiniValine's tagMeta/tagColor/tagMember options are gone: it tagged users by
+  # the md5 of their email from the client side, which Waline does not do. Waline
+  # instead stores a per-user `label` in wl_Users, editable from the admin panel
+  # at <serverURL>/ui, and marks the site owner as admin automatically.
 
 # bgm
 audio:
@@ -283,7 +273,7 @@ baidu_push: false
 vendors:
   css:
     katex: npm/katex@0.12.0/dist/katex.min.css
-    comment: css/comment.css
+    waline: npm/@waline/client@2/dist/waline.css
     fancybox: combine/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css,npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css
   js:
     pace: npm/pace-js@1.0.2/pace.min.js
@@ -295,7 +285,7 @@ vendors:
     lazyload: npm/lozad@1/dist/lozad.min.js
     quicklink: npm/quicklink@2/dist/quicklink.umd.js
     fancybox: combine/npm/jquery@3.5.1/dist/jquery.min.js,npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js,npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js
-    valine: gh/amehime/MiniValine@4.2.2-beta10/dist/MiniValine.min.js
+    waline: npm/@waline/client@2/dist/waline.js
     copy_tex: npm/katex@0.12.0/dist/contrib/copy-tex.min.js
     chart: npm/frappe-charts@1.5.0/dist/frappe-charts.min.iife.min.js
 

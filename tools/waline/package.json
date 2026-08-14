@@ -1,0 +1,13 @@
+{
+  "name": "waline-migration-tools",
+  "private": true,
+  "type": "module",
+  "description": "One-off tooling to stand up the Waline comment backend that replaced LeanCloud.",
+  "scripts": {
+    "import": "node import.mjs",
+    "dry-run": "node import.mjs --dry-run"
+  },
+  "dependencies": {
+    "pg": "^8.11.0"
+  }
+}

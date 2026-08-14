@@ -1,0 +1,47 @@
+// Waline ships its own stylesheet and exposes its palette as CSS custom
+// properties, so instead of reskinning it the way the old 548-line MiniValine
+// sheet did, we just point its variables at Shoka's own palette. That keeps the
+// comment area on-theme and makes dark mode work for free, since the Shoka
+// variables are already redefined under html[data-theme="dark"].
+#comments
+  --waline-theme-color: var(--primary-color)
+  --waline-active-color: var(--color-pink)
+  --waline-color: var(--text-color)
+  --waline-bg-color: transparent
+  --waline-bg-color-light: var(--note-bg)
+  --waline-bg-color-hover: var(--note-hover)
+  --waline-border-color: var(--note-border)
+  --waline-info-bg-color: var(--note-bg)
+  --waline-info-color: var(--color-grey)
+  --waline-border: 1px solid var(--note-border)
+  --waline-avatar-radius: 50%
+  --waline-font-size: 1rem
+
+  // The theme already provides the surrounding card, so the widget should not
+  // paint a second background on top of it.
+  .wl-panel
+    background: transparent
+    border-radius: 0.6rem
+
+  // Comment bodies reuse the post typography rather than Waline's defaults.
+  .wl-content
+    line-height: 1.8
+
+    img:not(.wl-emoji)
+      max-width: 100%
+      border-radius: 0.4rem
+
+  // MiniValine's "@mention" anchors survive in the imported comment bodies; the
+  // migration repoints them at the new integer ids, so keep them looking like links.
+  .wl-content a.at
+    color: var(--primary-color)
+    font-weight: bold
+
+.waline-recent-comment
+  .nick
+    color: var(--primary-color)
+    margin-right: 0.3rem
+
+  .content
+    p
+      display: inline

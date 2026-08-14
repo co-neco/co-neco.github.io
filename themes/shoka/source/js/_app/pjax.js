@@ -55,21 +55,45 @@ const siteRefresh = function (reload) {
   vendorJs('copy_tex');
   vendorCss('mermaid');
   vendorJs('chart');
-  vendorJs('valine', function() {
-    var options = Object.assign({}, CONFIG.valine);
-    options = Object.assign(options, LOCAL.valine||{});
-    options.el = '#comments';
-    options.pathname = LOCAL.path;
-    options.pjax = pjax;
-    options.lazyload = lazyload;
+  vendorJs('waline', function() {
+    var cfg = Object.assign({}, CONFIG.waline);
+    cfg = Object.assign(cfg, LOCAL.waline||{});
 
-    new MiniValine(options);
+    // Waline is initialised per page and must be torn down before the next pjax
+    // navigation, otherwise each visit leaves another live widget behind.
+    if (walineInstance) {
+      walineInstance.destroy();
+      walineInstance = null;
+    }
+
+    var options = {
+      el: '#comments',
+      serverURL: cfg.serverURL,
+      // Valine took a bare pathname; Waline expects the leading slash that
+      // window.location.pathname has, and the imported data was normalised to match.
+      path: '/' + LOCAL.path,
+      lang: cfg.lang,
+      pageSize: cfg.pageSize,
+      requiredMeta: cfg.requiredMeta,
+      // Valine's `visitor` became a separate pageview counter, wired up below.
+      pageview: false,
+      comment: false,
+      locale: { placeholder: cfg.placeholder },
+      dark: 'html[data-theme="dark"]'
+    };
+
+    if ($('#comments')) {
+      walineInstance = Waline.init(options);
+    }
+
+    walinePageview(cfg);
+    walineRecentComments(cfg);
 
     setTimeout(function(){
       positionInit(1);
-      postFancybox('.v');
+      postFancybox('.wl-content');
     }, 1000);
-  }, window.MiniValine);
+  }, window.Waline);
 
   if(!reload) {
     $.each('script[data-pjax]', pjaxScript);

@@ -21,20 +21,22 @@ hexo.extend.generator.register('script', function(locals){
     darkmode: theme.darkmode,
     auto_scroll: theme.auto_scroll,
     js: {
-      valine: theme.vendors.js.valine,
+      waline: theme.vendors.js.waline,
       chart: theme.vendors.js.chart,
       copy_tex: theme.vendors.js.copy_tex,
       fancybox: theme.vendors.js.fancybox
     },
     css: {
-      valine: theme.css + "/comment.css",
+      // Waline ships its own stylesheet; comment.css was the MiniValine skin and
+      // targets .v* class names that Waline does not emit.
+      waline: theme.vendors.css.waline,
       katex: theme.vendors.css.katex,
       mermaid: theme.css + "/mermaid.css",
       fancybox: theme.vendors.css.fancybox
     },
     loader: theme.loader,
     search : null,
-    valine: theme.valine,
+    waline: theme.waline,
     quicklink: {
       timeout : theme.quicklink.timeout,
       priority: theme.quicklink.priority

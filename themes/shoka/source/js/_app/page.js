@@ -392,6 +392,56 @@ const tabFormat = function() {
   });
 }
 
+// Held across pjax navigations so the previous widget can be destroyed; leaving
+// them alive stacks up one Waline instance per page visited.
+var walineInstance = null;
+
+// MiniValine filled `.leancloud-visitors-count` itself as a side effect of booting
+// the comment box. Waline splits that out into a standalone counter, so pages with
+// comments disabled still need this called explicitly.
+const walinePageview = function (cfg) {
+  if (!cfg.visitor || !cfg.serverURL) {
+    return;
+  }
+  if (typeof Waline.pageviewCount !== 'function') {
+    return;
+  }
+  Waline.pageviewCount({
+    serverURL: cfg.serverURL,
+    path: '/' + LOCAL.path,
+    selector: '.waline-pageview-count'
+  });
+}
+
+const walineRecentComments = function (cfg) {
+  var list = $('.waline-recent-comment');
+  if (!list || !cfg.serverURL || typeof Waline.RecentComments !== 'function') {
+    return;
+  }
+
+  Waline.RecentComments({
+    serverURL: cfg.serverURL,
+    count: cfg.recentCount || 10
+  }).then(function (res) {
+    var comments = (res && res.comments) || [];
+    if (!comments.length) {
+      return;
+    }
+    list.innerHTML = comments.map(function (c) {
+      // `link` is the page url Waline resolved for the comment; fall back to the
+      // raw path so an entry is never rendered as a dead anchor.
+      var href = c.url || c.link || '/';
+      return '<li class="item">'
+           + '<a href="' + href + '#' + c.objectId + '">'
+           + '<span class="nick">' + (c.nick || '') + '</span>'
+           + '<span class="content">' + (c.comment || '') + '</span>'
+           + '</a></li>';
+    }).join('');
+  }).catch(function () {
+    // A dead comment server must not take the sidebar down with it.
+  });
+}
+
 const loadComments = function () {
   var element = $('#comments');
   if (!element) {
@@ -402,11 +452,11 @@ const loadComments = function () {
   }
 
   if (!window.IntersectionObserver) {
-    vendorCss('valine');
+    vendorCss('waline');
   } else {
     var io = new IntersectionObserver(function(entries, observer) {
       var entry = entries[0];
-      vendorCss('valine');
+      vendorCss('waline');
       if (entry.isIntersecting || entry.intersectionRatio > 0) {
         transition($('#comments'), 'bounceUpIn');
         observer.disconnect();
